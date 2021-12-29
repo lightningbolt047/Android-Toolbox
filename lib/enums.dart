@@ -28,8 +28,3 @@ enum FileTransferType{
   copy,
   interDevice
 }
-
-enum UpdateStatus{
-  latest,
-  available
-}

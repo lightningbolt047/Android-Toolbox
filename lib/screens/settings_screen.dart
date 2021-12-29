@@ -1,6 +1,7 @@
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/enums.dart';
+import 'package:adb_gui/utils/update_services.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,6 +16,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  
+  
+  bool _checkingForUpdates=false;
 
 
   @override
@@ -67,8 +71,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   return Text("Version ${snapshot.data!.version}");
                 },
               ),
-              trailing: const CircularProgressIndicator(),
-              onTap: (){},
+              trailing: _checkingForUpdates?const CircularProgressIndicator():const Icon(Icons.check,color: Colors.green,),
+              onTap: () async{
+                setState(() {
+                  _checkingForUpdates=true;
+                });
+                try{
+                  Map<String,dynamic> updateInfo=await checkForUpdates();
+                  if(updateInfo['updateAvailable']){
+                    showDialog(
+                      context: context,
+                      builder: (context)=>AlertDialog(
+                        title: const Text("New update available!",style: TextStyle(
+                          color: Colors.blue
+                        ),),
+                        content: Text("A new update is available to download! Version: ${updateInfo['version']}"),
+                      ),
+                    );
+                  }else{
+                    showDialog(context: context, builder: (context)=>AlertDialog(
+                      title: const Text("No update available!",style: TextStyle(
+                          color: Colors.blue
+                      ),),
+                      content: const Text("You are already on the latest version"),
+                      actions: [
+                        TextButton(
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                          child: const Text("OK"),
+                        ),
+                      ],
+                    ));
+                  }
+                }catch(e){
+                  showDialog(
+                      context: context,
+                      builder: (context)=>AlertDialog(
+                        title: const Text("Failed to check update",style: TextStyle(
+                          color: Colors.blue
+                        ),),
+                        content: const Text("Check your internet connection and try again"),
+                        actions: [
+                          TextButton(
+                              onPressed: (){
+                                Navigator.pop(context);
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text("OK"),
+                              ),
+                          )
+                        ],
+                      ),
+                  );
+                }
+                setState(() {
+                  _checkingForUpdates=false;
+                });
+              },
             ),
             const PageSubheading(subheadingName: "Legal"),
             ListTile(
