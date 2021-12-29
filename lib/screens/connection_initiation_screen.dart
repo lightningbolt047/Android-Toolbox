@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/screens/home_screen.dart';
+import 'package:adb_gui/screens/settings_screen.dart';
 import 'package:adb_gui/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
@@ -211,6 +212,22 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      MaterialButton(
+                        shape: const CircleBorder(),
+                        color: Colors.blue,
+                        elevation: 0,
+                        minWidth: 8,
+                        hoverColor: Colors.lightBlue,
+                        height: 150,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.settings,color: Colors.white,),
+                        ),
+                        onPressed: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context)=>const SettingsScreen()));
+                        },
+                      ),
                       CustomMinimizeWindowButton(),
                       CustomMaximizeWindowButton(),
                       CustomCloseWindowButton(),

@@ -30,6 +30,7 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
   @override
   void initState() {
     process.stdout.listen((event) {
+      print(String.fromCharCodes(event));
       setState(() {
         _consoleOutput+=String.fromCharCodes(event);
       });
@@ -71,7 +72,7 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
                         else if(exitCode==0)
                           const Icon(FontAwesomeIcons.check,color: Colors.green,)
                         else
-                          const Icon(FontAwesomeIcons.cross,color: Colors.red,)
+                          const Icon(Icons.cancel,color: Colors.red,)
                       ],
                     ),
                   ),
