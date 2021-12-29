@@ -1,28 +1,25 @@
 import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/enums.dart';
+import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/screens/file_manager_screen.dart';
 import 'package:adb_gui/screens/package_manager_screen.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String deviceID;
-  final String deviceModel;
-  final String androidVersion;
-  const HomeScreen({Key? key,required this.deviceID,required this.deviceModel,this.androidVersion="11"}) : super(key: key);
+  final Device device;
+  const HomeScreen({Key? key,required this.device}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState(deviceID,deviceModel,androidVersion);
+  _HomeScreenState createState() => _HomeScreenState(device);
 }
 
 class _HomeScreenState extends State<HomeScreen> {
 
   Screens _currentScreen=Screens.fileManager;
-  final String deviceID;
-  final String deviceModel;
-  final String androidVersion;
+  final Device device;
 
-  _HomeScreenState(this.deviceID,this.deviceModel,this.androidVersion);
+  _HomeScreenState(this.device);
 
 
   String _getScreenName(Screens screenEnum){
@@ -50,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text("${_getScreenName(_currentScreen)} ($deviceID - $deviceModel)",overflow: TextOverflow.ellipsis,style: const TextStyle(
+                Text("${_getScreenName(_currentScreen)} (${device.id} - ${device.model})",overflow: TextOverflow.ellipsis,style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20
                 ),),
@@ -196,9 +193,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Builder(
               builder: (context){
                 if(_currentScreen==Screens.fileManager){
-                  return FileManagerScreen(deviceID: deviceID,androidVersion: androidVersion,);
+                  return FileManagerScreen(device: device,);
                 }
-                return PackageManagerScreen(deviceID: deviceID,);
+                return PackageManagerScreen(deviceID: device.id,);
               },
             ),
           ),

@@ -6,6 +6,7 @@ import 'package:adb_gui/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:adb_gui/models/device.dart';
 
 
 class ConnectionInitiationScreen extends StatefulWidget {
@@ -61,15 +62,21 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
     return devicePropertyValue;
   }
 
+  Future<Device> getDeviceAllProperties(Device device) async{
+    device.setOtherDeviceAttributes(
+      await getDeviceProperty(device.id, "ro.product.model"),
+      await getDeviceProperty(device.id, "ro.product.manufacturer"),
+      await getDeviceProperty(device.id, "ro.build.version.release"),
+      int.parse(await getDeviceProperty(device.id, "ro.build.version.sdk")),
+    );
+    return device;
+  }
+
   Future<List<Device>> getAllDevicesInfo() async {
     await getDevices();
 
     for(int i=0;i<devices.length;i++){
-      devices[i].setOtherDeviceAttributes(
-          await getDeviceProperty(devices[i].id, "ro.product.model"),
-          await getDeviceProperty(devices[i].id, "ro.product.manufacturer"),
-          await getDeviceProperty(devices[i].id, "ro.build.version.release"),
-      );
+      devices[i]=await getDeviceAllProperties(devices[i]);
     }
     return devices;
   }
@@ -386,7 +393,8 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                         ),
                         onPressed: () async{
                           if(await onAddressSubmit("127.0.0.1:58526")){
-                            await Navigator.push(context, CupertinoPageRoute(builder: (context)=>const HomeScreen(deviceID: "127.0.0.1:58526",deviceModel: "Subsystem for Android(TM)",)));
+                            Device wsaDevice=await getDeviceAllProperties(Device.wsaCons("127.0.0.1:58526"));
+                            await Navigator.push(context, CupertinoPageRoute(builder: (context)=>HomeScreen(device:wsaDevice,)));
                             setState(() {});
                             return;
                           }
@@ -433,7 +441,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                                   ScaffoldMessenger.of(context).deactivate();
                                   return;
                                 }
-                                await Navigator.push(context, CupertinoPageRoute(builder: (context)=>HomeScreen(deviceID: devices[selectedDeviceIndex].id,deviceModel: devices[selectedDeviceIndex].model,androidVersion:devices[selectedDeviceIndex].androidVersion)));
+                                await Navigator.push(context, CupertinoPageRoute(builder: (context)=>HomeScreen(device:devices[selectedDeviceIndex])));
                                 setState(() {});
                               },
                             );
@@ -454,49 +462,4 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
   }
 }
 
-class Device{
-  String id;
-  late String model;
-  late String manufacturer;
-  late String androidVersion;
-  String status;
-  late int selectedDeviceIndex;
-  Function updateSelectionStatus;
-  int index;
 
-  Device(this.index,this.id,this.status,this.selectedDeviceIndex,this.updateSelectionStatus);
-
-  void setOtherDeviceAttributes(String model,String manufacturer,String androidVersion){
-    this.model=model;
-    this.manufacturer=manufacturer;
-    this.androidVersion=androidVersion;
-  }
-
-  @override
-  String toString(){
-    return id+" "+status;
-  }
-
-  DataRow getDeviceInfoAsDataRow(){
-    return DataRow(
-        cells: [
-          DataCell(
-              Radio(
-                value: index,
-                onChanged: (value){
-                  updateSelectionStatus(index);
-                },
-                groupValue: selectedDeviceIndex,
-              )
-          ),
-          DataCell(Text(id,maxLines: 3)),
-          DataCell(Text(model,maxLines: 3)),
-          DataCell(Text(manufacturer,maxLines: 3)),
-          DataCell(Text(androidVersion,maxLines: 3)),
-          DataCell(Text(status,maxLines: 3)),
-        ]
-    );
-  }
-
-
-}

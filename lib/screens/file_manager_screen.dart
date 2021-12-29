@@ -7,27 +7,27 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:adb_gui/models/device.dart';
+import 'package:adb_gui/utils/android_api_checks.dart';
 
 import '../vars.dart';
 
 class FileManagerScreen extends StatefulWidget {
-  final String deviceID;
-  final String androidVersion;
-  const FileManagerScreen({Key? key, required this.deviceID, required this.androidVersion}) : super(key: key);
+  final Device device;
+  const FileManagerScreen({Key? key, required this.device}) : super(key: key);
 
   @override
-  _FileManagerScreenState createState() => _FileManagerScreenState(deviceID,androidVersion);
+  _FileManagerScreenState createState() => _FileManagerScreenState(device);
 }
 
 class _FileManagerScreenState extends State<FileManagerScreen> {
 
-  final String androidVersion;
-  final String deviceID;
+  final Device device;
 
   final List<FileTransferJob> _fileTransferJobs = [];
   int _totalJobCount = 0;
 
-  _FileManagerScreenState(this.deviceID,this.androidVersion);
+  _FileManagerScreenState(this.device);
 
   String _currentPath = "/sdcard/";
   final TextEditingController _addressBarEditingController =
@@ -39,10 +39,10 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
 
   Future<List<Item>> getDirectoryContents() async {
     ProcessResult result;
-    if(int.parse(androidVersion[0])<8){
-      result=await Process.run(adbExecutable, ["-s", deviceID, "shell", "ls", "\"$_currentPath\""]);
+    if(isLegacyAndroid(device.androidAPILevel)){
+      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls", "\"$_currentPath\""]);
     }else{
-      result=await Process.run(adbExecutable, ["-s", deviceID, "shell", "ls","-p", "\"$_currentPath\""]);
+      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-p", "\"$_currentPath\""]);
     }
     // result=await Process.run(adbExecutable, ["-s", deviceID, "shell", "ls","-p", "\"$_currentPath\""]);
     List<String> directoryContentDetails = (result.stdout).split("\n");
@@ -50,7 +50,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
     List<Item> directoryItems=[];
     for(int i=0;i<directoryContentDetails.length;i++){
       directoryContentDetails[i]=directoryContentDetails[i].trim();
-      directoryItems.add(Item(directoryContentDetails[i].trim().endsWith("/")?directoryContentDetails[i].replaceAll("/", "").trim():directoryContentDetails[i].trim(),getFileType(directoryContentDetails[i].trim())));
+      directoryItems.add(Item(directoryContentDetails[i].trim().endsWith("/")?directoryContentDetails[i].replaceAll("/", "").trim():directoryContentDetails[i].trim(),await getFileType(directoryContentDetails[i].trim())));
     }
     return directoryItems;
   }
@@ -113,7 +113,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
   void deleteItem(String itemName, BuildContext context) async {
     ProcessResult result = await Process.run(adbExecutable, [
       "-s",
-      deviceID,
+      device.id,
       "shell",
       "rm",
       "-r",
@@ -139,7 +139,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
     }
     Process process = await Process.start(
       adbExecutable,
-      ["-s", deviceID, "push", sourcePath, _currentPath],
+      ["-s", device.id, "push", sourcePath, _currentPath],
     );
     await showDialog(
         context: context,
@@ -156,7 +156,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
     if (fileTransferType == FileTransferType.move) {
       process = await Process.start(adbExecutable, [
         "-s",
-        deviceID,
+        device.id,
         "shell",
         "mv",
         "\"${_fileTransferJobs[index].itemPath}\"",
@@ -165,7 +165,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
     } else {
       process = await Process.start(adbExecutable, [
         "-s",
-        deviceID,
+        device.id,
         "shell",
         "cp",
         "-r",
@@ -198,7 +198,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
 
     ProcessResult result = await Process.run(adbExecutable, [
       "-s",
-      deviceID,
+      device.id,
       "shell",
       "mv",
       "\"${_currentPath + itemName}\"",
@@ -221,7 +221,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
   Future<FileContentTypes> findFileItemType(String fileItemName) async {
     ProcessResult result = await Process.run(adbExecutable, [
       "-s",
-      deviceID,
+      device.id,
       "shell",
       "ls",
       "\"$_currentPath" + fileItemName + "\""
@@ -240,7 +240,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
       return;
     }
     Process process = await Process.start(adbExecutable,
-        ["-s", deviceID, "pull", _currentPath + itemName, chosenDirectory]);
+        ["-s", device.id, "pull", _currentPath + itemName, chosenDirectory]);
     await showDialog(
         context: context,
         barrierDismissible: false,
@@ -256,9 +256,17 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
   //   return pathString;
   // }
 
-  FileContentTypes getFileType(String fileName) {
+  Future<FileContentTypes> getFileType(String fileName) async {
+    bool isLegacyAndroidFile=false;
+    if(isLegacyAndroid(device.androidAPILevel)){
+      ProcessResult result=await Process.run(adbExecutable,["-s",device.id,"shell","ls","\"${_currentPath+fileName}\""]);
+      // print(result.stdout.toString().trim().contains(_currentPath+fileName));
+      if(result.stdout.toString().trim().contains(_currentPath+fileName)){
+        isLegacyAndroidFile=true;
+      }
+    }
     String fileExtension = fileName.split(".").last;
-    if(fileName!="sdcard" && !fileName.endsWith("/")){
+    if(fileName!="sdcard" && (isLegacyAndroidFile || (!isLegacyAndroid(device.androidAPILevel) && !fileName.endsWith("/")))){
       if (fileExtension == "pdf") {
         return FileContentTypes.pdf;
       } else if (fileExtension == "zip" ||
@@ -349,9 +357,6 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
   @override
   void initState() {
     _addressBarEditingController.text = _currentPath;
-    _addressBarFocus.addListener(() {
-      setState(() {});
-    });
     super.initState();
   }
 
