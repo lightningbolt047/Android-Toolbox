@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:adb_gui/utils/platform_services.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
 import 'package:http/http.dart' as http;
@@ -12,10 +16,18 @@ Future<Map<String,dynamic>> checkForUpdates() async{
   List<String> latestVersionSplitByType=latestGithubReleaseInfo['tag_name'].split(".");
   Version latestVersion=Version(int.parse(latestVersionSplitByType[0]), int.parse(latestVersionSplitByType[1]), int.parse(latestVersionSplitByType[2]));
   if(currentVersion < latestVersion && !latestGithubReleaseInfo['prerelease']){
+    String assetLink="";
+    bool updateAvailable=false;
+    for(int i=0;i<latestGithubReleaseInfo['assets'].length;i++){
+      if(latestGithubReleaseInfo['assets'][i].toString().contains(getPlatformName())){
+        assetLink=latestGithubReleaseInfo['assets'][i]['browser_download_url'];
+        updateAvailable=true;
+      }
+    }
     return {
-      'updateAvailable':true,
+      'updateAvailable':updateAvailable,
       'version':latestGithubReleaseInfo['tag_name'],
-      'assetLink':latestGithubReleaseInfo['assets'][0]['browser_download_url']
+      'assetLink':assetLink
     };
   }
   return {
@@ -33,6 +45,15 @@ Future<Map<String,dynamic>> getLatestGithubReleaseInfo() async{
     return jsonDecode(response.body);
   }
   throw "Something went wrong when checking for updates";
+}
 
-
+Future<String> downloadRelease(String url) async{
+  http.Response response=await http.get(Uri.parse(url));
+  if(response.statusCode==200){
+    //TODO Save file and return path to file;
+    File latestRelease=File("latest.exe");
+    await latestRelease.writeAsBytes(response.bodyBytes);
+    return "latest.exe";
+  }
+  throw "Error occurred when attempting to download file";
 }

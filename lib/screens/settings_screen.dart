@@ -1,12 +1,10 @@
 import 'package:adb_gui/components/page_subheading.dart';
+import 'package:adb_gui/components/updater_dialog.dart';
 import 'package:adb_gui/components/window_buttons.dart';
-import 'package:adb_gui/enums.dart';
 import 'package:adb_gui/utils/update_services.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:version/version.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -81,12 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   if(updateInfo['updateAvailable']){
                     showDialog(
                       context: context,
-                      builder: (context)=>AlertDialog(
-                        title: const Text("New update available!",style: TextStyle(
-                          color: Colors.blue
-                        ),),
-                        content: Text("A new update is available to download! Version: ${updateInfo['version']}"),
-                      ),
+                      builder: (context)=>UpdaterDialog(updateInfo:updateInfo),
                     );
                   }else{
                     showDialog(context: context, builder: (context)=>AlertDialog(

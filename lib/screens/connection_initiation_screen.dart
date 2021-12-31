@@ -202,38 +202,21 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                const Text("ADB GUI",style: TextStyle(
+                const Text("Android Toolbox",style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                 ),),
                 const Spacer(),
-                Container(
-                  color: Colors.blue,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      MaterialButton(
-                        shape: const CircleBorder(),
-                        color: Colors.blue,
-                        elevation: 0,
-                        minWidth: 8,
-                        hoverColor: Colors.lightBlue,
-                        height: 150,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.settings,color: Colors.white,),
-                        ),
-                        onPressed: (){
-                          Navigator.push(context, CupertinoPageRoute(builder: (context)=>const SettingsScreen()));
-                        },
-                      ),
-                      CustomMinimizeWindowButton(),
-                      CustomMaximizeWindowButton(),
-                      CustomCloseWindowButton(),
-                    ],
-                  ),
+                WindowMaterialButton(
+                  buttonColor: Colors.blue,
+                  buttonIcon: const Icon(Icons.settings,color: Colors.white,),
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context)=>const SettingsScreen()));
+                  },
                 ),
+                CustomMinimizeWindowButton(),
+                CustomMaximizeWindowButton(),
+                CustomCloseWindowButton(),
               ],
             ),
           ),

@@ -30,7 +30,6 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
   @override
   void initState() {
     process.stdout.listen((event) {
-      print(String.fromCharCodes(event));
       setState(() {
         _consoleOutput+=String.fromCharCodes(event);
       });

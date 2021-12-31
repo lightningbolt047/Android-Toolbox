@@ -9,21 +9,11 @@ class CustomMinimizeWindowButton extends MinimizeWindowButton{
 
   @override
   Widget build(BuildContext context){
-    return MaterialButton(
-        shape: const CircleBorder(),
-        color: Colors.blue,
-        elevation: 0,
-        minWidth: 8,
-        hoverColor: Colors.lightBlue,
-        height: 150,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Icon(Icons.minimize,color: Colors.white,),
-        ),
-        onPressed: () async{
-          super.onPressed!();
-        },
+
+    return WindowMaterialButton(
+      buttonColor: Colors.blue,
+      buttonIcon: const Icon(Icons.minimize,color: Colors.white,),
+      onPressed: super.onPressed!,
     );
   }
 
@@ -35,19 +25,10 @@ class CustomMaximizeWindowButton extends MaximizeWindowButton{
 
   @override
   Widget build(BuildContext context){
-    return MaterialButton(
-      shape: const CircleBorder(),
-      color: Colors.blue,
-      elevation: 0,
-      minWidth: 8,
-      hoverColor: Colors.lightBlue,
-      height: 150,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Icon(Icons.check_box_outline_blank,color: Colors.white,),
-      ),
-      onPressed: onPressed,
+    return WindowMaterialButton(
+      buttonColor: Colors.blue,
+      buttonIcon: const Icon(Icons.check_box_outline_blank,color: Colors.white,),
+      onPressed: super.onPressed!,
     );
   }
 }
@@ -57,22 +38,43 @@ class CustomCloseWindowButton extends CloseWindowButton{
 
   @override
   Widget build(BuildContext context){
-    return MaterialButton(
-      shape: const CircleBorder(),
-      color: Colors.blue,
-      elevation: 0,
-      minWidth: 8,
+    return WindowMaterialButton(
+      buttonColor: Colors.blue,
       hoverColor: Colors.redAccent,
-      height: 150,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Icon(Icons.close,color: Colors.white,),
-      ),
+      buttonIcon: const Icon(Icons.close,color: Colors.white,),
       onPressed: () async{
         await Process.run(adbExecutable, ["kill-server"]);
         super.onPressed!();
       },
+    );
+  }
+}
+
+
+class WindowMaterialButton extends StatelessWidget {
+
+  final Color? buttonColor;
+  final Color? hoverColor;
+  final Icon buttonIcon;
+  final VoidCallback onPressed;
+
+  const WindowMaterialButton({Key? key,this.buttonColor=Colors.blue,this.hoverColor=Colors.lightBlue,required this.buttonIcon,required this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      shape: const CircleBorder(),
+      color: buttonColor,
+      elevation: 0,
+      minWidth: 8,
+      hoverColor: hoverColor,
+      height: 150,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: buttonIcon,
+      ),
+      onPressed: onPressed,
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:adb_gui/enums.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/screens/file_manager_screen.dart';
 import 'package:adb_gui/screens/package_manager_screen.dart';
+import 'package:adb_gui/utils/android_api_checks.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
@@ -52,33 +53,46 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 20
                 ),),
                 const Spacer(),
-                MaterialButton(
-                  shape: const CircleBorder(),
-                  color: Colors.blue,
-                  elevation: 0,
-                  minWidth: 8,
-                  height: 150,
-                  hoverColor: Colors.lightBlue,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.exit_to_app_rounded,color: Colors.white,),
-                  ),
+                if(isLegacyAndroid(device.androidAPILevel))
+                  WindowMaterialButton(
+                  buttonColor: Colors.blue,
+                  hoverColor: Colors.amber[300],
+                  buttonIcon: Icon(Icons.warning,color: Colors.amber[700],),
+                  onPressed: (){
+                    showDialog(
+                      context: context,
+                      builder: (context)=>AlertDialog(
+                        title: const Text("Performance Alert",style: TextStyle(
+                          color: Colors.blue
+                        ),),
+                        content: Text("You may experience degraded performance since your device runs on Android ${device.androidVersion} .\nThe recommended Android version is 7.0 and above"),
+                        actions: [
+                          TextButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text("OK",style: TextStyle(
+                                color: Colors.blue
+                              ),),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                WindowMaterialButton(
+                  buttonColor: Colors.blue,
+                  buttonIcon: const Icon(Icons.exit_to_app_rounded,color: Colors.white,),
                   onPressed: (){
                     Navigator.pop(context);
                   },
                 ),
-                Container(
-                  color: Colors.blue,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomMinimizeWindowButton(),
-                      CustomMaximizeWindowButton(),
-                      CustomCloseWindowButton(),
-                    ],
-                  ),
-                ),
+                CustomMinimizeWindowButton(),
+                CustomMaximizeWindowButton(),
+                CustomCloseWindowButton(),
               ],
             ),
           ),
