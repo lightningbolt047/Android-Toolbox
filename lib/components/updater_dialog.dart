@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:adb_gui/utils/update_services.dart';
+import 'package:adb_gui/services/update_services.dart';
 import 'package:adb_gui/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +24,10 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
       return const Text("Downloading Update",style: TextStyle(
         color: Colors.blue
       ),);
-    }else if(!_error){
+    }else if(_error){
       return const Text("Download failed");
     }
-    return const Text("New update available!",style: TextStyle(
+    return Text("New update available! ${(updateInfo['preRelease']!=null && updateInfo['preRelease'])?"(Prerelease)":""}",style: const TextStyle(
         color: Colors.blue
     ),);
   }
@@ -38,13 +38,15 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: const [
           Text("Update download in progress",style: TextStyle(
-            color: Colors.blue
             ),
+          ),
+          SizedBox(
+            width: 25,
           ),
           CircularProgressIndicator()
         ],
       );
-    }else if(!_error){
+    }else if(_error){
       return const Text("Check your internet connection and try again");
     }
     return Text("A new update is available to download! Version: ${updateInfo['version']}");
@@ -58,18 +60,20 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
       title: _getDialogTitle(),
       content: _getDialogContent(),
       actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextButton(
-            child: const Text("Close",style: TextStyle(
-                color: Colors.blue
-            ),),
-            onPressed: (){
-              Navigator.pop(context);
-            },
+        if(!_isDownloading)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+              child: const Text("Close",style: TextStyle(
+                  color: Colors.blue
+              ),),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            ),
           ),
-        ),
-        Padding(
+        if(!_isDownloading)
+          Padding(
           padding: const EdgeInsets.all(8),
           child: UpdateNowButton(
             updateFileLink: updateInfo['assetLink'],
@@ -100,13 +104,14 @@ class UpdateNowButton extends CloseWindowButton{
   final VoidCallback onError;
   final VoidCallback afterExecution;
   final String updateFileLink;
-  UpdateNowButton({Key? key,required this.updateFileLink,required this.beforeExecution,required this.onError,required this.afterExecution}) : super(key: key);
+  final bool disabled;
+  UpdateNowButton({Key? key,required this.updateFileLink,required this.beforeExecution,required this.onError,required this.afterExecution,this.disabled=false}) : super(key: key);
 
   void installUpdate(String pathToFile) async{
     if(Platform.isWindows){
-      Process.start(pathToFile,[],runInShell: true,mode: ProcessStartMode.detached);
+      Process.run("start",[pathToFile],runInShell: true);
     }
-    await Process.run(adbExecutable, ["kill-server"]);
+    await Process.run(adbExecutable, ["kill-server"],runInShell: true);
     super.onPressed!();
   }
 
@@ -116,9 +121,10 @@ class UpdateNowButton extends CloseWindowButton{
       child: const Text("Update Now",style: TextStyle(
           color: Colors.blue
       ),),
-      onPressed: () async{
+      onPressed: disabled?null:() async{
         beforeExecution();
         try{
+          // print(await downloadRelease(updateFileLink));
           installUpdate(await downloadRelease(updateFileLink));
 
         }catch(e){

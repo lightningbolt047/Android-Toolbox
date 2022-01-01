@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:adb_gui/components/icon_name_material_button.dart';
+import 'package:adb_gui/components/updater_dialog.dart';
 import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/screens/home_screen.dart';
 import 'package:adb_gui/screens/settings_screen.dart';
+import 'package:adb_gui/services/update_services.dart';
 import 'package:adb_gui/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,6 +57,17 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
       })));
     }
     return devices;
+  }
+
+  void checkUpdatesBackground() async {
+    Map<String, dynamic> updateInfo = await checkForUpdates();
+    if (updateInfo['updateAvailable']!=null && updateInfo['updateAvailable']) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => UpdaterDialog(updateInfo: updateInfo),
+      );
+    }
   }
 
   Future<String> getDeviceProperty(String deviceID,String property) async{
@@ -179,6 +192,13 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Target device refused connection! Check the address and try again. Make sure to be connected to the same network")));
     ScaffoldMessenger.of(context).deactivate();
     return false;
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    checkUpdatesBackground();
   }
 
 

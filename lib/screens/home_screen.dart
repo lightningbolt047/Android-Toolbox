@@ -3,7 +3,7 @@ import 'package:adb_gui/enums.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/screens/file_manager_screen.dart';
 import 'package:adb_gui/screens/package_manager_screen.dart';
-import 'package:adb_gui/utils/android_api_checks.dart';
+import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 

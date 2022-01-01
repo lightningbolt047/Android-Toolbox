@@ -1,7 +1,8 @@
+import 'package:adb_gui/components/allow_pre_release_toggle.dart';
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/updater_dialog.dart';
 import 'package:adb_gui/components/window_buttons.dart';
-import 'package:adb_gui/utils/update_services.dart';
+import 'package:adb_gui/services/update_services.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -56,6 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           children: [
             const PageSubheading(subheadingName: "Updates",),
+            const AllowPreReleaseToggle(),
             ListTile(
               title: const Text("Check for updates",style: TextStyle(
                 fontSize: 20,
@@ -74,51 +76,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 setState(() {
                   _checkingForUpdates=true;
                 });
-                try{
-                  Map<String,dynamic> updateInfo=await checkForUpdates();
-                  if(updateInfo['updateAvailable']){
-                    showDialog(
-                      context: context,
-                      builder: (context)=>UpdaterDialog(updateInfo:updateInfo),
-                    );
-                  }else{
-                    showDialog(context: context, builder: (context)=>AlertDialog(
-                      title: const Text("No update available!",style: TextStyle(
-                          color: Colors.blue
+                Map<String,dynamic> updateInfo=await checkForUpdates();
+                if(updateInfo['updateAvailable']!=null && updateInfo['updateAvailable']){
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context)=>UpdaterDialog(updateInfo:updateInfo),
+                  );
+                }else if(updateInfo['updateAvailable']!=null && !updateInfo['updateAvailable']){
+                  showDialog(context: context, builder: (context)=>AlertDialog(
+                    title: const Text("No update available!",style: TextStyle(
+                        color: Colors.blue
+                    ),),
+                    content: const Text("You are already on the latest version"),
+                    actions: [
+                      TextButton(
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  ));
+                }else{
+                showDialog(
+                    context: context,
+                    builder: (context)=>AlertDialog(
+                      title: const Text("Failed to check update",style: TextStyle(
+                        color: Colors.blue
                       ),),
-                      content: const Text("You are already on the latest version"),
+                      content: const Text("Check your internet connection and try again"),
                       actions: [
                         TextButton(
-                          onPressed: (){
-                            Navigator.pop(context);
-                          },
-                          child: const Text("OK"),
-                        ),
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text("OK"),
+                            ),
+                        )
                       ],
-                    ));
-                  }
-                }catch(e){
-                  showDialog(
-                      context: context,
-                      builder: (context)=>AlertDialog(
-                        title: const Text("Failed to check update",style: TextStyle(
-                          color: Colors.blue
-                        ),),
-                        content: const Text("Check your internet connection and try again"),
-                        actions: [
-                          TextButton(
-                              onPressed: (){
-                                Navigator.pop(context);
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text("OK"),
-                              ),
-                          )
-                        ],
-                      ),
-                  );
-                }
+                    ),
+                );
+              }
                 setState(() {
                   _checkingForUpdates=false;
                 });
