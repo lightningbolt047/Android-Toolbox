@@ -300,7 +300,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                                         ),)
                                     ),
                                     DataColumn(
-                                        label: Text("Device",maxLines: 3,style: TextStyle(
+                                        label: Text("Device SNo.",maxLines: 3,style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 20,
                                         ),)

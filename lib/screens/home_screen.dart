@@ -2,7 +2,7 @@ import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/enums.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/screens/file_manager_screen.dart';
-import 'package:adb_gui/screens/package_manager_screen.dart';
+import 'package:adb_gui/screens/power_controls_screen.dart';
 import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getScreenName(Screens screenEnum){
     if(screenEnum==Screens.fileManager){
       return "Files";
-    }else if(screenEnum==Screens.packageManager){
-      return "Apps";
+    }else if(screenEnum==Screens.powerControls){
+      return "Power Controls";
     }
     return "Wtf??";
   }
@@ -156,11 +156,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.apps_rounded),
-                title: const Text("Package Manager"),
+                leading: const Icon(Icons.power_settings_new_rounded),
+                title: const Text("Power Controls"),
                 onTap: (){
                   setState(() {
-                    _currentScreen=Screens.packageManager;
+                    _currentScreen=Screens.powerControls;
                   });
                   Navigator.pop(context);
                 },
@@ -172,44 +172,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          // Material(
-          //   color: Colors.blue,
-          //   elevation: 10,
-          //   type: MaterialType.card,
-          //   shadowColor: Colors.grey,
-          //   child: Container(
-          //     clipBehavior: Clip.none,
-          //     padding: const EdgeInsets.only(left: 8),
-          //     width: double.infinity,
-          //     height: 50,
-          //     child: Row(
-          //       children: [
-          //         IconButton(onPressed: (){}, icon: const Icon(Icons.menu,color: Colors.white,),),
-          //         SizedBox.fromSize(
-          //           size: const Size(24,0),
-          //         ),
-          //         Text(_getScreenName(_currentScreen),style: const TextStyle(
-          //           color: Colors.white,
-          //           fontSize: 20
-          //         ),),
-          //         const Spacer(),
-          //         IconButton(
-          //           onPressed: (){
-          //             Navigator.pop(context);
-          //           },
-          //           icon: const Icon(Icons.exit_to_app,color: Colors.white,),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           Expanded(
             child: Builder(
               builder: (context){
                 if(_currentScreen==Screens.fileManager){
                   return FileManagerScreen(device: device,);
+                }else if(_currentScreen==Screens.powerControls){
+                  return PowerControlsScreen(device: device);
                 }
-                return PackageManagerScreen(deviceID: device.id,);
+                return PowerControlsScreen(device: device);
               },
             ),
           ),

@@ -1,6 +1,7 @@
 enum Screens{
   fileManager,
   packageManager,
+  powerControls,
   other
 }
 
