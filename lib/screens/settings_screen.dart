@@ -15,10 +15,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  
-  
-  bool _checkingForUpdates=false;
 
+  bool _checkingForUpdates=false;
 
   @override
   Widget build(BuildContext context) {
