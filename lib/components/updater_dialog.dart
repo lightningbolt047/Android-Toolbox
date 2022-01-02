@@ -108,10 +108,11 @@ class UpdateNowButton extends CloseWindowButton{
   UpdateNowButton({Key? key,required this.updateFileLink,required this.beforeExecution,required this.onError,required this.afterExecution,this.disabled=false}) : super(key: key);
 
   void installUpdate(String pathToFile) async{
+    // await Process.run(adbExecutable, ["kill-server"],runInShell: true);
     if(Platform.isWindows){
       Process.run("start",[pathToFile],runInShell: true);
+      Process.run("taskkill", ["/IM","adb.exe","/F"],runInShell: true);
     }
-    Process.run(adbExecutable, ["kill-server"],runInShell: true);
     super.onPressed!();
   }
 
