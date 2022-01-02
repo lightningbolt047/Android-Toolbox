@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:adb_gui/components/file_transfer_progress.dart';
 import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/simple_file_transfer_progress.dart';
-import 'package:adb_gui/enums.dart';
+import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +11,7 @@ import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../vars.dart';
+import '../utils/vars.dart';
 
 class FileManagerScreen extends StatefulWidget {
   final Device device;

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/models/device.dart';
-import 'package:adb_gui/vars.dart';
+import 'package:adb_gui/utils/vars.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

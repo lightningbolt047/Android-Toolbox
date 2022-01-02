@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:adb_gui/enums.dart';
+import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 
 class SimpleFileTransferProgress extends StatefulWidget {

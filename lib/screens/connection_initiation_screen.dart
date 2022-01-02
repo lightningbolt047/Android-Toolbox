@@ -5,7 +5,7 @@ import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/screens/home_screen.dart';
 import 'package:adb_gui/screens/settings_screen.dart';
 import 'package:adb_gui/services/update_services.dart';
-import 'package:adb_gui/vars.dart';
+import 'package:adb_gui/utils/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +26,14 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
   final TextEditingController _pairingCodeFieldController=TextEditingController();
   final TextEditingController _pairingAddressFieldController=TextEditingController();
   List<Device> devices=[];
+  bool _serverStarted=false;
 
 
   Future<List<Device>> getDevices() async{
+    if(!_serverStarted){
+      await Process.run(adbExecutable, ["start-server"]);
+      _serverStarted=true;
+    }
     ProcessResult result=await Process.run(adbExecutable, ["devices"]);
     List<String> devicesResultFromConsole=result.stdout.split("\n");
     devicesResultFromConsole.removeLast();

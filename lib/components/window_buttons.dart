@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:adb_gui/vars.dart';
+import 'package:adb_gui/utils/vars.dart';
 
 class CustomMinimizeWindowButton extends MinimizeWindowButton{
   CustomMinimizeWindowButton({Key? key}) : super(key: key);

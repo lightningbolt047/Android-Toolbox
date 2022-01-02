@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:adb_gui/services/update_services.dart';
-import 'package:adb_gui/vars.dart';
+import 'package:adb_gui/utils/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
@@ -111,7 +111,7 @@ class UpdateNowButton extends CloseWindowButton{
     if(Platform.isWindows){
       Process.run("start",[pathToFile],runInShell: true);
     }
-    await Process.run(adbExecutable, ["kill-server"],runInShell: true);
+    Process.run(adbExecutable, ["kill-server"],runInShell: true);
     super.onPressed!();
   }
 

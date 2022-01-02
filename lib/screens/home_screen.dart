@@ -1,5 +1,5 @@
 import 'package:adb_gui/components/window_buttons.dart';
-import 'package:adb_gui/enums.dart';
+import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/screens/file_manager_screen.dart';
 import 'package:adb_gui/screens/power_controls_screen.dart';
