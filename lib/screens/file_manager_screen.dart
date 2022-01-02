@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/android_api_checks.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../vars.dart';
 
@@ -542,7 +543,44 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
             builder:
                 (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
               if (snapshot.connectionState!=ConnectionState.done || !snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
+                return Shimmer.fromColors(
+                  baseColor: const Color(0xFFE0E0E0),
+                  highlightColor: const Color(0xFFF5F5F5),
+                  enabled: true,
+                  child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, mainAxisExtent: 75
+                      ),
+                      itemCount: int.parse((MediaQuery.of(context).size.height/25).toStringAsFixed(0)),
+                      itemBuilder: (context,index){
+                        return Row(
+                          children: [
+                            SizedBox.fromSize(
+                              size: const Size(25, 0),
+                            ),
+                            Container(
+                              height:20,
+                              width:20,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox.fromSize(
+                              size: const Size(25, 0),
+                            ),
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                height: 25,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                  ),
+                );
               }
               if (snapshot.data!.isEmpty) {
                 return Center(
@@ -562,193 +600,187 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                   ),
                 );
               }
-              return AnimationLimiter(
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3, mainAxisExtent: 75),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return AnimationConfiguration.staggeredGrid(
-                        position: index,
-                        columnCount: 3,
-                        child: _renameFieldController.text!=snapshot.data![index].itemName?MaterialButton(
-                          onPressed: () {
-                            if(snapshot.data![index].itemContentType==FileContentTypes.directory){
-                              setState(() {
-                                addPath(snapshot.data![index].itemName);
-                              });
-                            }else{
-                              downloadContent(snapshot.data![index].itemName);
-                            }
-                          },
-                          shape: const RoundedRectangleBorder(),
-                          elevation: 5,
-                          hoverElevation: 10,
-                          child: Row(
-                            children: [
-                              SizedBox.fromSize(
-                                size: const Size(25, 0),
-                              ),
-                              Icon(getFileIconByType(snapshot.data![index].itemContentType),color: Colors.blue,),
-                              SizedBox.fromSize(
-                                size: const Size(25, 0),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  snapshot.data![index].itemName,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              PopupMenuButton(
-                                  icon: const Icon(
-                                    Icons.more_vert_rounded,
-                                    color: Colors.blueGrey,
-                                  ),
-                                  itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                          child: const ListTile(
-                                              leading: Icon(
-                                                FontAwesomeIcons.download,
-                                                color: Colors.blue,
-                                              ),
-                                              title: Text(
-                                                "Download",
-                                                style: TextStyle(
-                                                    color: Colors.blue),
-                                              )),
-                                          onTap: () {
-                                            downloadContent(snapshot.data![index].itemName);
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: const ListTile(
-                                              leading: Icon(
-                                                Icons.drive_file_rename_outline,
-                                                color: Colors.blue,
-                                              ),
-                                              title: Text(
-                                                "Rename",
-                                                style: TextStyle(
-                                                    color: Colors.blue),
-                                              )),
-                                          onTap: () async {
-                                            _renameItemFocus.requestFocus();
-                                            setState(() {
-                                              _renameFieldController.text=snapshot.data![index].itemName;
-                                            });
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: const ListTile(
-                                              leading: Icon(
-                                                FontAwesomeIcons.copy,
-                                                color: Colors.blue,
-                                              ),
-                                              title: Text(
-                                                "Copy",
-                                                style: TextStyle(
-                                                    color: Colors.blue),
-                                              )),
-                                          onTap: () {
-                                            addFileTransferJob(
-                                                FileTransferType.copy,
-                                                snapshot.data![index].itemName
-                                            );
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: const ListTile(
-                                              leading: Icon(
-                                                FontAwesomeIcons.cut,
-                                                color: Colors.blue,
-                                              ),
-                                              title: Text(
-                                                "Cut",
-                                                style: TextStyle(
-                                                    color: Colors.blue),
-                                              )),
-                                          onTap: () {
-                                            addFileTransferJob(
-                                                FileTransferType.move,
-                                                snapshot.data![index].itemName
-                                            );
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: const ListTile(
-                                              leading: Icon(
-                                                FontAwesomeIcons.trash,
-                                                color: Colors.blue,
-                                              ),
-                                              title: Text(
-                                                "Delete",
-                                                style: TextStyle(
-                                                    color: Colors.blue),
-                                              )),
-                                          onTap: () {
-                                            deleteItem(
-                                                snapshot.data![index].itemName,
-                                                context);
-                                          },
-                                        ),
-                                      ])
-                            ],
+              return GridView.builder(
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, mainAxisExtent: 75),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return _renameFieldController.text!=snapshot.data![index].itemName?MaterialButton(
+                      onPressed: () {
+                        if(snapshot.data![index].itemContentType==FileContentTypes.directory){
+                          setState(() {
+                            addPath(snapshot.data![index].itemName);
+                          });
+                        }else{
+                          downloadContent(snapshot.data![index].itemName);
+                        }
+                      },
+                      shape: const RoundedRectangleBorder(),
+                      elevation: 5,
+                      hoverElevation: 10,
+                      child: Row(
+                        children: [
+                          SizedBox.fromSize(
+                            size: const Size(25, 0),
                           ),
-                        ):Row(
-                          children: [
-                            SizedBox.fromSize(
-                              size: const Size(25, 0),
+                          Icon(getFileIconByType(snapshot.data![index].itemContentType),color: Colors.blue,),
+                          SizedBox.fromSize(
+                            size: const Size(25, 0),
+                          ),
+                          Expanded(
+                            child: Text(
+                              snapshot.data![index].itemName,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 15),
                             ),
-                            Icon(getFileIconByType(snapshot.data![index].itemContentType),color: Colors.blue,),
-                            SizedBox.fromSize(
-                              size: const Size(25, 0),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      focusNode: _renameItemFocus,
-                                      controller: _renameFieldController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        focusColor: Colors.blue,
-                                        hintText: "New name here",
-                                      ),
-                                      onSubmitted: (value){
-                                        renameItem(snapshot.data![index].itemName,_renameFieldController.text);
+                          ),
+                          PopupMenuButton(
+                              icon: const Icon(
+                                Icons.more_vert_rounded,
+                                color: Colors.blueGrey,
+                              ),
+                              itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      child: const ListTile(
+                                          leading: Icon(
+                                            FontAwesomeIcons.download,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text(
+                                            "Download",
+                                            style: TextStyle(
+                                                color: Colors.blue),
+                                          )),
+                                      onTap: () {
+                                        downloadContent(snapshot.data![index].itemName);
                                       },
                                     ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.check_circle,color: Colors.green,),
-                                    splashRadius: 8,
-                                    onPressed: () {
-                                      renameItem(snapshot.data![index].itemName,_renameFieldController.text);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.cancel,color: Colors.red,),
-                                    splashRadius: 8,
-                                    onPressed: () {
-                                      setState(() {
-                                        _renameFieldController.text="";
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                                    PopupMenuItem(
+                                      child: const ListTile(
+                                          leading: Icon(
+                                            Icons.drive_file_rename_outline,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text(
+                                            "Rename",
+                                            style: TextStyle(
+                                                color: Colors.blue),
+                                          )),
+                                      onTap: () async {
+                                        _renameItemFocus.requestFocus();
+                                        setState(() {
+                                          _renameFieldController.text=snapshot.data![index].itemName;
+                                        });
+                                      },
+                                    ),
+                                    PopupMenuItem(
+                                      child: const ListTile(
+                                          leading: Icon(
+                                            FontAwesomeIcons.copy,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text(
+                                            "Copy",
+                                            style: TextStyle(
+                                                color: Colors.blue),
+                                          )),
+                                      onTap: () {
+                                        addFileTransferJob(
+                                            FileTransferType.copy,
+                                            snapshot.data![index].itemName
+                                        );
+                                      },
+                                    ),
+                                    PopupMenuItem(
+                                      child: const ListTile(
+                                          leading: Icon(
+                                            FontAwesomeIcons.cut,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text(
+                                            "Cut",
+                                            style: TextStyle(
+                                                color: Colors.blue),
+                                          )),
+                                      onTap: () {
+                                        addFileTransferJob(
+                                            FileTransferType.move,
+                                            snapshot.data![index].itemName
+                                        );
+                                      },
+                                    ),
+                                    PopupMenuItem(
+                                      child: const ListTile(
+                                          leading: Icon(
+                                            FontAwesomeIcons.trash,
+                                            color: Colors.blue,
+                                          ),
+                                          title: Text(
+                                            "Delete",
+                                            style: TextStyle(
+                                                color: Colors.blue),
+                                          )),
+                                      onTap: () {
+                                        deleteItem(
+                                            snapshot.data![index].itemName,
+                                            context);
+                                      },
+                                    ),
+                                  ])
+                        ],
+                      ),
+                    ):Row(
+                      children: [
+                        SizedBox.fromSize(
+                          size: const Size(25, 0),
                         ),
-                      );
-                    }),
-              );
+                        Icon(getFileIconByType(snapshot.data![index].itemContentType),color: Colors.blue,),
+                        SizedBox.fromSize(
+                          size: const Size(25, 0),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  focusNode: _renameItemFocus,
+                                  controller: _renameFieldController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    focusColor: Colors.blue,
+                                    hintText: "New name here",
+                                  ),
+                                  onSubmitted: (value){
+                                    renameItem(snapshot.data![index].itemName,_renameFieldController.text);
+                                  },
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.check_circle,color: Colors.green,),
+                                splashRadius: 8,
+                                onPressed: () {
+                                  renameItem(snapshot.data![index].itemName,_renameFieldController.text);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.cancel,color: Colors.red,),
+                                splashRadius: 8,
+                                onPressed: () {
+                                  setState(() {
+                                    _renameFieldController.text="";
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  });
             },
           ),
         )
