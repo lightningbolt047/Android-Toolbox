@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:adb_gui/services/update_services.dart';
-import 'package:adb_gui/utils/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +15,9 @@ class UpdaterDialog extends StatefulWidget {
 class _UpdaterDialogState extends State<UpdaterDialog> {
 
   final Map<String,dynamic> updateInfo;
+
+  _UpdaterDialogState(this.updateInfo);
+
   bool _isDownloading=false;
   bool _error=false;
 
@@ -51,8 +53,6 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
     }
     return Text("A new update is available to download! Version: ${updateInfo['version']}");
   }
-
-  _UpdaterDialogState(this.updateInfo);
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,6 @@ import 'package:adb_gui/components/file_transfer_progress.dart';
 import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/simple_file_transfer_progress.dart';
 import 'package:adb_gui/utils/enums.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -573,7 +572,10 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                               child: Container(
                                 width: double.infinity,
                                 height: 25,
-                                color: Colors.black,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(25)
+                                ),
                               ),
                             ),
                           ],
@@ -753,6 +755,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                                     ),
                                     focusColor: Colors.blue,
                                     hintText: "New name here",
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey[500]
+                                    ),
                                   ),
                                   onSubmitted: (value){
                                     renameItem(snapshot.data![index].itemName,_renameFieldController.text);

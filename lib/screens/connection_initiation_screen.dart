@@ -10,6 +10,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adb_gui/models/device.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 class ConnectionInitiationScreen extends StatefulWidget {
@@ -136,12 +137,14 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     ),
                     focusColor: Colors.blue,
                   hintText: "000000",
-                  hintStyle: const TextStyle(
-                    fontWeight: FontWeight.w400
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[500]
                   ),
                 ),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
+                  color: Colors.grey[500],
                   fontWeight: FontWeight.w600
                 ),
               ),
@@ -150,7 +153,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
               ),
               // Text("136271"),
               Text("IP address & Port",style: TextStyle(
-                color: Colors.grey[600]
+                color: Colors.grey[500]
               ),),
               const SizedBox(
                 height: 8,
@@ -163,7 +166,10 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusColor: Colors.blue,
-                    hintText: "192.168.0.1:12345"
+                    hintText: "192.168.0.1:12345",
+                    hintStyle: TextStyle(
+                        color: Colors.grey[500]
+                    ),
                 ),
               ),
             ],
@@ -197,6 +203,31 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Target device refused connection! Check the address and try again. Make sure to be connected to the same network")));
     ScaffoldMessenger.of(context).deactivate();
     return false;
+  }
+
+  List<DataRow> getEmptyDeviceDataRows(){
+    return [
+      for(int i=0;i<5;i++)
+        DataRow(
+            cells: [
+              for(int j=0;j<6;j++)
+                DataCell(ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 100,
+                    maxHeight: 25,
+                  ),
+                  child: Container(
+                    width: 100,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(25)
+                    ),
+                  ),
+                )),
+            ]
+        )
+    ];
   }
 
 
@@ -281,62 +312,26 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     future:getAllDevicesInfo(),
                     builder: (BuildContext context,AsyncSnapshot<List<Device>> snapshot) {
 
-                      if(!snapshot.hasData){
-                        return const Center(child: CircularProgressIndicator());
+                      if(snapshot.connectionState!=ConnectionState.done || !snapshot.hasData){
+                        return Shimmer.fromColors(
+                            baseColor: const Color(0xFFE0E0E0),
+                            highlightColor: const Color(0xFFF5F5F5),
+                            enabled: true,
+                            child: DevicesDataTable(deviceDataRows: getEmptyDeviceDataRows())
+                        );
                       }
                       List<DataRow> deviceDataRows=[];
                       for(int i=0;i<snapshot.data!.length;i++){
                         deviceDataRows.add(snapshot.data![i].getDeviceInfoAsDataRow());
                       }
+
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
                             child: LimitedBox(
-                              child: SingleChildScrollView(
-                                scrollDirection:Axis.vertical,
-                                child: DataTable(
-                                  columns: const [
-                                    DataColumn(
-                                        label: Text("Select",maxLines: 3,style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                        ),)
-                                    ),
-                                    DataColumn(
-                                        label: Text("Device SNo.",maxLines: 3,style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                        ),)
-                                    ),
-                                    DataColumn(
-                                        label: Text("Model",maxLines: 3,style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                        ),)
-                                    ),
-                                    DataColumn(
-                                        label: Text("Manufacturer",maxLines: 3,style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                        ),)
-                                    ),
-                                    DataColumn(
-                                        label: Text("Android",maxLines: 3,style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                        ),)
-                                    ),
-                                    DataColumn(
-                                        label: Text("Status",maxLines: 3,style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                        ),)
-                                    ),
-                                  ], rows: deviceDataRows,
-                                ),
-                              ),
+                              child: DevicesDataTable(deviceDataRows: deviceDataRows),
                             ),
                           ),
                           SizedBox.fromSize(
@@ -395,11 +390,15 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                               },
                             ),
                             hintText: "192.168.0.1:1246",
+                            hintStyle: TextStyle(
+                              color: Colors.grey[500]
+                            ),
                             focusColor: Colors.blue,
                           ),
                         ),
                       ),
-                      MaterialButton(
+                      if(Platform.isWindows)
+                        MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
@@ -482,6 +481,61 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class DevicesDataTable extends StatelessWidget {
+
+  final List<DataRow> deviceDataRows;
+
+  const DevicesDataTable({Key? key,required this.deviceDataRows}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection:Axis.vertical,
+      child: DataTable(
+        columns: const [
+          DataColumn(
+              label: Text("Select",maxLines: 3,style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),)
+          ),
+          DataColumn(
+              label: Text("Device SNo.",maxLines: 3,style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),)
+          ),
+          DataColumn(
+              label: Text("Model",maxLines: 3,style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),)
+          ),
+          DataColumn(
+              label: Text("Manufacturer",maxLines: 3,style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),)
+          ),
+          DataColumn(
+              label: Text("Android",maxLines: 3,style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),)
+          ),
+          DataColumn(
+              label: Text("Status",maxLines: 3,style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),)
+          ),
+        ], rows: deviceDataRows,
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:adb_gui/utils/vars.dart';
@@ -43,7 +42,10 @@ class CustomCloseWindowButton extends CloseWindowButton{
       hoverColor: Colors.redAccent,
       buttonIcon: const Icon(Icons.close,color: Colors.white,),
       onPressed: () async{
-        await Process.run(adbExecutable, ["kill-server"]);
+        await Process.run(adbExecutable, ["kill-server"],runInShell: true);
+        if(Platform.isWindows){
+          await Process.run("taskkill", ["/IM","adb.exe","/F"],runInShell: true);
+        }
         super.onPressed!();
       },
     );
