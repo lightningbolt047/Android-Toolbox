@@ -132,10 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 showAboutDialog(
                     context: context,
                     applicationName: "Android-Toolbox",applicationVersion: (await PackageInfo.fromPlatform()).version,
-                    applicationIcon: const Text("⚡",style: TextStyle(
-                      fontSize: 32,
-                      color: Colors.blue
-                    ),),
+                    applicationIcon: Image.asset("assets/lightningBoltLogo.png",scale: 5,),
                   applicationLegalese: "The developer shall not be responsible in case of loss or damage to life and property resulting from use of this application"
                 );
               },
