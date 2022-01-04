@@ -15,7 +15,7 @@
     <h2>What does it do?</h2>
     <p>As of now, you can use it to access your internal storage either on your phone or on WSA. I plan to add more functionality in the coming days.</p>
     <h2>Okay I'm interested. How do I install it?</h2>
-    <p>As of now only the Windows installer is available (Although I plan to release it on linux and macOS (if I can get my hands on a Mac)). You may download it from this repo's releases which you can find here <a>https://github.com/lightningbolt047/Android-Toolbox/releases</a>.</p>
+    <p>As of now only the Windows installer is available (Although I plan to release it on linux and macOS (if I can get my hands on a Mac)). You may download it from this repo's releases which you can find here: [Releases](https://github.com/lightningbolt047/Android-Toolbox/releases).</p>
     <h2>Do I have to keep checking this repo for future updates to the app?</h2>
     <p>No you don't! The app will notify you when there is an update available, and you may choose to download and install the update from within the app.</p>
     <h2>Feature X is awesome, I can't wait to try it out, but it is a prerelease. How do I try it out?</h2>
