@@ -23,7 +23,7 @@
 </div>
 
 <div>
-    <h3>Clone and build it yourself</h3>
+    <h2>Clone and build it yourself</h2>
     <ul>
         <li>
             Make sure you have the Flutter SDK installed. You may check this by running <code>flutter doctor</code>.
