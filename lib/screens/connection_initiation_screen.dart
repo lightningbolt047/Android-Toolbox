@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/updater_dialog.dart';
@@ -142,9 +143,8 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     color: Colors.grey[500]
                   ),
                 ),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
-                  color: Colors.grey[500],
                   fontWeight: FontWeight.w600
                 ),
               ),
@@ -168,7 +168,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     focusColor: Colors.blue,
                     hintText: "192.168.0.1:12345",
                     hintStyle: TextStyle(
-                        color: Colors.grey[500]
+                      color: Colors.grey[500]
                     ),
                 ),
               ),
@@ -195,34 +195,25 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
         ScaffoldMessenger.of(context).deactivate();
         return false;
       }
-      setState(() {
-        clearAllFields();
-      });
-      return true;
+      return await onAddressSubmit(value);
     }
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Target device refused connection! Check the address and try again. Make sure to be connected to the same network")));
     ScaffoldMessenger.of(context).deactivate();
     return false;
   }
 
-  List<DataRow> getEmptyDeviceDataRows(){
+  List<DataRow> getEmptyDeviceDataRows(BuildContext context){
     return [
       for(int i=0;i<5;i++)
         DataRow(
             cells: [
               for(int j=0;j<6;j++)
-                DataCell(ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 100,
-                    maxHeight: 25,
-                  ),
-                  child: Container(
-                    width: 100,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(25)
-                    ),
+                DataCell(Container(
+                  width: MediaQuery.of(context).size.width*0.125,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(25)
                   ),
                 )),
             ]
@@ -317,14 +308,13 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                             baseColor: const Color(0xFFE0E0E0),
                             highlightColor: const Color(0xFFF5F5F5),
                             enabled: true,
-                            child: DevicesDataTable(deviceDataRows: getEmptyDeviceDataRows())
+                            child: DevicesDataTable(deviceDataRows: getEmptyDeviceDataRows(context))
                         );
                       }
                       List<DataRow> deviceDataRows=[];
                       for(int i=0;i<snapshot.data!.length;i++){
                         deviceDataRows.add(snapshot.data![i].getDeviceInfoAsDataRow());
                       }
-
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
@@ -506,7 +496,7 @@ class DevicesDataTable extends StatelessWidget {
               ),)
           ),
           DataColumn(
-              label: Text("Device SNo.",maxLines: 3,style: TextStyle(
+              label: Text("S No.",maxLines: 3,style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
               ),)

@@ -88,9 +88,7 @@ class _ActionTileState extends State<ActionTile> {
 
   void performAction() async{
     List<String> fullArguments=["-s",deviceID];
-    for(int i=0;i<arguments.length;i++){
-      fullArguments.add(arguments[i]);
-    }
+    fullArguments.addAll(arguments);
     setState(() {
       _doingWork=true;
     });

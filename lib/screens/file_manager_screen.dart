@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:adb_gui/components/file_transfer_progress.dart';
 import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/simple_file_transfer_progress.dart';
+import 'package:adb_gui/models/file_transfer_job.dart';
+import 'package:adb_gui/models/item.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -277,17 +279,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
         return FileContentTypes.archive;
       } else if (fileExtension == "apk") {
         return FileContentTypes.apk;
-      } else if (fileExtension == "doc" ||
-          fileExtension == "txt" ||
-          fileExtension == "docx" ||
-          fileExtension == "odt" ||
-          fileExtension == "ppt" ||
-          fileExtension == "pptx" ||
-          fileExtension == "xls" ||
-          fileExtension == "xlsx" ||
-          fileExtension == "csv") {
-        return FileContentTypes.document;
-      } else if (fileExtension == "png" ||
+      } else if (fileExtension == "doc" || fileExtension == "txt" || fileExtension == "docx" || fileExtension == "odt") {
+        return FileContentTypes.wordDocument;
+      }else if(fileExtension == "ppt" || fileExtension == "pptx"){
+        return FileContentTypes.powerpoint;
+      }else if(fileExtension == "xls" || fileExtension == "xlsx" || fileExtension == "csv"){
+        return FileContentTypes.excel;
+      }else if (fileExtension == "png" ||
           fileExtension == "jpg" ||
           fileExtension == "jpeg" ||
           fileExtension == "gif" ||
@@ -329,29 +327,21 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
   }
 
   IconData getFileIconByType(FileContentTypes fileType) {
-    // FileContentTypes fileType = getFileType(fileName);
-    if (fileType == FileContentTypes.pdf) {
-      return FontAwesomeIcons.filePdf;
-    } else if (fileType == FileContentTypes.document) {
-      return FontAwesomeIcons.fileWord;
-    } else if (fileType == FileContentTypes.image) {
-      return FontAwesomeIcons.fileImage;
-    } else if (fileType == FileContentTypes.video) {
-      return FontAwesomeIcons.fileVideo;
-    } else if (fileType == FileContentTypes.audio) {
-      return FontAwesomeIcons.fileAudio;
-    } else if (fileType == FileContentTypes.apk) {
-      return FontAwesomeIcons.android;
-    } else if (fileType == FileContentTypes.archive) {
-      return FontAwesomeIcons.fileArchive;
-    } else if (fileType == FileContentTypes.torrent) {
-      return FontAwesomeIcons.magnet;
-    } else if (fileType == FileContentTypes.securityCertificate) {
-      return FontAwesomeIcons.key;
-    } else if(fileType == FileContentTypes.file){
-      return FontAwesomeIcons.file;
+    switch(fileType){
+      case FileContentTypes.pdf: return FontAwesomeIcons.filePdf;
+      case FileContentTypes.wordDocument: return FontAwesomeIcons.fileWord;
+      case FileContentTypes.powerpoint: return FontAwesomeIcons.filePowerpoint;
+      case FileContentTypes.excel: return FontAwesomeIcons.fileExcel;
+      case FileContentTypes.image: return FontAwesomeIcons.fileImage;
+      case FileContentTypes.video: return FontAwesomeIcons.fileVideo;
+      case FileContentTypes.audio: return FontAwesomeIcons.fileAudio;
+      case FileContentTypes.apk: return FontAwesomeIcons.android;
+      case FileContentTypes.archive: return FontAwesomeIcons.fileArchive;
+      case FileContentTypes.torrent: return FontAwesomeIcons.magnet;
+      case FileContentTypes.securityCertificate: return FontAwesomeIcons.key;
+      case FileContentTypes.file: return FontAwesomeIcons.file;
+      default: return FontAwesomeIcons.folder;
     }
-    return FontAwesomeIcons.folder;
   }
 
   @override
@@ -844,19 +834,3 @@ class ClipboardChip extends StatelessWidget {
   }
 }
 
-class FileTransferJob {
-  FileTransferType jobType;
-  String itemPath, itemName;
-  FileTransferJob(this.jobType, this.itemPath, this.itemName);
-
-  bool checkSameItem(FileTransferJob fileTransferJob) {
-    return itemPath == fileTransferJob.itemPath &&
-        itemName == fileTransferJob.itemName;
-  }
-}
-
-class Item{
-  String itemName;
-  FileContentTypes itemContentType;
-  Item(this.itemName,this.itemContentType);
-}

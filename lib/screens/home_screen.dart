@@ -1,4 +1,5 @@
 import 'package:adb_gui/components/window_buttons.dart';
+import 'package:adb_gui/services/platform_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/screens/file_manager_screen.dart';
@@ -117,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
               DrawerHeader(
                   decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.transparent, Colors.grey],
+                        colors: [Colors.blueGrey, Colors.grey],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       )),
@@ -136,10 +137,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                       ),
+                      Image.asset("assets/lightningBoltLogo.png",width: 50,height: 50,),
                       const Padding(
                         padding: EdgeInsets.only(left: 12.0, bottom: 4),
                         child: Text(
-                          "ADB GUI",
+                          "Android Toolbox",
                           style: TextStyle(color: Colors.white, fontSize: 25),
                         ),
                       ),
@@ -157,7 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.power_settings_new_rounded),
-                title: const Text("Power Controls"),
+                enabled: !isWSA(device.id),
+                title: Text("Power Controls ${isWSA(device.id)?"(N/A for WSA)":""}"),
                 onTap: (){
                   setState(() {
                     _currentScreen=Screens.powerControls;
