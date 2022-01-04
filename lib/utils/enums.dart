@@ -5,7 +5,7 @@ enum Screens{
   other
 }
 
-enum FileUploadType{
+enum FileItemType{
   file,
   directory
 }

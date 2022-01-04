@@ -4,12 +4,12 @@ import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/simple_file_transfer_progress.dart';
 import 'package:adb_gui/models/file_transfer_job.dart';
 import 'package:adb_gui/models/item.dart';
+import 'package:adb_gui/services/adb_services.dart';
+import 'package:adb_gui/services/file_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:adb_gui/models/device.dart';
-import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../utils/vars.dart';
@@ -39,23 +39,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
   final _addressBarFocus = FocusNode();
   final _renameItemFocus = FocusNode();
 
-  Future<List<Item>> getDirectoryContents() async {
-    ProcessResult result;
-    if(isLegacyAndroid(device.androidAPILevel)){
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls", "\"$_currentPath\""]);
-    }else{
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-p", "\"$_currentPath\""]);
-    }
-    // result=await Process.run(adbExecutable, ["-s", deviceID, "shell", "ls","-p", "\"$_currentPath\""]);
-    List<String> directoryContentDetails = (result.stdout).split("\n");
-    directoryContentDetails.removeLast();
-    List<Item> directoryItems=[];
-    for(int i=0;i<directoryContentDetails.length;i++){
-      directoryContentDetails[i]=directoryContentDetails[i].trim();
-      directoryItems.add(Item(directoryContentDetails[i].trim().endsWith("/")?directoryContentDetails[i].replaceAll("/", "").trim():directoryContentDetails[i].trim(),await getFileType(directoryContentDetails[i].trim())));
-    }
-    return directoryItems;
-  }
+  late ADBService adbService;
+
+
 
   void addFileTransferJob(FileTransferType fileTransferType, String itemName) {
     FileTransferJob newJob =
@@ -83,9 +69,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
   }
 
   void addPath(String fileItemName) async {
-    if (await findFileItemType(fileItemName) == FileContentTypes.file) {
-      return;
-    }
+    // if (await findFileItemType(adbService,_currentPath,fileItemName) == FileContentTypes.file) {
+    //   return;
+    // }
     setState(() {
       _renameFieldController.text="";
       if (_currentPath[_currentPath.length - 1] != "/") {
@@ -112,68 +98,14 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
     });
   }
 
-  void deleteItem(String itemName, BuildContext context) async {
-    ProcessResult result = await Process.run(adbExecutable, [
-      "-s",
-      device.id,
-      "shell",
-      "rm",
-      "-r",
-      "\"${_currentPath + itemName}\""
-    ]);
-    if (result.exitCode == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$itemName deleted successfully")));
-      ScaffoldMessenger.of(context).deactivate();
-      setState(() {});
-    }
-  }
-
-  void uploadContent(FileUploadType uploadType) async {
-    String? sourcePath = "";
-    if (uploadType == FileUploadType.file) {
-      FilePickerResult? filePicker = await FilePicker.platform.pickFiles();
-      sourcePath = filePicker?.files.single.path;
-    } else {
-      sourcePath = await FilePicker.platform.getDirectoryPath();
-    }
-    if (sourcePath == null) {
-      return;
-    }
-    Process process = await Process.start(
-      adbExecutable,
-      ["-s", device.id, "push", sourcePath, _currentPath],
-    );
-    await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => FileTransferProgress(process: process));
-    setState(() {});
-    // Process.runSync("adb", ["pull",(_currentPath[_currentPath.length-1]=="/"?_currentPath:_currentPath+"/")+itemName,chosenDirectory]);
-  }
-
   void transferFile(FileTransferType fileTransferType, int index,
       BuildContext context) async {
     Process process;
 
     if (fileTransferType == FileTransferType.move) {
-      process = await Process.start(adbExecutable, [
-        "-s",
-        device.id,
-        "shell",
-        "mv",
-        "\"${_fileTransferJobs[index].itemPath}\"",
-        "\"$_currentPath\""
-      ]);
+      process=await adbService.fileMove(oldPath: _fileTransferJobs[index].itemPath, newPath: _currentPath);
     } else {
-      process = await Process.start(adbExecutable, [
-        "-s",
-        device.id,
-        "shell",
-        "cp",
-        "-r",
-        "\"${_fileTransferJobs[index].itemPath}\"",
-        "\"$_currentPath\""
-      ]);
+      process=await adbService.fileCopy(oldPath: _fileTransferJobs[index].itemPath, newPath: _currentPath);
     }
 
     await showDialog(
@@ -198,14 +130,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
       Scaffold.of(context).deactivate();
     }
 
-    ProcessResult result = await Process.run(adbExecutable, [
-      "-s",
-      device.id,
-      "shell",
-      "mv",
-      "\"${_currentPath + itemName}\"",
-      "\"${_currentPath + newName}\""
-    ]);
+    ProcessResult result = await adbService.fileRename(oldPath: _currentPath + itemName, newPath: _currentPath + newName);
 
     if (result.exitCode == 0) {
       setState(() {
@@ -218,99 +143,6 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
           content: Text(
               "Failed to rename! Check if new name is valid! It must not contain spaces or special characters")));
     }
-  }
-
-  Future<FileContentTypes> findFileItemType(String fileItemName) async {
-    ProcessResult result = await Process.run(adbExecutable, [
-      "-s",
-      device.id,
-      "shell",
-      "ls",
-      "\"$_currentPath" + fileItemName + "\""
-    ]);
-
-    if (result.stdout.split("\r\n")[0] == _currentPath + fileItemName) {
-      return FileContentTypes.file;
-    }
-    return FileContentTypes.directory;
-  }
-
-  void downloadContent(String itemName) async {
-    String? chosenDirectory = await FilePicker.platform.getDirectoryPath();
-
-    if (chosenDirectory == null) {
-      return;
-    }
-    Process process = await Process.start(adbExecutable,
-        ["-s", device.id, "pull", _currentPath + itemName, chosenDirectory]);
-    await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => FileTransferProgress(process: process));
-    setState(() {});
-  }
-
-  // String getPathStringFromDirectoryStack(){
-  //   String pathString="/";
-  //   for(int i=0;i<_directoryStack.length;i++){
-  //     pathString+=_directoryStack[i]+"/";
-  //   }
-  //   return pathString;
-  // }
-
-  Future<FileContentTypes> getFileType(String fileName) async {
-    bool isLegacyAndroidFile=false;
-    if(isLegacyAndroid(device.androidAPILevel)){
-      ProcessResult result=await Process.run(adbExecutable,["-s",device.id,"shell","ls","\"${_currentPath+fileName}\""]);
-      // print(result.stdout.toString().trim().contains(_currentPath+fileName));
-      if(result.stdout.toString().trim().contains(_currentPath+fileName)){
-        isLegacyAndroidFile=true;
-      }
-    }
-    String fileExtension = fileName.split(".").last;
-    if(fileName!="sdcard" && (isLegacyAndroidFile || (!isLegacyAndroid(device.androidAPILevel) && !fileName.endsWith("/")))){
-      if (fileExtension == "pdf") {
-        return FileContentTypes.pdf;
-      } else if (fileExtension == "zip" ||
-          fileExtension == "tar" ||
-          fileExtension == "gz" ||
-          fileExtension == "rar" ||
-          fileExtension == "7z") {
-        return FileContentTypes.archive;
-      } else if (fileExtension == "apk") {
-        return FileContentTypes.apk;
-      } else if (fileExtension == "doc" || fileExtension == "txt" || fileExtension == "docx" || fileExtension == "odt") {
-        return FileContentTypes.wordDocument;
-      }else if(fileExtension == "ppt" || fileExtension == "pptx"){
-        return FileContentTypes.powerpoint;
-      }else if(fileExtension == "xls" || fileExtension == "xlsx" || fileExtension == "csv"){
-        return FileContentTypes.excel;
-      }else if (fileExtension == "png" ||
-          fileExtension == "jpg" ||
-          fileExtension == "jpeg" ||
-          fileExtension == "gif" ||
-          fileExtension == "raw") {
-        return FileContentTypes.image;
-      } else if (fileExtension == "mp4" ||
-          fileExtension == "mkv" ||
-          fileExtension == "webm" ||
-          fileExtension == "mpeg") {
-        return FileContentTypes.video;
-      } else if (fileExtension == "mp3" ||
-          fileExtension == "wma" ||
-          fileExtension == "flac" ||
-          fileExtension == "wav" ||
-          fileExtension == "ogg") {
-        return FileContentTypes.audio;
-      } else if (fileExtension == "torrent") {
-          return FileContentTypes.torrent;
-      } else if (fileExtension == "cer") {
-          return FileContentTypes.securityCertificate;
-      }
-      return FileContentTypes.file;
-    }
-
-    return FileContentTypes.directory;
   }
 
   void updatePathFromTextField(String value) {
@@ -326,26 +158,11 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
     _addressBarFocus.previousFocus();
   }
 
-  IconData getFileIconByType(FileContentTypes fileType) {
-    switch(fileType){
-      case FileContentTypes.pdf: return FontAwesomeIcons.filePdf;
-      case FileContentTypes.wordDocument: return FontAwesomeIcons.fileWord;
-      case FileContentTypes.powerpoint: return FontAwesomeIcons.filePowerpoint;
-      case FileContentTypes.excel: return FontAwesomeIcons.fileExcel;
-      case FileContentTypes.image: return FontAwesomeIcons.fileImage;
-      case FileContentTypes.video: return FontAwesomeIcons.fileVideo;
-      case FileContentTypes.audio: return FontAwesomeIcons.fileAudio;
-      case FileContentTypes.apk: return FontAwesomeIcons.android;
-      case FileContentTypes.archive: return FontAwesomeIcons.fileArchive;
-      case FileContentTypes.torrent: return FontAwesomeIcons.magnet;
-      case FileContentTypes.securityCertificate: return FontAwesomeIcons.key;
-      case FileContentTypes.file: return FontAwesomeIcons.file;
-      default: return FontAwesomeIcons.folder;
-    }
-  }
+
 
   @override
   void initState() {
+    adbService=ADBService(device: device);
     _addressBarEditingController.text = _currentPath;
     super.initState();
   }
@@ -457,7 +274,17 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                                     ],
                                   ),
                                   onTap: () {
-                                    uploadContent(FileUploadType.file);
+                                    adbService.uploadContent(
+                                      currentPath: _currentPath,
+                                      uploadType:FileItemType.file,
+                                      onProgress: (Process process) async{
+                                        await showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) => FileTransferProgress(process: process));
+                                        setState(() {});
+                                      }
+                                    );
                                   },
                                 ),
                                 PopupMenuItem(
@@ -476,7 +303,17 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                                     ],
                                   ),
                                   onTap: () {
-                                    uploadContent(FileUploadType.directory);
+                                    adbService.uploadContent(
+                                        currentPath: _currentPath,
+                                        uploadType:FileItemType.directory,
+                                        onProgress: (Process process) async{
+                                          await showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) => FileTransferProgress(process: process));
+                                          setState(() {});
+                                        }
+                                    );
                                   },
                                 ),
                               ],
@@ -528,7 +365,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                 )),
         Expanded(
           child: FutureBuilder(
-            future: getDirectoryContents(),
+            future: adbService.getDirectoryContents(_currentPath),
             builder:
                 (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
               if (snapshot.connectionState!=ConnectionState.done || !snapshot.hasData) {
@@ -605,7 +442,16 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                             addPath(snapshot.data![index].itemName);
                           });
                         }else{
-                          downloadContent(snapshot.data![index].itemName);
+                          adbService.downloadContent(
+                            itemPath:_currentPath+snapshot.data![index].itemName,
+                            onProgress: (Process process) async{
+                              await showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => FileTransferProgress(process: process));
+                              setState(() {});
+                            }
+                          );
                         }
                       },
                       shape: const RoundedRectangleBorder(),
@@ -646,7 +492,16 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                                                 color: Colors.blue),
                                           )),
                                       onTap: () {
-                                        downloadContent(snapshot.data![index].itemName);
+                                        adbService.downloadContent(
+                                            itemPath:_currentPath+snapshot.data![index].itemName,
+                                            onProgress: (Process process) async{
+                                              await showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (context) => FileTransferProgress(process: process));
+                                              setState(() {});
+                                            }
+                                        );
                                       },
                                     ),
                                     PopupMenuItem(
@@ -715,9 +570,14 @@ class _FileManagerScreenState extends State<FileManagerScreen> {
                                                 color: Colors.blue),
                                           )),
                                       onTap: () {
-                                        deleteItem(
-                                            snapshot.data![index].itemName,
-                                            context);
+                                        adbService.deleteItem(
+                                          itemPath: _currentPath+snapshot.data![index].itemName,
+                                          onSuccess: (){
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${snapshot.data![index].itemName} deleted successfully")));
+                                            ScaffoldMessenger.of(context).deactivate();
+                                            setState(() {});
+                                          }
+                                        );
                                       },
                                     ),
                                   ])
