@@ -8,7 +8,7 @@
 
 <div>
     <h2>About</h2>
-    <p>This application built with Flutter. It uses adb behind the scenes to execute each and every user operation. The application comes bundled with adb, so you need not have adb installed and configured in path. I plan to bring it to linux after adding some functionality.</p>
+    <p>This application is built with Flutter. It uses adb behind the scenes to execute each and every user operation. The application comes bundled with adb, so you need not have adb installed and configured in path. I plan to bring it to linux after adding some functionality.</p>
 </div>
 
 <div>
