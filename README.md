@@ -20,6 +20,8 @@
     <p>No you don't! The app will notify you when there is an update available, and you may choose to download and install the update from within the app.</p>
     <h2>Feature X is awesome, I can't wait to try it out, but it is a prerelease. How do I try it out?</h2>
     <p>There is support for updating to prerelease builds from within the app. Beware! Prerelease builds might not work as intended, and may even break updates (which might happen if I screw with the updater) in which case you will have to manually install the next update.</p>
+    <h2>Why would I use the app's file manager when I can simply use Windows Explorer?</h2>
+    <p>Gone are the days when we could use USB storage and mount the device as a storage device in windows. Right now MTP is being used and it is painful to use especially when transferring large number of files. This way seems to be faster (I got an almost 2x improvement using my highly unscientific method of testing speed)</p>
 </div>
 
 <div>
