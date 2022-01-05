@@ -25,6 +25,16 @@
 </div>
 
 <div>
+    <h2>Screenshots</h2>
+    <h3>Connection Initiation</h3>
+    <img src="readme_assets/screenshot_connection_initiation.png" alt="connection_initiation"/>
+    <h3>File Manager</h3>
+    <img src="readme_assets/screenshot_file_manager.png" alt="file_manager"/>
+    <h3>Power Controls</h3>
+    <img src="readme_assets/screenshot_power_controls.png" alt="power_controls"/>
+</div>
+
+<div>
     <h2>Clone and build it yourself</h2>
     <ul>
         <li>
