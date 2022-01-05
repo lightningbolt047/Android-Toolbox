@@ -98,14 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        // actions: [
-        //   IconButton(
-        //     onPressed: (){
-        //       Navigator.pop(context);
-        //     },
-        //     icon: const Icon(Icons.exit_to_app,color: Colors.white,),
-        //   ),
-        // ],
       ),
       drawer: Drawer(
         shape: const RoundedRectangleBorder(

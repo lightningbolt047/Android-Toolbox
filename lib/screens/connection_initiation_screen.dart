@@ -21,12 +21,16 @@ class ConnectionInitiationScreen extends StatefulWidget {
   _ConnectionInitiationScreenState createState() => _ConnectionInitiationScreenState();
 }
 
-class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen> {
+class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen> with SingleTickerProviderStateMixin {
 
   int selectedDeviceIndex=0;
   final TextEditingController _addressFieldController=TextEditingController();
   final TextEditingController _pairingCodeFieldController=TextEditingController();
   final TextEditingController _pairingAddressFieldController=TextEditingController();
+
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
   List<Device> devices=[];
   bool _serverStarted=false;
 
@@ -224,6 +228,11 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
 
   @override
   void initState() {
+    _animationController=AnimationController(vsync: this,duration: const Duration(milliseconds: 500));
+    _fadeAnimation=Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.decelerate));
     super.initState();
     checkUpdatesBackground();
   }
@@ -315,19 +324,23 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                       for(int i=0;i<snapshot.data!.length;i++){
                         deviceDataRows.add(snapshot.data![i].getDeviceInfoAsDataRow());
                       }
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: LimitedBox(
-                              child: DevicesDataTable(deviceDataRows: deviceDataRows),
+                      _animationController.forward(from: 0);
+                      return FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: LimitedBox(
+                                child: DevicesDataTable(deviceDataRows: deviceDataRows),
+                              ),
                             ),
-                          ),
-                          SizedBox.fromSize(
-                            size: const Size(8,0),
-                          ),
-                        ],
+                            SizedBox.fromSize(
+                              size: const Size(8,0),
+                            ),
+                          ],
+                        ),
                       );
                     }
                 ),
