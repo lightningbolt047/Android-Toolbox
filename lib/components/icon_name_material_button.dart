@@ -6,8 +6,9 @@ class IconNameMaterialButton extends StatelessWidget {
   final Icon icon;
   final Text text;
   final VoidCallback onPressed;
+  final double spacing;
 
-  const IconNameMaterialButton({Key? key, required this.icon, required this.text, required this.onPressed}) : super(key: key);
+  const IconNameMaterialButton({Key? key, required this.icon, required this.text, required this.onPressed, this.spacing=0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,10 @@ class IconNameMaterialButton extends StatelessWidget {
       child: Row(
         children: [
           icon,
-          text
+          SizedBox(
+            width: spacing,
+          ),
+          text,
         ],
       ),
       onPressed: onPressed,

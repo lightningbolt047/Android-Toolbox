@@ -1,4 +1,5 @@
 import 'package:adb_gui/components/window_buttons.dart';
+import 'package:adb_gui/screens/package_manager_screen.dart';
 import 'package:adb_gui/services/platform_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/models/device.dart';
@@ -25,12 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   String _getScreenName(Screens screenEnum){
-    if(screenEnum==Screens.fileManager){
-      return "Files";
-    }else if(screenEnum==Screens.powerControls){
-      return "Power Controls";
+    switch(screenEnum){
+      case Screens.fileManager: return "Files";
+      case Screens.powerControls: return "Power Controls";
+      case Screens.packageManager: return "Apps";
+      default: return "Wtf??";
     }
-    return "Wtf??";
   }
 
   @override
@@ -160,6 +161,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pop(context);
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.apps_rounded),
+                title: const Text("Applications"),
+                onTap: (){
+                  setState(() {
+                    _currentScreen=Screens.packageManager;
+                  });
+                  Navigator.pop(context);
+                },
+              ),
 
             ],
           );
@@ -170,12 +181,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Builder(
               builder: (context){
-                if(_currentScreen==Screens.fileManager){
-                  return FileManagerScreen(device: device,);
-                }else if(_currentScreen==Screens.powerControls){
-                  return PowerControlsScreen(device: device);
+                switch(_currentScreen){
+                  case Screens.fileManager: return FileManagerScreen(device: device);
+                  case Screens.powerControls: return PowerControlsScreen(device: device);
+                  case Screens.packageManager: return PackageManagerScreen(device: device);
+                  default: return Container();
                 }
-                return PowerControlsScreen(device: device);
               },
             ),
           ),

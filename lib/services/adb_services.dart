@@ -116,6 +116,35 @@ class ADBService{
       onProgress(process);
     }
   }
+  
+  Future<List<String>> getUserPackageNames() async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-3","|","cut","-d",":","-f2-"]);
+    List<String> packageNames=result.stdout.toString().split("\n");
+    packageNames.removeLast();
+    for(int i=0;i<packageNames.length;i++){
+      packageNames[i]=packageNames[i].trim();
+    }
+    return packageNames;
+  }
+
+  Future<List<String>> getSystemPackageNames() async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-s","|","cut","-d",":","-f2-"]);
+    List<String> packageNames=result.stdout.toString().split("\n");
+    packageNames.removeLast();
+    for(int i=0;i<packageNames.length;i++){
+      packageNames[i]=packageNames[i].trim();
+    }
+    return packageNames;
+  }
+
+  Future<void> forceStopPackage(String packageName) async{
+    await Process.run(adbExecutable, ["-s",device.id,"shell","am","force-stop",packageName]);
+  }
+
+  Future<int> uninstallApp(String packageName) async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"uninstall",packageName]);
+    return result.exitCode;
+  }
 
 
 }

@@ -31,3 +31,8 @@ enum FileTransferType{
   copy,
   interDevice
 }
+
+enum AppType{
+  system,
+  user
+}

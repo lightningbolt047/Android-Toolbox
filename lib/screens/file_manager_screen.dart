@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:adb_gui/components/file_transfer_progress.dart';
 import 'package:adb_gui/components/icon_name_material_button.dart';
+import 'package:adb_gui/components/material_ribbon.dart';
 import 'package:adb_gui/components/simple_file_transfer_progress.dart';
 import 'package:adb_gui/models/file_transfer_job.dart';
 import 'package:adb_gui/models/item.dart';
@@ -193,10 +194,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
         LayoutBuilder(
             builder: (context, constraints) => Column(
                   children: [
-                    Container(
-                      color: Colors.grey[200],
-                      width: constraints.maxWidth,
-                      height: 45,
+                    MaterialRibbon(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -210,44 +208,44 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                           ),
                           Expanded(
                               child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 4),
-                            child: TextField(
-                              controller: _addressBarEditingController,
-                              focusNode: _addressBarFocus,
-                              textAlign: TextAlign.left,
-                              textAlignVertical: TextAlignVertical.top,
-                              maxLines: 1,
-                              onSubmitted: updatePathFromTextField,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.zero),
-                                focusColor: Colors.blue,
-                                suffixIcon: _addressBarFocus.hasFocus
-                                    ? IconButton(
-                                        icon: const Icon(
-                                            Icons.arrow_forward_rounded),
-                                        hoverColor: Colors.transparent,
-                                        splashRadius: 1,
-                                        splashColor: Colors.transparent,
-                                        onPressed: () {
-                                          updatePathFromTextField(
-                                              _addressBarEditingController
-                                                  .text);
-                                        },
-                                      )
-                                    : IconButton(
-                                        icon: const Icon(Icons.refresh),
-                                        hoverColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        splashRadius: 1,
-                                        onPressed: () {
-                                          setState(() {});
-                                        },
-                                      ),
-                              ),
-                            ),
-                          )),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 4),
+                                child: TextField(
+                                  controller: _addressBarEditingController,
+                                  focusNode: _addressBarFocus,
+                                  textAlign: TextAlign.left,
+                                  textAlignVertical: TextAlignVertical.top,
+                                  maxLines: 1,
+                                  onSubmitted: updatePathFromTextField,
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.zero),
+                                    focusColor: Colors.blue,
+                                    suffixIcon: _addressBarFocus.hasFocus
+                                        ? IconButton(
+                                      icon: const Icon(
+                                          Icons.arrow_forward_rounded),
+                                      hoverColor: Colors.transparent,
+                                      splashRadius: 1,
+                                      splashColor: Colors.transparent,
+                                      onPressed: () {
+                                        updatePathFromTextField(
+                                            _addressBarEditingController
+                                                .text);
+                                      },
+                                    )
+                                        : IconButton(
+                                      icon: const Icon(Icons.refresh),
+                                      hoverColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      splashRadius: 1,
+                                      onPressed: () {
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: PopupMenuButton(
@@ -271,7 +269,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                 PopupMenuItem(
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: const [
                                       Icon(
                                         FontAwesomeIcons.fileUpload,
@@ -285,22 +283,22 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                   ),
                                   onTap: () {
                                     adbService.uploadContent(
-                                      currentPath: _currentPath,
-                                      uploadType:FileItemType.file,
-                                      onProgress: (Process process) async{
-                                        await showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) => FileTransferProgress(process: process));
-                                        setState(() {});
-                                      }
+                                        currentPath: _currentPath,
+                                        uploadType:FileItemType.file,
+                                        onProgress: (Process process) async{
+                                          await showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) => FileTransferProgress(process: process));
+                                          setState(() {});
+                                        }
                                     );
                                   },
                                 ),
                                 PopupMenuItem(
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: const [
                                       Icon(
                                         FontAwesomeIcons.folderPlus,
@@ -333,44 +331,43 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                       ),
                     ),
                     if (_fileTransferJobs.isNotEmpty)
-                      Container(
-                        color: Colors.grey[200],
-                        width: constraints.maxWidth,
-                        height: 45,
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            for (int i = 0; i < _fileTransferJobs.length; i++)
-                              ClipboardChip(
-                                itemName: _fileTransferJobs[i].itemName,
-                                jobIndex: i,
-                                fileTransferType: _fileTransferJobs[i].jobType,
-                                transferFile: transferFile,
-                                parentContext: context,
-                              ),
-                            const Spacer(),
-                            IconNameMaterialButton(
-                                icon: const Icon(
-                                  Icons.clear_all_rounded,
-                                  size: 35,
-                                  color: Colors.blueGrey,
+                      MaterialRibbon(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              for (int i = 0; i < _fileTransferJobs.length; i++)
+                                ClipboardChip(
+                                  itemName: _fileTransferJobs[i].itemName,
+                                  jobIndex: i,
+                                  fileTransferType: _fileTransferJobs[i].jobType,
+                                  transferFile: transferFile,
+                                  parentContext: context,
                                 ),
-                                text: const Text(
-                                  "Clear",
-                                  style: TextStyle(
-                                      color: Colors.blueGrey, fontSize: 20),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _totalJobCount = 0;
-                                    _fileTransferJobs.clear();
-                                  });
-                                }),
-                          ],
+                              const Spacer(),
+                              IconNameMaterialButton(
+                                  icon: const Icon(
+                                    Icons.clear_all_rounded,
+                                    size: 35,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  text: const Text(
+                                    "Clear",
+                                    style: TextStyle(
+                                        color: Colors.blueGrey, fontSize: 20),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _totalJobCount = 0;
+                                      _fileTransferJobs.clear();
+                                    });
+                                  }),
+                            ],
+                          ),
                         ),
-                      )
+                      ),
                   ],
                 )),
         Expanded(
