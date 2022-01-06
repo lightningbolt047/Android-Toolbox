@@ -12,7 +12,7 @@ import 'android_api_checks.dart';
 
 Future<FileContentTypes> getFileType({required Device device,required String currentPath,required String fileName}) async {
   bool isLegacyAndroidFile=false;
-  if(isLegacyAndroid(device.androidAPILevel)){
+  if(isPreMarshmallowAndroid(device.androidAPILevel)){
     ProcessResult result=await Process.run(adbExecutable,["-s",device.id,"shell","ls","\"${currentPath+fileName}\""]);
     // print(result.stdout.toString().trim().contains(_currentPath+fileName));
     if(result.stdout.toString().trim().contains(currentPath+fileName)){
@@ -20,7 +20,7 @@ Future<FileContentTypes> getFileType({required Device device,required String cur
     }
   }
   String fileExtension = fileName.split(".").last;
-  if(fileName!="sdcard" && (isLegacyAndroidFile || (!isLegacyAndroid(device.androidAPILevel) && !fileName.endsWith("/")))){
+  if(fileName!="sdcard" && (isLegacyAndroidFile || (!isPreMarshmallowAndroid(device.androidAPILevel) && !fileName.endsWith("/")))){
     if (fileExtension == "pdf") {
       return FileContentTypes.pdf;
     } else if (fileExtension == "zip" ||

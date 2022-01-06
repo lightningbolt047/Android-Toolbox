@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 20
                 ),),
                 const Spacer(),
-                if(isLegacyAndroid(device.androidAPILevel))
+                if(isPreMarshmallowAndroid(device.androidAPILevel))
                   WindowMaterialButton(
                   buttonColor: Colors.blue,
                   hoverColor: Colors.amber[300],
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: const Text("Performance Alert",style: TextStyle(
                           color: Colors.blue
                         ),),
-                        content: Text("You may experience degraded performance since your device runs on Android ${device.androidVersion} .\nThe recommended Android version is 7.0 and above"),
+                        content: Text("You may experience degraded performance/glitches since your device runs on Android ${device.androidVersion} .\nThe recommended Android version is 7.0 and above"),
                         actions: [
                           TextButton(
                             onPressed: (){

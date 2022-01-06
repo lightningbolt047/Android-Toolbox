@@ -14,7 +14,7 @@ class ADBService{
 
   Future<List<Item>> getDirectoryContents(String currentPath) async {
     ProcessResult result;
-    if(isLegacyAndroid(device.androidAPILevel)){
+    if(isPreMarshmallowAndroid(device.androidAPILevel)){
       result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls", "\"$currentPath\""]);
     }else{
       result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-p", "\"$currentPath\""]);
@@ -118,20 +118,26 @@ class ADBService{
   }
   
   Future<List<String>> getUserPackageNames() async{
-    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-3","|","cut","-d",":","-f2-"]);
+    List<String> arguments=["-s",device.id,"shell","pm","list","packages","-3"];
+    if(isPreIceCreamSandwichAndroid(device.androidAPILevel)){
+      arguments.removeLast();
+    }
+    ProcessResult result=await Process.run(adbExecutable, arguments);
     List<String> packageNames=result.stdout.toString().split("\n");
     packageNames.removeLast();
     for(int i=0;i<packageNames.length;i++){
+      packageNames[i]=packageNames[i].split(":")[1];
       packageNames[i]=packageNames[i].trim();
     }
     return packageNames;
   }
 
   Future<List<String>> getSystemPackageNames() async{
-    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-s","|","cut","-d",":","-f2-"]);
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-s"]);
     List<String> packageNames=result.stdout.toString().split("\n");
     packageNames.removeLast();
     for(int i=0;i<packageNames.length;i++){
+      packageNames[i]=packageNames[i].split(":")[1];
       packageNames[i]=packageNames[i].trim();
     }
     return packageNames;

@@ -4,6 +4,7 @@ import 'package:adb_gui/components/material_ribbon.dart';
 import 'package:adb_gui/layout_widgets/PackageInfo.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/adb_services.dart';
+import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,6 +37,12 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
   void initState() {
     adbService=ADBService(device: device);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _searchbarController.dispose();
+    super.dispose();
   }
 
   @override
@@ -89,15 +96,15 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                 DropdownButton(
                   underline: Container(),
                   value: _appType,
-                  items: const [
+                  items: [
                     DropdownMenuItem(
                       value: AppType.user,
                       child: CustomListTile(
-                        icon: Icon(FontAwesomeIcons.user,color: Colors.blue,),
-                        title: "User apps",
+                        icon: const Icon(FontAwesomeIcons.user,color: Colors.blue,),
+                        title: isPreIceCreamSandwichAndroid(device.androidAPILevel)?"All apps":"User apps",
                       ),
                     ),
-                    DropdownMenuItem(
+                    const DropdownMenuItem(
                       value: AppType.system,
                       child: CustomListTile(
                         icon: Icon(Icons.system_update,color: Colors.blue,),
@@ -105,7 +112,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                       ),
                     ),
                   ],
-                  onChanged: (AppType? appType){
+                  onChanged: isPreIceCreamSandwichAndroid(device.androidAPILevel)?null:(AppType? appType){
                     if(_appType!=appType!){
                       setState(() {
                         _selectedPackageName="";
