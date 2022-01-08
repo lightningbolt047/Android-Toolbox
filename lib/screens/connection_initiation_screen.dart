@@ -264,7 +264,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                 ),),
                 const Spacer(),
                 WindowMaterialButton(
-                  buttonColor: Colors.blue,
+                  // buttonColor: Colors.blue,
                   buttonIcon: const Icon(Icons.settings,color: Colors.white,),
                   onPressed: (){
                     Navigator.push(context, CupertinoPageRoute(builder: (context)=>const SettingsScreen()));
@@ -286,14 +286,11 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Lets get you connected",style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 40
-                ),),
+                Text("Lets get you connected",style: Theme.of(context).textTheme.headline3,),
                 IconNameMaterialButton(
-                    icon: const Icon(Icons.refresh_rounded, size: 35,color: Colors.blue,),
-                    text: const Text("Refresh", style: TextStyle(
-                        color: Colors.blue,
+                    icon: Icon(Icons.refresh_rounded, size: 35,color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.white,),
+                    text: Text("Refresh", style: TextStyle(
+                        color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.white,
                         fontSize: 20
                     ),),
                     onPressed: (){
@@ -314,15 +311,15 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
 
                       if(snapshot.connectionState!=ConnectionState.done || !snapshot.hasData){
                         return Shimmer.fromColors(
-                            baseColor: const Color(0xFFE0E0E0),
-                            highlightColor: const Color(0xFFF5F5F5),
+                            baseColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFE0E0E0):Colors.black12,
+                            highlightColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFF5F5F5):Colors.blueGrey,
                             enabled: true,
                             child: DevicesDataTable(deviceDataRows: getEmptyDeviceDataRows(context))
                         );
                       }
                       List<DataRow> deviceDataRows=[];
                       for(int i=0;i<snapshot.data!.length;i++){
-                        deviceDataRows.add(snapshot.data![i].getDeviceInfoAsDataRow());
+                        deviceDataRows.add(snapshot.data![i].getDeviceInfoAsDataRow(context));
                       }
                       _animationController.forward(from: 0);
                       return FadeTransition(
@@ -405,7 +402,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        color: Colors.blue,
+                        color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.blueGrey,
                         child: Row(
                           children: [
                             SizedBox(
@@ -452,7 +449,8 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                           builder: (context) {
                             return MaterialButton(
                               shape: const CircleBorder(),
-                              color: Colors.blue,
+                              // color: Colors.blue,
+                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.blueGrey,
                               disabledColor: Colors.grey,
                               child: const Padding(
                                   padding: EdgeInsets.all(8.0),
@@ -501,42 +499,24 @@ class DevicesDataTable extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection:Axis.vertical,
       child: DataTable(
-        columns: const [
+        columns: [
           DataColumn(
-              label: Text("Select",maxLines: 3,style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),)
+              label: Text("Select",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
           ),
           DataColumn(
-              label: Text("S No.",maxLines: 3,style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),)
+              label: Text("S No.",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
           ),
           DataColumn(
-              label: Text("Model",maxLines: 3,style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),)
+              label: Text("Model",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
           ),
           DataColumn(
-              label: Text("Manufacturer",maxLines: 3,style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),)
+              label: Text("Manufacturer",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
           ),
           DataColumn(
-              label: Text("Android",maxLines: 3,style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),)
+              label: Text("Android",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
           ),
           DataColumn(
-              label: Text("Status",maxLines: 3,style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-              ),)
+              label: Text("Status",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
           ),
         ], rows: deviceDataRows,
       ),

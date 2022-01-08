@@ -377,8 +377,8 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                 (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
               if (snapshot.connectionState!=ConnectionState.done || !snapshot.hasData) {
                 return Shimmer.fromColors(
-                  baseColor: const Color(0xFFE0E0E0),
-                  highlightColor: const Color(0xFFF5F5F5),
+                  baseColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFE0E0E0):Colors.black12,
+                  highlightColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFF5F5F5):Colors.blueGrey,
                   enabled: true,
                   child: GridView.builder(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -499,12 +499,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         child: const ListTile(
                                             leading: Icon(
                                               FontAwesomeIcons.download,
-                                              color: Colors.blue,
                                             ),
                                             title: Text(
                                               "Download",
-                                              style: TextStyle(
-                                                  color: Colors.blue),
                                             )),
                                         onTap: () {
                                           adbService.downloadContent(
@@ -523,12 +520,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         child: const ListTile(
                                             leading: Icon(
                                               Icons.drive_file_rename_outline,
-                                              color: Colors.blue,
                                             ),
                                             title: Text(
                                               "Rename",
-                                              style: TextStyle(
-                                                  color: Colors.blue),
                                             )),
                                         onTap: () async {
                                           _renameItemFocus.requestFocus();
@@ -541,12 +535,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         child: const ListTile(
                                             leading: Icon(
                                               FontAwesomeIcons.copy,
-                                              color: Colors.blue,
                                             ),
                                             title: Text(
                                               "Copy",
-                                              style: TextStyle(
-                                                  color: Colors.blue),
                                             )),
                                         onTap: () {
                                           addFileTransferJob(
@@ -559,12 +550,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         child: const ListTile(
                                             leading: Icon(
                                               FontAwesomeIcons.cut,
-                                              color: Colors.blue,
                                             ),
                                             title: Text(
                                               "Cut",
-                                              style: TextStyle(
-                                                  color: Colors.blue),
                                             )),
                                         onTap: () {
                                           addFileTransferJob(
@@ -577,12 +565,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         child: const ListTile(
                                             leading: Icon(
                                               FontAwesomeIcons.trash,
-                                              color: Colors.blue,
                                             ),
                                             title: Text(
                                               "Delete",
-                                              style: TextStyle(
-                                                  color: Colors.blue),
                                             )),
                                         onTap: () {
                                           adbService.deleteItem(

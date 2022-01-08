@@ -21,7 +21,7 @@ class Device{
     this.androidAPILevel=androidAPILevel;
   }
 
-  DataRow getDeviceInfoAsDataRow(){
+  DataRow getDeviceInfoAsDataRow(BuildContext context){
     return DataRow(
         cells: [
           DataCell(
@@ -33,11 +33,11 @@ class Device{
                 groupValue: selectedDeviceIndex,
               )
           ),
-          DataCell(Text(id,maxLines: 3)),
-          DataCell(Text(model,maxLines: 3)),
-          DataCell(Text(manufacturer,maxLines: 3)),
-          DataCell(Text(androidVersion,maxLines: 3)),
-          DataCell(Text(status,maxLines: 3)),
+          DataCell(Text(id,maxLines: 3,),),
+          DataCell(Text(model,maxLines: 3,),),
+          DataCell(Text(manufacturer,maxLines: 3,),),
+          DataCell(Text(androidVersion,maxLines: 3,),),
+          DataCell(Text(status,maxLines: 3,),),
         ]
     );
   }

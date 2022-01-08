@@ -10,7 +10,7 @@ class CustomMinimizeWindowButton extends MinimizeWindowButton{
   Widget build(BuildContext context){
 
     return WindowMaterialButton(
-      buttonColor: Colors.blue,
+      // buttonColor: Colors.blue,
       buttonIcon: const Icon(Icons.minimize,color: Colors.white,),
       onPressed: super.onPressed!,
     );
@@ -25,7 +25,7 @@ class CustomMaximizeWindowButton extends MaximizeWindowButton{
   @override
   Widget build(BuildContext context){
     return WindowMaterialButton(
-      buttonColor: Colors.blue,
+      // buttonColor: Colors.blue,
       buttonIcon: const Icon(Icons.check_box_outline_blank,color: Colors.white,),
       onPressed: super.onPressed!,
     );
@@ -38,8 +38,9 @@ class CustomCloseWindowButton extends CloseWindowButton{
   @override
   Widget build(BuildContext context){
     return WindowMaterialButton(
-      buttonColor: Colors.blue,
+      // buttonColor: Colors.blue,
       hoverColor: Colors.redAccent,
+      darkModeHoverColor: Colors.redAccent,
       buttonIcon: const Icon(Icons.close,color: Colors.white,),
       onPressed: () async{
         await Process.run(adbExecutable, ["kill-server"],runInShell: true);
@@ -55,21 +56,22 @@ class CustomCloseWindowButton extends CloseWindowButton{
 
 class WindowMaterialButton extends StatelessWidget {
 
-  final Color? buttonColor;
+  // final Color? buttonColor;
   final Color? hoverColor;
+  final Color? darkModeHoverColor;
   final Icon buttonIcon;
   final VoidCallback onPressed;
 
-  const WindowMaterialButton({Key? key,this.buttonColor=Colors.blue,this.hoverColor=Colors.lightBlue,required this.buttonIcon,required this.onPressed}) : super(key: key);
+  const WindowMaterialButton({Key? key,this.hoverColor=Colors.lightBlue,this.darkModeHoverColor=Colors.black26,required this.buttonIcon,required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       shape: const CircleBorder(),
-      color: buttonColor,
+      color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.grey[800],
       elevation: 0,
       minWidth: 8,
-      hoverColor: hoverColor,
+      hoverColor: Theme.of(context).brightness==Brightness.light?hoverColor:darkModeHoverColor,
       height: 150,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       child: Padding(

@@ -18,6 +18,7 @@ class PackageInfo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 0,
+        leading: Container(),
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text("App info",style: TextStyle(

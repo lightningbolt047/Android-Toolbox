@@ -9,7 +9,7 @@ class MaterialRibbon extends StatelessWidget {
     return LayoutBuilder(
       builder: (context,constraints) {
         return Container(
-          color: Colors.grey[200],
+          color: Theme.of(context).brightness==Brightness.light?Colors.grey[200]:Colors.black26,
           width: constraints.maxWidth,
           height: 45,
           child: child,

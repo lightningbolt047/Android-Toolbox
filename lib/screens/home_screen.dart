@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Spacer(),
                 if(isPreMarshmallowAndroid(device.androidAPILevel))
                   WindowMaterialButton(
-                  buttonColor: Colors.blue,
+                  // buttonColor: Colors.blue,
                   hoverColor: Colors.amber[300],
                   buttonIcon: Icon(Icons.warning,color: Colors.amber[700],),
                   onPressed: (){
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 WindowMaterialButton(
-                  buttonColor: Colors.blue,
+                  // buttonColor: Colors.blue,
                   buttonIcon: const Icon(Icons.exit_to_app_rounded,color: Colors.white,),
                   onPressed: (){
                     Navigator.pop(context);
@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   )),
               ListTile(
                 leading: const Icon(Icons.drive_file_move),
-                title: const Text("File Manager"),
+                title: const Text("File Manager",),
                 onTap: (){
                   setState(() {
                     _currentScreen=Screens.fileManager;

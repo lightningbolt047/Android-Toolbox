@@ -17,8 +17,59 @@ void main() {
     }
   }
 
-  runApp(const MaterialApp(
-    home: ConnectionInitiationScreen(),
+  runApp(MaterialApp(
+    themeMode: ThemeMode.dark,
+    theme: ThemeData(
+      textTheme: const TextTheme(
+        headline3: TextStyle(
+          color: Colors.blue,
+          fontSize: 40,
+        ),
+        headline5: TextStyle(
+            color: Colors.blue,
+            fontSize: 25,
+            fontWeight: FontWeight.w600
+        ),
+      ),
+    ),
+    darkTheme: ThemeData.dark().copyWith(
+      primaryColor: Colors.blueGrey,
+      listTileTheme: const ListTileThemeData(
+        textColor: Colors.white70,
+        iconColor: Colors.white70
+      ),
+      textTheme: const TextTheme(
+        headline3: TextStyle(
+          color: Colors.white,
+          fontSize: 40,
+        ),
+        headline5: TextStyle(
+            color: Colors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.w600
+        ),
+        headline6: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+          fontSize: 20,
+        ),
+        subtitle1: TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+        ),
+        bodyText2: TextStyle(
+          color: Colors.white70,
+        ),
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: MaterialStateProperty.resolveWith((states) => Colors.blueGrey),
+      ),
+      buttonTheme: const ButtonThemeData(
+        buttonColor: Colors.black54
+      ),
+      toggleableActiveColor: Colors.blueGrey
+    ),
+    home: const ConnectionInitiationScreen(),
   ));
 
   doWhenWindowReady(() {

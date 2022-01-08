@@ -34,16 +34,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 20,
                 ),),
                 const Spacer(),
-                Container(
-                  color: Colors.blue,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomMinimizeWindowButton(),
-                      CustomMaximizeWindowButton(),
-                      CustomCloseWindowButton(),
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomMinimizeWindowButton(),
+                    CustomMaximizeWindowButton(),
+                    CustomCloseWindowButton(),
+                  ],
                 ),
               ],
             ),
