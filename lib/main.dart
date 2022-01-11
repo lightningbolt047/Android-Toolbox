@@ -18,7 +18,7 @@ void main() {
   }
 
   runApp(MaterialApp(
-    themeMode: ThemeMode.dark,
+    themeMode: ThemeMode.light,
     theme: ThemeData(
       textTheme: const TextTheme(
         headline3: TextStyle(
@@ -35,8 +35,9 @@ void main() {
     darkTheme: ThemeData.dark().copyWith(
       primaryColor: Colors.blueGrey,
       listTileTheme: const ListTileThemeData(
-        textColor: Colors.white70,
-        iconColor: Colors.white70
+        textColor: Colors.white,
+        dense: true,
+        iconColor: Colors.blue,
       ),
       textTheme: const TextTheme(
         headline3: TextStyle(
