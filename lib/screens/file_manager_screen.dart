@@ -496,12 +496,17 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                 ),
                                 itemBuilder: (context) => [
                                       PopupMenuItem(
-                                        child: const ListTile(
+                                        child: ListTile(
                                             leading: Icon(
                                               FontAwesomeIcons.download,
+                                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
                                             ),
+                                            dense:false,
                                             title: Text(
                                               "Download",
+                                              style: TextStyle(
+                                                color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                              ),
                                             )),
                                         onTap: () {
                                           adbService.downloadContent(
@@ -517,12 +522,17 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         },
                                       ),
                                       PopupMenuItem(
-                                        child: const ListTile(
+                                        child: ListTile(
                                             leading: Icon(
                                               Icons.drive_file_rename_outline,
+                                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
                                             ),
+                                            dense:false,
                                             title: Text(
                                               "Rename",
+                                              style: TextStyle(
+                                                color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                              ),
                                             )),
                                         onTap: () async {
                                           _renameItemFocus.requestFocus();
@@ -532,12 +542,17 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         },
                                       ),
                                       PopupMenuItem(
-                                        child: const ListTile(
+                                        child: ListTile(
                                             leading: Icon(
                                               FontAwesomeIcons.copy,
+                                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
                                             ),
+                                            dense:false,
                                             title: Text(
                                               "Copy",
+                                              style: TextStyle(
+                                                color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                              ),
                                             )),
                                         onTap: () {
                                           addFileTransferJob(
@@ -547,12 +562,17 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         },
                                       ),
                                       PopupMenuItem(
-                                        child: const ListTile(
+                                        child: ListTile(
                                             leading: Icon(
                                               FontAwesomeIcons.cut,
+                                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
                                             ),
+                                            dense:false,
                                             title: Text(
                                               "Cut",
+                                              style: TextStyle(
+                                                color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                              ),
                                             )),
                                         onTap: () {
                                           addFileTransferJob(
@@ -562,12 +582,17 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         },
                                       ),
                                       PopupMenuItem(
-                                        child: const ListTile(
+                                        child: ListTile(
                                             leading: Icon(
                                               FontAwesomeIcons.trash,
+                                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
                                             ),
+                                            dense:false,
                                             title: Text(
                                               "Delete",
+                                              style: TextStyle(
+                                                color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                              ),
                                             )),
                                         onTap: () {
                                           adbService.deleteItem(

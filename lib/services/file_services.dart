@@ -87,6 +87,29 @@ Future<String?> pickFileFolderFromDesktop(FileItemType uploadType) async{
 }
 
 
+//Unused
+Future<int> getDesktopFileSize(String filePath) async{
+  int size=0;
+
+  File file=File(filePath);
+  if(await file.exists()){
+    return file.length();
+  }
+  Directory root=Directory(filePath);
+  if(await root.exists()){
+    List<FileSystemEntity> element=root.listSync(recursive: true,followLinks: false);
+    for (FileSystemEntity element in element) {
+      if(element is File){
+        size+=await element.length();
+      }
+    }
+  }
+  return size;
+
+
+}
+
+
 IconData getFileIconByType(FileContentTypes fileType) {
   switch(fileType){
     case FileContentTypes.pdf: return FontAwesomeIcons.filePdf;

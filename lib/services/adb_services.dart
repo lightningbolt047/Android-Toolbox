@@ -47,6 +47,8 @@ class ADBService{
   void uploadContent({required currentPath, required FileItemType uploadType, Function? onProgress}) async {
     String? sourcePath = await pickFileFolderFromDesktop(uploadType);
 
+    print(await getDesktopFileSize(sourcePath!));
+
     if (sourcePath == null) {
       return;
     }
