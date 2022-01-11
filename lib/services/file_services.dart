@@ -87,7 +87,30 @@ Future<String?> pickFileFolderFromDesktop(FileItemType uploadType) async{
 }
 
 
-//Unused
+String getLastPathElement(String path){
+
+  if(path.contains("\\")){
+    List<String> elements=path.split("\\");
+    if(path.endsWith("\\")){
+      return elements[elements.length-2];
+    }
+    return elements[elements.length-1];
+  }
+  List<String> elements=path.split("/");
+  if(path.endsWith("/")){
+    return elements[elements.length-2];
+  }
+  return elements[elements.length-1];
+}
+
+String getPlatformDelimiter(){
+  if(Platform.isWindows){
+    return "\\";
+  }
+  return "/";
+}
+
+
 Future<int> getDesktopFileSize(String filePath) async{
   int size=0;
 

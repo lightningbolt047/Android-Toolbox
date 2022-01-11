@@ -47,8 +47,6 @@ class ADBService{
   void uploadContent({required currentPath, required FileItemType uploadType, Function? onProgress}) async {
     String? sourcePath = await pickFileFolderFromDesktop(uploadType);
 
-    print(await getDesktopFileSize(sourcePath!));
-
     if (sourcePath == null) {
       return;
     }
@@ -57,7 +55,7 @@ class ADBService{
       ["-s", device.id, "push", sourcePath, currentPath],
     );
     if(onProgress!=null){
-      onProgress(process);
+      onProgress(process,getDesktopFileSize,getFileItemSize,sourcePath,currentPath);
     }
   }
 
@@ -115,8 +113,13 @@ class ADBService{
     }
     Process process = await Process.start(adbExecutable, ["-s", device.id, "pull", itemPath, chosenDirectory]);
     if(onProgress!=null){
-      onProgress(process);
+      onProgress(process,getFileItemSize,getDesktopFileSize,itemPath,chosenDirectory);
     }
+  }
+
+  Future<int> getFileItemSize(String filePath) async{
+    ProcessResult processResult=await Process.run(adbExecutable, ["-s",device.id,"shell","du","-s","\"$filePath\""]);
+    return int.parse(processResult.stdout.toString().split("\t")[0]);
   }
   
   Future<List<String>> getUserPackageNames() async{

@@ -29,7 +29,8 @@ enum FileContentTypes{
 enum FileTransferType{
   move,
   copy,
-  interDevice
+  pcToPhone,
+  phoneToPC
 }
 
 enum AppType{

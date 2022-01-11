@@ -285,11 +285,11 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                     adbService.uploadContent(
                                         currentPath: _currentPath,
                                         uploadType:FileItemType.file,
-                                        onProgress: (Process process) async{
+                                        onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
                                           await showDialog(
                                               context: context,
                                               barrierDismissible: false,
-                                              builder: (context) => FileTransferProgress(process: process));
+                                              builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.pcToPhone,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
                                           setState(() {});
                                         }
                                     );
@@ -314,11 +314,11 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                     adbService.uploadContent(
                                         currentPath: _currentPath,
                                         uploadType:FileItemType.directory,
-                                        onProgress: (Process process) async{
+                                        onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
                                           await showDialog(
                                               context: context,
                                               barrierDismissible: false,
-                                              builder: (context) => FileTransferProgress(process: process));
+                                              builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.pcToPhone,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
                                           setState(() {});
                                         }
                                     );
@@ -459,11 +459,11 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                           }else{
                             adbService.downloadContent(
                               itemPath:_currentPath+snapshot.data![index].itemName,
-                              onProgress: (Process process) async{
+                              onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
                                 await showDialog(
                                     context: context,
                                     barrierDismissible: false,
-                                    builder: (context) => FileTransferProgress(process: process));
+                                    builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.phoneToPC,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
                                 setState(() {});
                               }
                             );
@@ -511,11 +511,11 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         onTap: () {
                                           adbService.downloadContent(
                                               itemPath:_currentPath+snapshot.data![index].itemName,
-                                              onProgress: (Process process) async{
+                                              onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
                                                 await showDialog(
                                                     context: context,
                                                     barrierDismissible: false,
-                                                    builder: (context) => FileTransferProgress(process: process));
+                                                    builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.phoneToPC,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
                                                 setState(() {});
                                               }
                                           );
