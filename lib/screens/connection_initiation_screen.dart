@@ -37,6 +37,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
 
   Future<List<Device>> getDevices() async{
     if(!_serverStarted){
+      await Process.run(adbExecutable,["kill-server"]);
       await Process.run(adbExecutable, ["start-server"]);
       _serverStarted=true;
     }

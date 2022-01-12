@@ -4,6 +4,7 @@ import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
+import 'dart:math' as math;
 
 class FileTransferProgress extends StatefulWidget {
   final Process process;
@@ -68,7 +69,7 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
         setState(() {
           _calculatingProgress=true;
         });
-        destinationPathSize=await getDestinationPathSize(destinationPath+(fileTransferType==FileTransferType.phoneToPC?getPlatformDelimiter():"")+getLastPathElement(sourcePath));
+        destinationPathSize=math.max(destinationPathSize, await getDestinationPathSize(destinationPath+(fileTransferType==FileTransferType.phoneToPC?getPlatformDelimiter():"")+getLastPathElement(sourcePath)));
         setState(() {
           _calculatingProgress=false;
         });
@@ -111,7 +112,7 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
       child: LayoutBuilder(
         builder: (context,constraints) {
           return SizedBox(
-            height: constraints.maxHeight*0.5,
+            height: constraints.maxHeight*0.75,
             width: constraints.maxWidth*0.5,
             child: Padding(
               padding: const EdgeInsets.all(12.0),
@@ -162,9 +163,9 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
                           height: 8,
                         ),
                         LinearProgressIndicator(
-                          value: (sourcePathSize==0 || destinationPathSize==0)?null:((double.parse(destinationSizeMB())/double.parse(sourceSizeMB()))),
+                          value: (sourcePathSize==0 || destinationPathSize==0 || double.parse(destinationSizeMB())>=double.parse(sourceSizeMB()))?null:((double.parse(destinationSizeMB())/double.parse(sourceSizeMB()))),
                         ),
-                        if(sourcePathSize!=0 && destinationPathSize!=0)
+                        if(sourcePathSize!=0 && destinationPathSize!=0 && double.parse(destinationSizeMB())<double.parse(sourceSizeMB()))
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

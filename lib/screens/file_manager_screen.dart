@@ -33,9 +33,8 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
   _FileManagerScreenState(this.device);
 
   String _currentPath = "/sdcard/";
-  final TextEditingController _addressBarEditingController =
-      TextEditingController();
-  final TextEditingController _renameFieldController = TextEditingController();
+  late final TextEditingController _addressBarEditingController;
+  late final TextEditingController _renameFieldController;
 
   final _addressBarFocus = FocusNode();
   final _renameItemFocus = FocusNode();
@@ -166,6 +165,8 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
 
   @override
   void initState() {
+    _addressBarEditingController = TextEditingController();
+    _renameFieldController = TextEditingController();
     adbService=ADBService(device: device);
     _addressBarEditingController.text = _currentPath;
 
