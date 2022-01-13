@@ -8,6 +8,7 @@ import 'package:adb_gui/screens/settings_screen.dart';
 import 'package:adb_gui/services/update_services.dart';
 import 'package:adb_gui/utils/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adb_gui/models/device.dart';
@@ -37,6 +38,9 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
 
   Future<List<Device>> getDevices() async{
     if(!_serverStarted){
+      if(Platform.isLinux && !kDebugMode){
+        await Process.run("chmod",["+x",adbExecutable]);
+      }
       await Process.run(adbExecutable,["kill-server"]);
       await Process.run(adbExecutable, ["start-server"]);
       _serverStarted=true;

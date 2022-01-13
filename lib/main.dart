@@ -7,7 +7,7 @@ import 'dart:io';
 
 void main() {
 
-  if(kDebugMode){
+  if(kDebugMode && Platform.isWindows){
     adbExecutable="adb";
   }else{
     if(Platform.isWindows){
