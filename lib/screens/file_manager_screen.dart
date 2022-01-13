@@ -623,6 +623,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                               children: [
                                 Expanded(
                                   child: TextField(
+                                    enabled: true,
                                     focusNode: _renameItemFocus,
                                     controller: _renameFieldController,
                                     decoration: InputDecoration(

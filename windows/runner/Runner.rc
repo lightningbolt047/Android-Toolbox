@@ -90,7 +90,7 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.lightningbolt" "\0"
-            VALUE "FileDescription", "A new Flutter project to do ADB GUI" "\0"
+            VALUE "FileDescription", "Android-Toolbox" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "adb_gui" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2021 com.lightningbolt. All rights reserved." "\0"

@@ -218,7 +218,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
             cells: [
               for(int j=0;j<6;j++)
                 DataCell(Container(
-                  width: MediaQuery.of(context).size.width*0.125,
+                  width: MediaQuery.of(context).size.width*0.1,
                   height: 25,
                   decoration: BoxDecoration(
                     color: Colors.black,

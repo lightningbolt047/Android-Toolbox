@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class FileTransferProgress extends StatefulWidget {
   final Process process;
@@ -145,7 +146,7 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      color: Colors.grey[200],
+                      color: Theme.of(context).brightness==Brightness.light?Colors.grey[200]:Colors.grey[900],
                       child: SingleChildScrollView(
                         reverse: true,
                         scrollDirection: Axis.vertical,
@@ -162,8 +163,12 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
                         const SizedBox(
                           height: 8,
                         ),
-                        LinearProgressIndicator(
-                          value: (sourcePathSize==0 || destinationPathSize==0 || double.parse(destinationSizeMB())>=double.parse(sourceSizeMB()))?null:((double.parse(destinationSizeMB())/double.parse(sourceSizeMB()))),
+                        LinearPercentIndicator(
+                          animateFromLastPercent: true,
+                          animation: true,
+                          padding: const EdgeInsets.all(0),
+                          progressColor: Colors.blue,
+                          percent: (sourcePathSize==0 || destinationPathSize==0 || double.parse(destinationSizeMB())>=double.parse(sourceSizeMB()))?0:((double.parse(destinationSizeMB())/double.parse(sourceSizeMB()))),
                         ),
                         if(sourcePathSize!=0 && destinationPathSize!=0 && double.parse(destinationSizeMB())<double.parse(sourceSizeMB()))
                           Row(
@@ -181,7 +186,7 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: const [
-                              Text("Calculating size",style: TextStyle(
+                              Text("Calculating progress",style: TextStyle(
                                 fontWeight: FontWeight.w600
                               ),)
                             ],

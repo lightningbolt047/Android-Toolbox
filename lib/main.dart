@@ -20,6 +20,7 @@ void main() {
   runApp(MaterialApp(
     themeMode: ThemeMode.light,
     theme: ThemeData(
+      primaryColor: Colors.blue,
       textTheme: const TextTheme(
         headline3: TextStyle(
           color: Colors.blue,
@@ -66,7 +67,7 @@ void main() {
         fillColor: MaterialStateProperty.resolveWith((states) => Colors.blueGrey),
       ),
       buttonTheme: const ButtonThemeData(
-        buttonColor: Colors.black54
+        buttonColor: Colors.black
       ),
       toggleableActiveColor: Colors.blueGrey
     ),

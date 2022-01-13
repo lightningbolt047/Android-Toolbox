@@ -1,5 +1,5 @@
 name: adb_gui
-description: A new Flutter project to do ADB GUI
+description: Android-Toolbox
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^2.0.8
   version: ^2.0.0
   shimmer: ^2.0.0
+  percent_indicator: ^3.4.0
 
 dev_dependencies:
   flutter_test:
