@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 
 Future<void> setAllowPreReleasePreference(bool value) async {
   SharedPreferences pref=await SharedPreferences.getInstance();
@@ -12,5 +13,19 @@ Future<bool?> getAllowPreReleasePreference() async{
     return false;
   }
   return pref.getBool("allowPreRelease");
+}
 
+Future<void> setThemeModePreference(ThemeMode themeMode) async{
+  SharedPreferences pref=await SharedPreferences.getInstance();
+  pref.setInt("themeMode", themeMode.index);
+}
+
+Future<ThemeMode> getThemeModePreference() async{
+  SharedPreferences pref=await SharedPreferences.getInstance();
+
+  if(pref.getInt("themeMode")==null){
+    await setThemeModePreference(ThemeMode.system);
+    return ThemeMode.system;
+  }
+  return ThemeMode.values[pref.getInt("themeMode")!];
 }

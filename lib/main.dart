@@ -1,11 +1,12 @@
 import 'package:adb_gui/screens/connection_initiation_screen.dart';
+import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'utils/vars.dart';
 import 'dart:io';
 
-void main() {
+void main() async {
 
   if(kDebugMode && Platform.isWindows){
     adbExecutable="adb";
@@ -18,7 +19,7 @@ void main() {
   }
 
   runApp(MaterialApp(
-    themeMode: ThemeMode.light,
+    themeMode: await getThemeModePreference(),
     theme: ThemeData(
       primaryColor: Colors.blue,
       textTheme: const TextTheme(

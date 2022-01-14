@@ -2,6 +2,7 @@ import 'package:adb_gui/components/allow_pre_release_toggle.dart';
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/updater_dialog.dart';
 import 'package:adb_gui/components/window_buttons.dart';
+import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/update_services.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,18 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
 
   bool _checkingForUpdates=false;
+
+
+  Future<String> getSelectedThemeModeAsString() async{
+    ThemeMode selectedThemeMode=await getThemeModePreference();
+    if(selectedThemeMode==ThemeMode.light){
+      return "Light Mode";
+    }else if(selectedThemeMode==ThemeMode.dark){
+      return "Dark Mode";
+    }
+    return "Follow System";
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +64,85 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            const PageSubheading(subheadingName: "Appearance"),
+            PopupMenuButton(
+              offset: Offset(MediaQuery.of(context).size.width,0),
+              child: ListTile(
+                title: const Text("Theme Mode",style: TextStyle(
+                  fontSize: 20
+                ),),
+                subtitle: const Text("Requires restart for change to take effect"),
+                trailing: FutureBuilder(
+                    future: getSelectedThemeModeAsString(),
+                    builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+                      if(!snapshot.hasData){
+                        return const CircularProgressIndicator();
+                      }
+                      return Text(snapshot.data!,style: TextStyle(
+                        color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                        fontSize: 20
+                      ),);
+                    },
+                  )
+              ),
+              itemBuilder: (BuildContext context)=>[
+                PopupMenuItem(
+                  child: ListTile(
+                      leading: Icon(
+                        Icons.wb_sunny_rounded,
+                        color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                      ),
+                      dense:false,
+                      title: Text(
+                        "Light Mode",
+                        style: TextStyle(
+                          color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                        ),
+                      ),
+                  ),
+                  onTap: () async {
+                    await setThemeModePreference(ThemeMode.light);
+                    setState(() {});
+                  }
+                ),
+                PopupMenuItem(
+                    child: ListTile(
+                        leading: Icon(
+                          Icons.mode_night_rounded,
+                          color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                        ),
+                        dense:false,
+                        title: Text(
+                          "Dark Mode",
+                          style: TextStyle(
+                            color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                          ),
+                        )),
+                    onTap: () async{
+                      await setThemeModePreference(ThemeMode.dark);
+                      setState(() {});
+                    }
+                ),
+                PopupMenuItem(
+                    child: ListTile(
+                        leading: Icon(
+                          Icons.brightness_auto,
+                          color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                        ),
+                        dense:false,
+                        title: Text(
+                          "Follow System",
+                          style: TextStyle(
+                            color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                          ),
+                        )),
+                    onTap: () async{
+                      await setThemeModePreference(ThemeMode.system);
+                      setState(() {});
+                    }
+                ),
+              ],
+            ),
             const PageSubheading(subheadingName: "Updates",),
             const AllowPreReleaseToggle(),
             ListTile(
