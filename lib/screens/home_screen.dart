@@ -50,10 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text("${_getScreenName(_currentScreen)} (${device.id} - ${device.model})",overflow: TextOverflow.ellipsis,style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20
-                ),),
+                Tooltip(
+                  message: "${device.id} - ${device.model}",
+                  child: Text("${_getScreenName(_currentScreen)} (${device.model})",overflow: TextOverflow.ellipsis,style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20
+                  ),),
+                ),
                 const Spacer(),
                 if(isPreMarshmallowAndroid(device.androidAPILevel))
                   WindowMaterialButton(
@@ -143,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 leading: const Icon(Icons.drive_file_move),
                 title: const Text("File Manager",),
+                dense: false,
                 onTap: (){
                   setState(() {
                     _currentScreen=Screens.fileManager;
@@ -154,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: const Icon(Icons.power_settings_new_rounded),
                 enabled: !isWSA(device.id),
                 title: Text("Power Controls ${isWSA(device.id)?"(N/A for WSA)":""}"),
+                dense: false,
                 onTap: (){
                   setState(() {
                     _currentScreen=Screens.powerControls;
@@ -161,17 +166,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.apps_rounded),
-                title: const Text("Applications"),
-                onTap: (){
-                  setState(() {
-                    _currentScreen=Screens.packageManager;
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-
+              // ListTile(
+              //   leading: const Icon(Icons.apps_rounded),
+              //   title: const Text("Applications"),
+              //   dense: false,
+              //   onTap: (){
+              //     setState(() {
+              //       _currentScreen=Screens.packageManager;
+              //     });
+              //     Navigator.pop(context);
+              //   },
+              // ),
             ],
           );
         }),

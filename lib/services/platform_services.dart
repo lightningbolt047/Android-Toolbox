@@ -5,7 +5,7 @@ String getPlatformName(){
   if(Platform.isWindows){
     return "windows";
   }else if(Platform.isMacOS){
-    return "macos";
+    return "macOS";
   }
   return "linux";
 }

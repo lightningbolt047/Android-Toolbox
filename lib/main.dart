@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'utils/vars.dart';
 import 'dart:io';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
 
@@ -22,16 +23,19 @@ void main() async {
     themeMode: await getThemeModePreference(),
     theme: ThemeData(
       primaryColor: Colors.blue,
-      textTheme: const TextTheme(
-        headline3: TextStyle(
-          color: Colors.blue,
-          fontSize: 40,
-        ),
-        headline5: TextStyle(
-            color: Colors.blue,
-            fontSize: 25,
-            fontWeight: FontWeight.w600
-        ),
+      textTheme: TextTheme(
+        headline1: GoogleFonts.quicksand(),
+        headline2: GoogleFonts.quicksand(),
+        headline3: GoogleFonts.quicksand(color: Colors.blue,fontSize: 40,),
+        headline4: GoogleFonts.quicksand(),
+        headline5: GoogleFonts.quicksand(color: Colors.blue,fontSize: 25,fontWeight: FontWeight.w600),
+        headline6: GoogleFonts.quicksand(),
+        subtitle1: GoogleFonts.quicksand(),
+        subtitle2: GoogleFonts.quicksand(),
+        bodyText1: GoogleFonts.quicksand(),
+        bodyText2: GoogleFonts.quicksand(),
+        button: GoogleFonts.quicksand(),
+        caption: GoogleFonts.quicksand(),
       ),
     ),
     darkTheme: ThemeData.dark().copyWith(
@@ -41,28 +45,19 @@ void main() async {
         dense: true,
         iconColor: Colors.blue,
       ),
-      textTheme: const TextTheme(
-        headline3: TextStyle(
-          color: Colors.white,
-          fontSize: 40,
-        ),
-        headline5: TextStyle(
-            color: Colors.white,
-            fontSize: 25,
-            fontWeight: FontWeight.w600
-        ),
-        headline6: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-          fontSize: 20,
-        ),
-        subtitle1: TextStyle(
-          color: Colors.white,
-          fontSize: 15,
-        ),
-        bodyText2: TextStyle(
-          color: Colors.white70,
-        ),
+      textTheme: TextTheme(
+        headline1: GoogleFonts.quicksand(),
+        headline2: GoogleFonts.quicksand(),
+        headline3: GoogleFonts.quicksand(color: Colors.white,fontSize: 40),
+        headline4: GoogleFonts.quicksand(),
+        headline5: GoogleFonts.quicksand(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w600),
+        headline6: GoogleFonts.quicksand(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w500),
+        subtitle1: GoogleFonts.quicksand(color: Colors.white,fontSize: 15),
+        subtitle2: GoogleFonts.quicksand(),
+        bodyText1: GoogleFonts.quicksand(),
+        bodyText2: GoogleFonts.quicksand(color: Colors.white70),
+        caption: GoogleFonts.quicksand(),
+        button: GoogleFonts.quicksand(),
       ),
       radioTheme: RadioThemeData(
         fillColor: MaterialStateProperty.resolveWith((states) => Colors.blueGrey),
