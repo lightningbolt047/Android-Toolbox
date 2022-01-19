@@ -30,7 +30,10 @@ class ADBService{
     return directoryItems;
   }
 
-  void deleteItem({required String itemPath, Function? onSuccess, Function? onFail}) async {
+  void deleteItem({required String itemPath,Function? beforeExecution, Function? onSuccess, Function? onFail}) async {
+    if(beforeExecution != null){
+      beforeExecution();
+    }
     ProcessResult result = await Process.run(adbExecutable, [
       "-s",
       device.id,

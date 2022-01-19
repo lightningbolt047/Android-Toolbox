@@ -166,17 +166,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pop(context);
                 },
               ),
-              // ListTile(
-              //   leading: const Icon(Icons.apps_rounded),
-              //   title: const Text("Applications"),
-              //   dense: false,
-              //   onTap: (){
-              //     setState(() {
-              //       _currentScreen=Screens.packageManager;
-              //     });
-              //     Navigator.pop(context);
-              //   },
-              // ),
+              ListTile(
+                leading: const Icon(Icons.apps_rounded),
+                title: const Text("Applications"),
+                dense: false,
+                onTap: (){
+                  setState(() {
+                    _currentScreen=Screens.packageManager;
+                  });
+                  Navigator.pop(context);
+                },
+              ),
             ],
           );
         }),

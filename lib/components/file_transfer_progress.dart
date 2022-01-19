@@ -3,6 +3,7 @@ import 'package:adb_gui/services/file_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -150,7 +151,7 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
                       child: SingleChildScrollView(
                         reverse: true,
                         scrollDirection: Axis.vertical,
-                        child: Text(_consoleOutput),
+                        child: Text(_consoleOutput,style: GoogleFonts.inconsolata(),),
                       ),
                     ),
                   ),

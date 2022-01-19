@@ -598,6 +598,20 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                         onTap: () {
                                           adbService.deleteItem(
                                             itemPath: _currentPath+snapshot.data![index].itemName,
+                                            beforeExecution: (){
+                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(
+                                                children: [
+                                                  const CircularProgressIndicator(
+                                                    valueColor: AlwaysStoppedAnimation<Color?>(Colors.blue),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 12,
+                                                  ),
+                                                  Text("Deleting ${snapshot.data![index].itemName}"),
+                                                ],
+                                              )));
+                                              ScaffoldMessenger.of(context).deactivate();
+                                            },
                                             onSuccess: (){
                                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${snapshot.data![index].itemName} deleted successfully")));
                                               ScaffoldMessenger.of(context).deactivate();
