@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/models/item.dart';
-import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/utils/vars.dart';
 import 'android_api_checks.dart';
@@ -18,19 +17,15 @@ class ADBService{
     if(isPreMarshmallowAndroid(device.androidAPILevel)){
       result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls", "\"$currentPath\""]);
     }else{
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-l","-p", "\"$currentPath\""]);
+      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-p", "\"$currentPath\""]);
     }
     // result=await Process.run(adbExecutable, ["-s", deviceID, "shell", "ls","-p", "\"$_currentPath\""]);
     List<String> directoryContentDetails = (result.stdout).split("\n");
-    directoryContentDetails.removeAt(0);
     directoryContentDetails.removeLast();
     List<Item> directoryItems=[];
-    directoryContentDetails=getTrimmedStringList(directoryContentDetails);
     for(int i=0;i<directoryContentDetails.length;i++){
-      List<String> directoryContent=directoryContentDetails[i].split(" ");
-      directoryContent=getTrimmedStringList(directoryContent);
-      print("This: "+directoryContent[9].toString());
-      directoryItems.add(Item(directoryContent[9].endsWith("/")?directoryContent[9].replaceAll("/", ""):directoryContent[7],await getFileType(device:device,currentPath:currentPath,fileName:directoryContent[9])));
+      directoryContentDetails[i]=directoryContentDetails[i].trim();
+      directoryItems.add(Item(directoryContentDetails[i].trim().endsWith("/")?directoryContentDetails[i].replaceAll("/", "").trim():directoryContentDetails[i].trim(),await getFileType(device:device,currentPath:currentPath,fileName:directoryContentDetails[i].trim())));
     }
     return directoryItems;
   }

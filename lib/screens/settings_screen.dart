@@ -66,7 +66,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             const PageSubheading(subheadingName: "Appearance"),
             PopupMenuButton(
-              tooltip: "Select Theme Mode",
               offset: Offset(MediaQuery.of(context).size.width,0),
               child: ListTile(
                 title: const Text("Theme Mode",style: TextStyle(
