@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/models/item.dart';
+import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/utils/vars.dart';
 import 'android_api_checks.dart';
@@ -23,9 +24,9 @@ class ADBService{
     List<String> directoryContentDetails = (result.stdout).split("\n");
     directoryContentDetails.removeLast();
     List<Item> directoryItems=[];
+    directoryContentDetails=getTrimmedStringList(directoryContentDetails);
     for(int i=0;i<directoryContentDetails.length;i++){
-      directoryContentDetails[i]=directoryContentDetails[i].trim();
-      directoryItems.add(Item(directoryContentDetails[i].trim().endsWith("/")?directoryContentDetails[i].replaceAll("/", "").trim():directoryContentDetails[i].trim(),await getFileType(device:device,currentPath:currentPath,fileName:directoryContentDetails[i].trim())));
+      directoryItems.add(Item(directoryContentDetails[i].endsWith("/")?directoryContentDetails[i].replaceAll("/", ""):directoryContentDetails[i],await getFileType(device:device,currentPath:currentPath,fileName:directoryContentDetails[i])));
     }
     return directoryItems;
   }

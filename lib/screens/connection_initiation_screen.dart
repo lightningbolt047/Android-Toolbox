@@ -313,8 +313,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                 FutureBuilder(
                     future:getAllDevicesInfo(),
                     builder: (BuildContext context,AsyncSnapshot<List<Device>> snapshot) {
-
-                      if(snapshot.connectionState!=ConnectionState.done || !snapshot.hasData){
+                      if(!snapshot.hasData){
                         return Shimmer.fromColors(
                             baseColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFE0E0E0):Colors.black12,
                             highlightColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFF5F5F5):Colors.blueGrey,
