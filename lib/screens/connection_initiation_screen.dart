@@ -41,7 +41,9 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
       if(Platform.isLinux && !kDebugMode){
         await Process.run("chmod",["+x",adbExecutable]);
       }
-      await Process.run(adbExecutable,["kill-server"]);
+      if(!kDebugMode){
+        await Process.run(adbExecutable,["kill-server"]);
+      }
       await Process.run(adbExecutable, ["start-server"]);
       _serverStarted=true;
     }

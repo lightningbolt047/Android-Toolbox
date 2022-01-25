@@ -437,7 +437,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                         Text(
                           "Directory is Empty",
                           style: TextStyle(color: Colors.grey, fontSize: 30),
-                        )
+                        ),
                       ],
                     ),
                   ),

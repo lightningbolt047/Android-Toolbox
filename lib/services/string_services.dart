@@ -4,3 +4,11 @@ List<String> getTrimmedStringList(List<String> inputString){
   }
   return inputString;
 }
+
+String getStringFromStringList(List<String> inputString){
+  String outputString = "";
+  for(int i=0;i<inputString.length;i++){
+    outputString+=inputString[i]+"\n";
+  }
+  return outputString;
+}

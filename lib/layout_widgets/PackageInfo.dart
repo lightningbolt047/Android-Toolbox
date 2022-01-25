@@ -15,6 +15,22 @@ class PackageInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(packageName==""){
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.android,color: Colors.grey,size: 100,),
+              Text(
+                "Select an App",
+                style: TextStyle(color: Colors.grey, fontSize: 30),
+              )
+            ],
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 0,

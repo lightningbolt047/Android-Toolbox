@@ -1,3 +1,4 @@
+import 'package:adb_gui/components/apk_install_dialog.dart';
 import 'package:adb_gui/components/custom_list_tile.dart';
 import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/material_ribbon.dart';
@@ -68,7 +69,10 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                           fontSize: 20
                         ),),
                         onPressed: (){
-
+                          showDialog(
+                            context: context,
+                            builder: (context)=>ApkInstallDialog(device: device,),
+                          );
                         },
                       )
                     ),
@@ -159,8 +163,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                   ),
                 ),
               ),
-              if(_selectedPackageName!="")
-                Expanded(child: Card(child: PackageInfo(device: device,packageName: _selectedPackageName,adbService: adbService,onUninstallComplete: (){setState(() {_selectedPackageName="";});},))),
+              Expanded(child: Card(child: PackageInfo(device: device,packageName: _selectedPackageName,adbService: adbService,onUninstallComplete: (){setState(() {_selectedPackageName="";});},))),
             ],
           ),
         ),

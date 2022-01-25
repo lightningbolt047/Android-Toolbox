@@ -37,3 +37,16 @@ enum AppType{
   system,
   user
 }
+
+enum AppInstallType{
+  single,
+  multiApks,
+  batch,
+}
+
+enum ProcessStatus{
+  notStarted,
+  working,
+  success,
+  fail,
+}

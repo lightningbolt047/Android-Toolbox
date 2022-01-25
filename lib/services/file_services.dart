@@ -77,13 +77,25 @@ Future<FileContentTypes> findFileItemType(ADBService adbService, String currentP
 }
 
 
-Future<String?> pickFileFolderFromDesktop(FileItemType uploadType, String dialogTitle) async{
+Future<String?> pickFileFolderFromDesktop({required FileItemType uploadType, required String dialogTitle, required List<String> allowedExtensions}) async{
   if (uploadType == FileItemType.file) {
-    FilePickerResult? filePicker = await FilePicker.platform.pickFiles(dialogTitle: dialogTitle);
+    FilePickerResult? filePicker = await FilePicker.platform.pickFiles(dialogTitle: dialogTitle, type: allowedExtensions[0]=="*"?FileType.any:FileType.custom, allowedExtensions: allowedExtensions);
     return filePicker?.files.single.path;
   } else {
     return await FilePicker.platform.getDirectoryPath(dialogTitle: dialogTitle);
   }
+}
+
+Future<List<String?>> pickMultipleFilesFromDesktop({required String dialogTitle,required List<String> allowedExtensions}) async{
+  FilePickerResult? filePicker = await FilePicker.platform.pickFiles(dialogTitle: dialogTitle,allowMultiple: true, type: allowedExtensions[0]=="*"?FileType.any:FileType.custom, allowedExtensions: allowedExtensions);
+  List<String?> filePaths=[];
+  if(filePicker==null){
+    return filePaths;
+  }
+  for(int i=0;i<filePicker.files.length;i++){
+    filePaths.add(filePicker.files[i].path);
+  }
+  return filePaths;
 }
 
 

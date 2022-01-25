@@ -49,7 +49,7 @@ class ADBService{
   }
 
   void uploadContent({required currentPath, required FileItemType uploadType, Function? onProgress}) async {
-    String? sourcePath = await pickFileFolderFromDesktop(uploadType,uploadType==FileItemType.file?"Select File":"Select Directory");
+    String? sourcePath = await pickFileFolderFromDesktop(uploadType: uploadType,dialogTitle:uploadType==FileItemType.file?"Select File":"Select Directory",allowedExtensions: ["*"]);
 
     if (sourcePath == null) {
       return;
@@ -110,7 +110,7 @@ class ADBService{
   }
 
   void downloadContent({required String itemPath,Function? onProgress}) async {
-    String? chosenDirectory = await pickFileFolderFromDesktop(FileItemType.directory,"Where to download");
+    String? chosenDirectory = await pickFileFolderFromDesktop(uploadType:FileItemType.directory,dialogTitle: "Where to download",allowedExtensions: ["*"]);
 
     if (chosenDirectory == null) {
       return;
@@ -159,6 +159,27 @@ class ADBService{
   Future<int> uninstallApp(String packageName) async{
     ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"uninstall",packageName]);
     return result.exitCode;
+  }
+
+  Future<Process> installSingleApk(String apkFilePath) async{
+    // apkFilePath.replaceAll(" ", "` ");
+    return await Process.start(adbExecutable, ["-s",device.id,"install",apkFilePath]);
+  }
+
+  Future<Process> installMultipleForSinglePackage(List<String> apkFilePaths) async{
+    List<String> processArgs=["-s",device.id,"install-multiple"];
+    for(int i=0;i<apkFilePaths.length;i++){
+      processArgs.add(apkFilePaths[i]);
+    }
+    return await Process.start(adbExecutable, processArgs);
+  }
+
+  Future<Process> batchInstallApk(List<String> apkFilePaths) async{
+    List<String> processArgs=["-s",device.id,"install-multi-package"];
+    for(int i=0;i<apkFilePaths.length;i++){
+      processArgs.add(apkFilePaths[i]);
+    }
+    return await Process.start(adbExecutable, processArgs);
   }
 
 

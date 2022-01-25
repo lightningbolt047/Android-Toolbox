@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:adb_gui/components/console_output.dart';
 import 'package:adb_gui/services/file_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
@@ -144,17 +145,7 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
                     height: 1,
                     thickness: 1,
                   ),
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      color: Theme.of(context).brightness==Brightness.light?Colors.grey[200]:Colors.grey[900],
-                      child: SingleChildScrollView(
-                        reverse: true,
-                        scrollDirection: Axis.vertical,
-                        child: Text(_consoleOutput,style: GoogleFonts.inconsolata(),),
-                      ),
-                    ),
-                  ),
+                  ConsoleOutput(consoleOutput: _consoleOutput),
                   SizedBox.fromSize(
                     size: const Size(0,4),
                   ),
