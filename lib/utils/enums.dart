@@ -50,3 +50,8 @@ enum ProcessStatus{
   success,
   fail,
 }
+
+enum AppInstaller{
+  googlePlayStore,
+  custom
+}

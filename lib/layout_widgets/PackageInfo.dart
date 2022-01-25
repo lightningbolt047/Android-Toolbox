@@ -1,4 +1,5 @@
 import 'package:adb_gui/components/prompt_dialog.dart';
+import 'package:adb_gui/components/set_app_installer_dialog.dart';
 import 'package:adb_gui/components/simple_rectangle_icon_material_button.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/adb_services.dart';
@@ -119,7 +120,6 @@ class PackageInfo extends StatelessWidget {
                           onUninstallComplete();
                         }
                         Navigator.pop(context);
-
                       },
                     ),
                   );
@@ -131,8 +131,40 @@ class PackageInfo extends StatelessWidget {
             thickness: 2,
             color: Colors.grey[200],
           ),
+          AppActionListTile(
+            titleText: "Set Installer",
+            subtitleText: "This will help you set the installer of this app",
+            onTap: (){
+              showDialog(
+                context: context,
+                builder: (context)=>SetAppInstallerDialog(),
+              );
+            },
+          ),
         ],
       ),
+    );
+  }
+}
+
+
+class AppActionListTile extends StatelessWidget {
+
+  final String titleText;
+  final String subtitleText;
+  final VoidCallback onTap;
+
+  const AppActionListTile({Key? key, required this.titleText, required this.subtitleText, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(titleText,style: const TextStyle(
+        fontSize: 20
+      ),),
+      dense: true,
+      onTap: onTap,
+      subtitle: Text(subtitleText),
     );
   }
 }

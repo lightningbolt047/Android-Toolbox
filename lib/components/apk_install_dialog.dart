@@ -66,6 +66,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
     }
     if(process!=null){
       setState(() {
+        consoleOutput="";
         processStatus=ProcessStatus.working;
       });
       process.stdout.listen((event) {
@@ -123,16 +124,25 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                     children: [
                       AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.single, label: "Single APK", onChanged: (value){
                         setState(() {
+                          if(appInstallType!=AppInstallType.single){
+                            selectedFiles.clear();
+                          }
                           appInstallType=AppInstallType.single;
                         });
                       }),
                       // AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.multiApks, label: "Multi APKs", onChanged: (value){
                       //   setState(() {
+                      //     if(appInstallType!=AppInstallType.multiApks){
+                      //       selectedFiles.clear();
+                      //     }
                       //     appInstallType=AppInstallType.multiApks;
                       //   });
                       // }),
                       // AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
                       //   setState(() {
+                      //     if(appInstallType!=AppInstallType.batch){
+                      //       selectedFiles.clear();
+                      //     }
                       //     appInstallType=AppInstallType.batch;
                       //   });
                       // }),
