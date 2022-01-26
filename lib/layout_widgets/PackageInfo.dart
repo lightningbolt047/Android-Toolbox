@@ -5,6 +5,7 @@ import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/adb_services.dart';
 import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PackageInfo extends StatelessWidget {
 
@@ -70,6 +71,46 @@ class PackageInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SimpleRectangleIconMaterialButton(
+                buttonText: "Offload",
+                buttonIcon: const Icon(FontAwesomeIcons.archive,color: Colors.blue,),
+                onPressed: (){
+                  showDialog(
+                    context: context,
+                    builder: (context)=>PromptDialog(
+                      title: "Offload ${packageInfo['packageName']!}?",
+                      contentText: "This will uninstall the app while retaining its data. Yes that's right! Reinstalling this way will make sure you don't have to redo all those annoying initialization processes. If you want to remove the data completely, install the app again and uninstall normally",
+                      onConfirm: () async{
+                        if(await adbService.uninstallApp(packageName: packageInfo['packageName']!,keepData: true)!=0){
+                          await showDialog(
+                            context: context,
+                            builder: (context)=>AlertDialog(
+                              title: const Text("Error",style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w600
+                              ),),
+                              content: const Text("An error occurred"),
+                              actions: [
+                                TextButton(
+                                  onPressed: (){
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("OK",style: TextStyle(
+                                      color: Colors.blue
+                                  ),),
+                                ),
+                              ],
+                            ),
+                          );
+                        }else{
+                          onUninstallComplete();
+                        }
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                },
+              ),
+              SimpleRectangleIconMaterialButton(
                 buttonText: "Force stop",
                 buttonIcon: const Icon(Icons.warning_amber_rounded,color: Colors.blue,),
                 onPressed: () {
@@ -96,7 +137,7 @@ class PackageInfo extends StatelessWidget {
                       title: packageInfo['packageName']!,
                       contentText: "Do you want to uninstall this app?",
                       onConfirm: () async{
-                        if(await adbService.uninstallApp(packageInfo['packageName']!)!=0){
+                        if(await adbService.uninstallApp(packageName: packageInfo['packageName']!)!=0){
                           await showDialog(
                             context: context,
                             builder: (context)=>AlertDialog(

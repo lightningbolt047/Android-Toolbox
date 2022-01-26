@@ -149,8 +149,13 @@ class ADBService{
     await Process.run(adbExecutable, ["-s",device.id,"shell","am","force-stop",packageName]);
   }
 
-  Future<int> uninstallApp(String packageName) async{
-    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"uninstall",packageName]);
+  Future<int> uninstallApp({required String packageName, bool keepData=false}) async{
+    ProcessResult result;
+    if(keepData){
+      result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","uninstall","-k",packageName]);
+    }else{
+      result=await Process.run(adbExecutable, ["-s",device.id,"uninstall",packageName]);
+    }
     return result.exitCode;
   }
 
