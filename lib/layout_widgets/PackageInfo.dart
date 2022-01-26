@@ -136,7 +136,7 @@ class PackageInfo extends StatelessWidget {
             Column(
               children: [
                 Tooltip(
-                  message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and can unsuspend them by using the unsuspend option",
+                  message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and may unsuspend them by using the unsuspend option",
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

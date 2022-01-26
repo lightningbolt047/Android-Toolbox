@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:adb_gui/utils/vars.dart';
@@ -43,9 +44,11 @@ class CustomCloseWindowButton extends CloseWindowButton{
       darkModeHoverColor: Colors.redAccent,
       buttonIcon: const Icon(Icons.close,color: Colors.white,),
       onPressed: () async{
-        await Process.run(adbExecutable, ["kill-server"],runInShell: true);
-        if(Platform.isWindows){
-          await Process.run("taskkill", ["/IM","adb.exe","/F"],runInShell: true);
+        if((await getKillADBOnExitPreference())!){
+          await Process.run(adbExecutable, ["kill-server"],runInShell: true);
+          if(Platform.isWindows){
+            await Process.run("taskkill", ["/IM","adb.exe","/F"],runInShell: true);
+          }
         }
         super.onPressed!();
       },
