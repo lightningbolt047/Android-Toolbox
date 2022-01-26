@@ -5,3 +5,7 @@ bool isPreMarshmallowAndroid(int apiLevel){
 bool isPreIceCreamSandwichAndroid(int apiLevel){
   return apiLevel<15;
 }
+
+bool appSuspendSupported(int apiLevel){
+  return apiLevel>=29;
+}

@@ -3,6 +3,7 @@ import 'package:adb_gui/components/set_app_installer_dialog.dart';
 import 'package:adb_gui/components/simple_rectangle_icon_material_button.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/adb_services.dart';
+import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:flutter/material.dart';
 
 class PackageInfo extends StatelessWidget {
@@ -131,33 +132,45 @@ class PackageInfo extends StatelessWidget {
             thickness: 2,
             color: Colors.grey[200],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SimpleRectangleIconMaterialButton(
-                buttonIcon: const Icon(Icons.ac_unit, color: Colors.blue,),
-                buttonText: "Suspend",
-                onPressed: () async {
-                  if((await adbService.suspendApp(packageInfo['packageName']!))==0){
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Suspended")));
-                  }else{
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Suspend App")));
-                  }
-                },
-              ),
-              SimpleRectangleIconMaterialButton(
-                buttonIcon: const Icon(Icons.wb_sunny_rounded, color: Colors.blue,),
-                buttonText: "Unsuspend",
-                onPressed: () async {
-                  if((await adbService.unsuspendApp(packageInfo['packageName']!))==0){
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Un-Suspended")));
-                  }else{
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Un-Suspend App")));
-                  }
-                },
-              ),
-            ],
-          ),
+          if(appSuspendSupported(device.androidAPILevel))
+            Column(
+              children: [
+                Tooltip(
+                  message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and can unsuspend them by using the unsuspend option",
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SimpleRectangleIconMaterialButton(
+                        buttonIcon: const Icon(Icons.ac_unit, color: Colors.blue,),
+                        buttonText: "Suspend",
+                        onPressed: () async {
+                          if((await adbService.suspendApp(packageInfo['packageName']!))==0){
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Suspended")));
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Suspend App")));
+                          }
+                        },
+                      ),
+                      SimpleRectangleIconMaterialButton(
+                        buttonIcon: const Icon(Icons.wb_sunny_rounded, color: Colors.blue,),
+                        buttonText: "Unsuspend",
+                        onPressed: () async {
+                          if((await adbService.unsuspendApp(packageInfo['packageName']!))==0){
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Un-Suspended")));
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Un-Suspend App")));
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  thickness: 2,
+                  color: Colors.grey[200],
+                ),
+              ],
+            ),
           AppActionListTile(
             titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,
             subtitleText: "Installer",

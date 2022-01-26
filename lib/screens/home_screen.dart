@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showDialog(
                       context: context,
                       builder: (context)=>AlertDialog(
-                        title: const Text("Performance Alert",style: TextStyle(
+                        title: const Text("Stability Alert",style: TextStyle(
                           color: Colors.blue
                         ),),
                         content: Text("You may experience degraded performance/glitches since your device runs on Android ${device.androidVersion} .\nThe recommended Android version is 7.0 and above"),
