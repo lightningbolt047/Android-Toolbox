@@ -84,17 +84,17 @@ class _SetAppInstallerDialogState extends State<SetAppInstallerDialog> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: TextButton(
-                              child: const Text("OK",),
-                              onPressed: () async{
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ),
                         ],
                       ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                      child: const Text("OK",),
+                      onPressed: () async{
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                 ],

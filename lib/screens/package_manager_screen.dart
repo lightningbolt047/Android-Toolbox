@@ -29,7 +29,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
 
   AppType _appType=AppType.user;
 
-  String _selectedPackageName="";
+  Map<String,String> _selectedPackageName={};
 
   final TextEditingController _searchbarController=TextEditingController();
 
@@ -119,7 +119,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                   onChanged: isPreIceCreamSandwichAndroid(device.androidAPILevel)?null:(AppType? appType){
                     if(_appType!=appType!){
                       setState(() {
-                        _selectedPackageName="";
+                        _selectedPackageName={};
                         _appType=appType;
                       });
                     }
@@ -137,20 +137,20 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
               Expanded(
                 child: Card(
                   child: FutureBuilder(
-                    future: _appType==AppType.user?adbService.getUserPackageNames():adbService.getSystemPackageNames(),
-                    builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                    future: adbService.getAppPackageNames(_appType),
+                    builder: (BuildContext context, AsyncSnapshot<List<Map<String,String>>> snapshot) {
                       if(!snapshot.hasData){
                         return const ShimmerAppsList();
                       }
                       return ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context,index){
-                          if(snapshot.data![index]!="" && !snapshot.data![index].contains(_searchbarController.text)){
+                          if(snapshot.data![index]['packageName']!="" && !snapshot.data![index]['packageName']!.contains(_searchbarController.text)){
                             return Container();
                           }
                           return ListTile(
                             leading: const Icon(Icons.android,color: Colors.green,),
-                            title: Text(snapshot.data![index]),
+                            title: Text(snapshot.data![index]['packageName']!),
                             onTap: (){
                               setState(() {
                                 _selectedPackageName=snapshot.data![index];
@@ -163,7 +163,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                   ),
                 ),
               ),
-              Expanded(child: Card(child: PackageInfo(device: device,packageName: _selectedPackageName,adbService: adbService,onUninstallComplete: (){setState(() {_selectedPackageName="";});},))),
+              Expanded(child: Card(child: PackageInfo(device: device,packageInfo: _selectedPackageName,adbService: adbService,onUninstallComplete: (){setState(() {_selectedPackageName={};});},))),
             ],
           ),
         ),

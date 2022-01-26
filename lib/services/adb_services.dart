@@ -126,30 +126,23 @@ class ADBService{
     return int.parse(processResult.stdout.toString().split("\t")[0]);
   }
   
-  Future<List<String>> getUserPackageNames() async{
-    List<String> arguments=["-s",device.id,"shell","pm","list","packages","-3"];
+  Future<List<Map<String,String>>> getAppPackageNames(AppType appType) async{
+    List<String> arguments=["-s",device.id,"shell","pm","list","packages",appType==AppType.system?"-s":"-3","-i"];
     if(isPreIceCreamSandwichAndroid(device.androidAPILevel)){
       arguments.removeLast();
     }
     ProcessResult result=await Process.run(adbExecutable, arguments);
-    List<String> packageNames=result.stdout.toString().split("\n");
-    packageNames.removeLast();
-    for(int i=0;i<packageNames.length;i++){
-      packageNames[i]=packageNames[i].split(":")[1];
-      packageNames[i]=packageNames[i].trim();
+    List<String> packageInfoList=result.stdout.toString().split("\n");
+    packageInfoList.removeLast();
+    List<Map<String,String>> packageInfoMap=[];
+    for(int i=0;i<packageInfoList.length;i++){
+      List<String> packageInfo = packageInfoList[i].split("  ");
+      packageInfoMap.add({
+        'packageName':packageInfo[0].split(":")[1],
+        'installer':packageInfo[1].split("=")[1].trim()
+      });
     }
-    return packageNames;
-  }
-
-  Future<List<String>> getSystemPackageNames() async{
-    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-s"]);
-    List<String> packageNames=result.stdout.toString().split("\n");
-    packageNames.removeLast();
-    for(int i=0;i<packageNames.length;i++){
-      packageNames[i]=packageNames[i].split(":")[1];
-      packageNames[i]=packageNames[i].trim();
-    }
-    return packageNames;
+    return packageInfoMap;
   }
 
   Future<void> forceStopPackage(String packageName) async{
@@ -180,6 +173,16 @@ class ADBService{
       processArgs.add(apkFilePaths[i]);
     }
     return await Process.start(adbExecutable, processArgs);
+  }
+
+  Future<int> suspendApp(String packageName) async{
+    ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","suspend",packageName]);
+    return result.exitCode;
+  }
+
+  Future<int> unsuspendApp(String packageName) async{
+    ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","unsuspend",packageName]);
+    return result.exitCode;
   }
 
 

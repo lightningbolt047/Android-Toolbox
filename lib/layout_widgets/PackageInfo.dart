@@ -8,15 +8,15 @@ import 'package:flutter/material.dart';
 class PackageInfo extends StatelessWidget {
 
   final Device device;
-  final String packageName;
+  final Map<String,String> packageInfo;
   final ADBService adbService;
   final VoidCallback onUninstallComplete;
 
-  const PackageInfo({Key? key,required this.device,required this.packageName, required this.adbService,required this.onUninstallComplete}) : super(key: key);
+  const PackageInfo({Key? key,required this.device,required this.packageInfo, required this.adbService,required this.onUninstallComplete}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if(packageName==""){
+    if(packageInfo['packageName']==null){
       return Scaffold(
         body: Center(
           child: Column(
@@ -55,7 +55,7 @@ class PackageInfo extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(packageName,maxLines: 2,overflow: TextOverflow.ellipsis,style: const TextStyle(
+              Text(packageInfo['packageName']!,maxLines: 2,overflow: TextOverflow.ellipsis,style: const TextStyle(
                 fontSize: 20,
                 color: Colors.blue,
               ),),
@@ -78,7 +78,7 @@ class PackageInfo extends StatelessWidget {
                       title: "Force Stop?",
                       contentText: "If you force stop an app, it may misbehave",
                       onConfirm: () async{
-                        await adbService.forceStopPackage(packageName);
+                        await adbService.forceStopPackage(packageInfo['packageName']!);
                         Navigator.pop(context);
                       },
                     ),
@@ -92,10 +92,10 @@ class PackageInfo extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context)=>PromptDialog(
-                      title: packageName,
+                      title: packageInfo['packageName']!,
                       contentText: "Do you want to uninstall this app?",
                       onConfirm: () async{
-                        if(await adbService.uninstallApp(packageName)!=0){
+                        if(await adbService.uninstallApp(packageInfo['packageName']!)!=0){
                           await showDialog(
                             context: context,
                             builder: (context)=>AlertDialog(
@@ -131,15 +131,37 @@ class PackageInfo extends StatelessWidget {
             thickness: 2,
             color: Colors.grey[200],
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SimpleRectangleIconMaterialButton(
+                buttonIcon: const Icon(Icons.ac_unit, color: Colors.blue,),
+                buttonText: "Suspend",
+                onPressed: () async {
+                  if((await adbService.suspendApp(packageInfo['packageName']!))==0){
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Suspended")));
+                  }else{
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Suspend App")));
+                  }
+                },
+              ),
+              SimpleRectangleIconMaterialButton(
+                buttonIcon: const Icon(Icons.wb_sunny_rounded, color: Colors.blue,),
+                buttonText: "Unsuspend",
+                onPressed: () async {
+                  if((await adbService.unsuspendApp(packageInfo['packageName']!))==0){
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Un-Suspended")));
+                  }else{
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Un-Suspend App")));
+                  }
+                },
+              ),
+            ],
+          ),
           AppActionListTile(
-            titleText: "Set Installer",
-            subtitleText: "This will help you set the installer of this app",
-            onTap: (){
-              showDialog(
-                context: context,
-                builder: (context)=>SetAppInstallerDialog(),
-              );
-            },
+            titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,
+            subtitleText: "Installer",
+            onTap: (){},
           ),
         ],
       ),
