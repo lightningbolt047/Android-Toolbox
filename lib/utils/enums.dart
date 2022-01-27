@@ -57,10 +57,10 @@ enum AppInstaller{
 }
 
 enum CompilationMode{
+  quicken,
   space,
   spaceProfile,
   speed,
   speedProfile,
-  quicken,
   everything,
 }

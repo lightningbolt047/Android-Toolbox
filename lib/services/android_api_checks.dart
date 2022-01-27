@@ -9,3 +9,7 @@ bool isPreIceCreamSandwichAndroid(int apiLevel){
 bool appSuspendSupported(int apiLevel){
   return apiLevel>=29;
 }
+
+bool appCompilationSupported(int apiLevel){
+  return apiLevel>=29;
+}

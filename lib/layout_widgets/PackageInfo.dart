@@ -79,7 +79,7 @@ class PackageInfo extends StatelessWidget {
                     context: context,
                     builder: (context)=>PromptDialog(
                       title: "Offload ${packageInfo['packageName']!}?",
-                      contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off. If you want to remove the data completely, install the app again and uninstall normally",
+                      contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off (Similar to what iOS does). If you want to remove the data completely, install the app again and uninstall normally",
                       onConfirm: () async{
                         if(await adbService.uninstallApp(packageName: packageInfo['packageName']!,keepData: true)!=0){
                           await showDialog(
@@ -174,12 +174,13 @@ class PackageInfo extends StatelessWidget {
             thickness: 2,
             color: Colors.grey[200],
           ),
-          if(appSuspendSupported(device.androidAPILevel))
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+          if(appSuspendSupported(device.androidAPILevel) || appCompilationSupported(device.androidAPILevel))
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if(appSuspendSupported(device.androidAPILevel))
                     Tooltip(
                       message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and may unsuspend them by using the unsuspend option",
                       child: SimpleRectangleIconMaterialButton(
@@ -194,41 +195,44 @@ class PackageInfo extends StatelessWidget {
                         },
                       ),
                     ),
+                  if(appSuspendSupported(device.androidAPILevel))
                     Tooltip(
-                      message: "Unsuspending apps will restore normal functionality",
-                      child: SimpleRectangleIconMaterialButton(
-                        buttonIcon: const Icon(Icons.wb_sunny_rounded, color: Colors.blue,),
-                        buttonText: "Unsuspend",
-                        onPressed: () async {
-                          if((await adbService.unsuspendApp(packageInfo['packageName']!))==0){
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Un-Suspended")));
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Un-Suspend App")));
-                          }
-                        },
-                      ),
+                    message: "Unsuspending apps will restore normal functionality",
+                    child: SimpleRectangleIconMaterialButton(
+                      buttonIcon: const Icon(Icons.wb_sunny_rounded, color: Colors.blue,),
+                      buttonText: "Unsuspend",
+                      onPressed: () async {
+                        if((await adbService.unsuspendApp(packageInfo['packageName']!))==0){
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Un-Suspended")));
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Un-Suspend App")));
+                        }
+                      },
                     ),
+                  ),
+                  if(appCompilationSupported(device.androidAPILevel))
                     Tooltip(
                       message: "You can opt to trade speed for space or vice versa. Applications may take up less or more space depending on your choice",
                       child: SimpleRectangleIconMaterialButton(
                         buttonIcon: const Icon(Icons.refresh_rounded, color: Colors.blue,),
                         buttonText: "Recompile",
-                        onPressed: () async {
-                          await showDialog(
+                        onPressed: () {
+                          showDialog(
                             context: context,
-                            builder: (context)=>SelectCompilationModeDialog(),
+                            barrierDismissible: false,
+                            builder: (context)=>SelectCompilationModeDialog(packageName: packageInfo['packageName']!,adbService: adbService,),
                           );
                         },
                       ),
                     ),
-                  ],
-                ),
-                Divider(
-                  thickness: 2,
-                  color: Colors.grey[200],
-                ),
-              ],
-            ),
+                ],
+              ),
+              Divider(
+                thickness: 2,
+                color: Colors.grey[200],
+              ),
+            ],
+          ),
           AppActionListTile(
             titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,
             subtitleText: "Installer",

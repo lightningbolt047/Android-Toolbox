@@ -190,5 +190,10 @@ class ADBService{
     return result.exitCode;
   }
 
+  Future<int> compileApp(String packageName, CompilationMode compilationMode) async{
+    ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","compile","-m",getCompilationModeAsString(compilationMode),"-f",packageName]);
+    return result.exitCode;
+  }
+
 
 }
