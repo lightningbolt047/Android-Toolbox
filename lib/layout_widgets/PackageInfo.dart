@@ -1,4 +1,5 @@
 import 'package:adb_gui/components/prompt_dialog.dart';
+import 'package:adb_gui/components/select_compilation_mode_dialog.dart';
 import 'package:adb_gui/components/set_app_installer_dialog.dart';
 import 'package:adb_gui/components/simple_rectangle_icon_material_button.dart';
 import 'package:adb_gui/models/device.dart';
@@ -78,7 +79,7 @@ class PackageInfo extends StatelessWidget {
                     context: context,
                     builder: (context)=>PromptDialog(
                       title: "Offload ${packageInfo['packageName']!}?",
-                      contentText: "This will uninstall the app while retaining its data. Yes that's right! Reinstalling this way will make sure you don't have to redo all those annoying initialization processes. If you want to remove the data completely, install the app again and uninstall normally",
+                      contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off. If you want to remove the data completely, install the app again and uninstall normally",
                       onConfirm: () async{
                         if(await adbService.uninstallApp(packageName: packageInfo['packageName']!,keepData: true)!=0){
                           await showDialog(
@@ -176,12 +177,12 @@ class PackageInfo extends StatelessWidget {
           if(appSuspendSupported(device.androidAPILevel))
             Column(
               children: [
-                Tooltip(
-                  message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and may unsuspend them by using the unsuspend option",
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SimpleRectangleIconMaterialButton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Tooltip(
+                      message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and may unsuspend them by using the unsuspend option",
+                      child: SimpleRectangleIconMaterialButton(
                         buttonIcon: const Icon(Icons.ac_unit, color: Colors.blue,),
                         buttonText: "Suspend",
                         onPressed: () async {
@@ -192,7 +193,10 @@ class PackageInfo extends StatelessWidget {
                           }
                         },
                       ),
-                      SimpleRectangleIconMaterialButton(
+                    ),
+                    Tooltip(
+                      message: "Unsuspending apps will restore normal functionality",
+                      child: SimpleRectangleIconMaterialButton(
                         buttonIcon: const Icon(Icons.wb_sunny_rounded, color: Colors.blue,),
                         buttonText: "Unsuspend",
                         onPressed: () async {
@@ -203,8 +207,21 @@ class PackageInfo extends StatelessWidget {
                           }
                         },
                       ),
-                    ],
-                  ),
+                    ),
+                    Tooltip(
+                      message: "You can opt to trade speed for space or vice versa. Applications may take up less or more space depending on your choice",
+                      child: SimpleRectangleIconMaterialButton(
+                        buttonIcon: const Icon(Icons.refresh_rounded, color: Colors.blue,),
+                        buttonText: "Recompile",
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (context)=>SelectCompilationModeDialog(),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 Divider(
                   thickness: 2,

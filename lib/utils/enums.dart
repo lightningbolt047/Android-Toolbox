@@ -55,3 +55,12 @@ enum AppInstaller{
   googlePlayStore,
   custom
 }
+
+enum CompilationMode{
+  space,
+  spaceProfile,
+  speed,
+  speedProfile,
+  quicken,
+  everything,
+}
