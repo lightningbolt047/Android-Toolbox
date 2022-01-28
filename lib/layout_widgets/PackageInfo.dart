@@ -80,7 +80,7 @@ class PackageInfo extends StatelessWidget {
                     context: context,
                     builder: (context)=>PromptDialog(
                       title: "Offload ${packageInfo['packageName']!}?",
-                      contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off (Similar to what iOS does). If you want to remove the data completely, install the app again and uninstall normally",
+                      contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off (Similar to what offloading in iOS does). If you want to remove the data completely, install the app again and uninstall normally.",
                       onConfirm: () async{
                         if(await adbService.uninstallApp(packageName: packageInfo['packageName']!,keepData: true)!=0){
                           await showDialog(
