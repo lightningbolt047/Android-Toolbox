@@ -1,17 +1,17 @@
 import 'package:adb_gui/components/prompt_dialog.dart';
 import 'package:adb_gui/components/select_compilation_mode_dialog.dart';
-import 'package:adb_gui/components/set_app_installer_dialog.dart';
 import 'package:adb_gui/components/simple_rectangle_icon_material_button.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/adb_services.dart';
 import 'package:adb_gui/services/android_api_checks.dart';
+import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PackageInfo extends StatelessWidget {
 
   final Device device;
-  final Map<String,String> packageInfo;
+  final Map<String,dynamic> packageInfo;
   final ADBService adbService;
   final VoidCallback onUninstallComplete;
 
@@ -71,7 +71,8 @@ class PackageInfo extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SimpleRectangleIconMaterialButton(
+              if(packageInfo['appType']==AppType.user)
+                SimpleRectangleIconMaterialButton(
                 buttonText: "Offload",
                 buttonIcon: const Icon(FontAwesomeIcons.archive,color: Colors.blue,),
                 onPressed: (){
@@ -128,7 +129,8 @@ class PackageInfo extends StatelessWidget {
                   );
                 },
               ),
-              SimpleRectangleIconMaterialButton(
+              if(packageInfo['appType']==AppType.user)
+                SimpleRectangleIconMaterialButton(
                 buttonText: "Uninstall",
                 buttonIcon: const Icon(Icons.delete,color: Colors.blue,),
                 onPressed: (){

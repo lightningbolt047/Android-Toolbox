@@ -126,7 +126,7 @@ class ADBService{
     return int.parse(processResult.stdout.toString().split("\t")[0])*1024;
   }
   
-  Future<List<Map<String,String>>> getAppPackageNames(AppType appType) async{
+  Future<List<Map<String,dynamic>>> getAppPackageInfo(AppType appType) async{
     List<String> arguments=["-s",device.id,"shell","pm","list","packages",appType==AppType.system?"-s":"-3","-i"];
     if(isPreIceCreamSandwichAndroid(device.androidAPILevel)){
       arguments.removeLast();
@@ -134,12 +134,13 @@ class ADBService{
     ProcessResult result=await Process.run(adbExecutable, arguments);
     List<String> packageInfoList=result.stdout.toString().split("\n");
     packageInfoList.removeLast();
-    List<Map<String,String>> packageInfoMap=[];
+    List<Map<String,dynamic>> packageInfoMap=[];
     for(int i=0;i<packageInfoList.length;i++){
       List<String> packageInfo = packageInfoList[i].split("  ");
       packageInfoMap.add({
         'packageName':packageInfo[0].split(":")[1],
-        'installer':packageInfo[1].split("=")[1].trim()
+        'installer':packageInfo[1].split("=")[1].trim(),
+        'appType':appType
       });
     }
     return packageInfoMap;

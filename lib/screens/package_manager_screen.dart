@@ -29,7 +29,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
 
   AppType _appType=AppType.user;
 
-  Map<String,String> _selectedPackageName={};
+  Map<String,dynamic> _selectedPackageInfo={};
 
   final TextEditingController _searchbarController=TextEditingController();
 
@@ -119,7 +119,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                   onChanged: isPreIceCreamSandwichAndroid(device.androidAPILevel)?null:(AppType? appType){
                     if(_appType!=appType!){
                       setState(() {
-                        _selectedPackageName={};
+                        _selectedPackageInfo={};
                         _appType=appType;
                       });
                     }
@@ -137,8 +137,8 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
               Expanded(
                 child: Card(
                   child: FutureBuilder(
-                    future: adbService.getAppPackageNames(_appType),
-                    builder: (BuildContext context, AsyncSnapshot<List<Map<String,String>>> snapshot) {
+                    future: adbService.getAppPackageInfo(_appType),
+                    builder: (BuildContext context, AsyncSnapshot<List<Map<String,dynamic>>> snapshot) {
                       if(!snapshot.hasData){
                         return const ShimmerAppsList();
                       }
@@ -153,7 +153,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                             title: Text(snapshot.data![index]['packageName']!),
                             onTap: (){
                               setState(() {
-                                _selectedPackageName=snapshot.data![index];
+                                _selectedPackageInfo=snapshot.data![index];
                               });
                             },
                           );
@@ -163,7 +163,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                   ),
                 ),
               ),
-              Expanded(child: Card(child: PackageInfo(device: device,packageInfo: _selectedPackageName,adbService: adbService,onUninstallComplete: (){setState(() {_selectedPackageName={};});},))),
+              Expanded(child: Card(child: PackageInfo(device: device,packageInfo: _selectedPackageInfo,adbService: adbService,onUninstallComplete: (){setState(() {_selectedPackageInfo={};});},))),
             ],
           ),
         ),
