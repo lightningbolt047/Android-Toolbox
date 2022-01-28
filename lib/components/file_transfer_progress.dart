@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:adb_gui/components/console_output.dart';
 import 'package:adb_gui/services/file_services.dart';
+import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -51,20 +51,12 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
     return (numBytes/(1024*1024)).toStringAsFixed(2);
   }
 
-  String convertKBtoMB(int numBytes){
-    return (numBytes/1024).toStringAsFixed(2);
-  }
+  // String convertKBtoMB(int numBytes){
+  //   return (numBytes/1024).toStringAsFixed(2);
+  // }
 
-  String destinationSizeMB(){
-    if(exitCode==0){
-      return sourceSizeMB();
-    }
-    return fileTransferType==FileTransferType.phoneToPC?getSizeAsMegaBytes(destinationPathSize):convertKBtoMB(destinationPathSize);
-  }
 
-  String sourceSizeMB(){
-    return fileTransferType==FileTransferType.phoneToPC?convertKBtoMB(sourcePathSize):getSizeAsMegaBytes(sourcePathSize);
-  }
+
 
   void calculateProgress(){
     Timer.periodic(const Duration(seconds: 2), (timer) async{
@@ -160,16 +152,16 @@ class _FileTransferProgressState extends State<FileTransferProgress> {
                           animation: true,
                           padding: const EdgeInsets.all(0),
                           progressColor: Colors.blue,
-                          percent: (sourcePathSize==0 || destinationPathSize==0 || double.parse(destinationSizeMB())>=double.parse(sourceSizeMB()))?0:((double.parse(destinationSizeMB())/double.parse(sourceSizeMB()))),
+                          percent: (sourcePathSize==0 || destinationPathSize==0 || destinationPathSize>=sourcePathSize?0:(destinationPathSize/sourcePathSize)),
                         ),
-                        if(sourcePathSize!=0 && destinationPathSize!=0 && double.parse(destinationSizeMB())<double.parse(sourceSizeMB()))
+                        if(sourcePathSize!=0 && destinationPathSize!=0 && destinationPathSize<sourcePathSize)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("${destinationSizeMB()}MB of ${sourceSizeMB()}MB complete",overflow: TextOverflow.fade,style: const TextStyle(
+                              Text("${getFileSizeWithUnits(destinationPathSize.toDouble())} of ${getFileSizeWithUnits(sourcePathSize.toDouble())} complete",overflow: TextOverflow.fade,style: const TextStyle(
                                 fontWeight: FontWeight.w600
                               ),),
-                              Text(((double.parse(destinationSizeMB())/double.parse(sourceSizeMB()))*100).toStringAsFixed(2)+" %",overflow: TextOverflow.fade,style: const TextStyle(
+                              Text(((destinationPathSize/sourcePathSize)*100).toStringAsFixed(2)+" %",overflow: TextOverflow.fade,style: const TextStyle(
                                 fontWeight: FontWeight.w600
                               ),)
                             ],

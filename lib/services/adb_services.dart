@@ -123,7 +123,7 @@ class ADBService{
 
   Future<int> getFileItemSize(String filePath) async{
     ProcessResult processResult=await Process.run(adbExecutable, ["-s",device.id,"shell","du","-s","\"$filePath\""]);
-    return int.parse(processResult.stdout.toString().split("\t")[0]);
+    return int.parse(processResult.stdout.toString().split("\t")[0])*1024;
   }
   
   Future<List<Map<String,String>>> getAppPackageNames(AppType appType) async{

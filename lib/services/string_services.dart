@@ -25,3 +25,13 @@ String getCompilationModeAsString(CompilationMode compilationMode){
     default: return "space";
   }
 }
+
+String getFileSizeWithUnits(double size){
+  List<String> units=["B","KB","MB","GB","TB","PB"];
+  int selectedUnitIndex=0;
+  while(size > 1023 && selectedUnitIndex < units.length){
+    size/=1024;
+    selectedUnitIndex++;
+  }
+  return "${size.toStringAsFixed(2)} ${units[selectedUnitIndex]}";
+}
