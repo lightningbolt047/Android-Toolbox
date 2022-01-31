@@ -13,9 +13,25 @@
 
 <div>
     <h2>What does it do?</h2>
-    <p>As of now, you can use it to access your internal storage either on your phone or on WSA. I plan to add more functionality in the coming days.</p>
+    <p><strike>As of now, you can only use it to access your internal storage either on your phone or on WSA.</strike>
+        Current features:
+        <ul>
+            <li>
+                You can now perform some file management tasks
+            </li>
+            <li>
+                Reboot to system, recovery, fastboot, bootloader or simply power off using the power controls
+            </li>
+            <li>
+                You can offload, suspend, un-suspend, install, uninstall, kill or recompile apps. <em>(Apps are currently shown as package names only. I couldn't find a way to find app titles without pushing aapt to the mobile device.)</em>
+            </li>
+            <li>
+                <em>More soon......</em>
+            </li>
+        </ul>
+    </p>
     <h2>Okay I'm interested. How do I install it?</h2>
-    <p>As of now only the Windows installer is available (Although I plan to release it on linux and macOS (if I can get my hands on a Mac)). You may download it from this repo's releases which you can find here: [Releases](https://github.com/lightningbolt047/Android-Toolbox/releases).</p>
+    <p>As of now only the Windows installer is available (Although I plan to release it on linux and macOS (if I can get my hands on a Mac)). You may download it from this repo's releases which you can find here: [Releases](https://github.com/lightningbolt047/Android-Toolbox/releases). Or if you are very much interested to compile and run in linux, you may as well clone this repo and build it for yourself. Do note that the app might not work as intended in that case.</p>
     <h2>Do I have to keep checking this repo for future updates to the app?</h2>
     <p>No you don't! The app will notify you when there is an update available, and you may choose to download and install the update from within the app.</p>
     <h2>Feature X is awesome, I can't wait to try it out, but it is a prerelease. How do I try it out?</h2>
@@ -32,6 +48,8 @@
     <img src="readme_assets/screenshot_file_manager.png" alt="file_manager"/>
     <h3>Power Controls</h3>
     <img src="readme_assets/screenshot_power_controls.png" alt="power_controls"/>
+    <h3>Apps</h3>
+    <img src="readme_assets/screenshot_apps.png" alt="apps"/>
 </div>
 
 <div>
