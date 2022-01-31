@@ -36,6 +36,7 @@ class _PreferenceToggleState extends State<PreferenceToggle> {
           title: Text(titleText,style: const TextStyle(
             fontSize: 20,
           ),),
+          dense: true,
           subtitle: Text(subtitleText),
           value: snapshot.data!,
           onChanged: (value) async {

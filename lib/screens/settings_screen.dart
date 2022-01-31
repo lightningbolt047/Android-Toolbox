@@ -70,6 +70,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 tooltip: "Select Theme Mode",
                 offset: Offset(MediaQuery.of(context).size.width,0),
                 child: ListTile(
+                  dense: true,
                   title: const Text("Theme Mode",style: TextStyle(
                     fontSize: 20
                   ),),
@@ -172,6 +173,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
               ),
               ListTile(
+                dense: true,
                 title: const Text("Check for updates",style: TextStyle(
                   fontSize: 20,
                 ),),
@@ -240,6 +242,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const PageSubheading(subheadingName: "Legal"),
               ListTile(
+                dense: true,
                 title: const Text("Licenses",style: TextStyle(
                   fontSize: 20,
                 ),),

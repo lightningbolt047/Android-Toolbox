@@ -29,8 +29,8 @@ void main() async {
         headline3: GoogleFonts.quicksand(color: Colors.blue,fontSize: 40,),
         headline4: GoogleFonts.quicksand(),
         headline5: GoogleFonts.quicksand(color: Colors.blue,fontSize: 25,fontWeight: FontWeight.w600),
-        headline6: GoogleFonts.quicksand(),
-        subtitle1: GoogleFonts.quicksand(),
+        headline6: GoogleFonts.quicksand(fontSize: 20,fontWeight: FontWeight.w500),
+        subtitle1: GoogleFonts.quicksand(fontSize: 15),
         subtitle2: GoogleFonts.quicksand(),
         bodyText1: GoogleFonts.quicksand(),
         bodyText2: GoogleFonts.quicksand(),
@@ -42,7 +42,6 @@ void main() async {
       primaryColor: Colors.blueGrey,
       listTileTheme: const ListTileThemeData(
         textColor: Colors.white,
-        dense: true,
         iconColor: Colors.blue,
       ),
       textTheme: TextTheme(
