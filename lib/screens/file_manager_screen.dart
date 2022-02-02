@@ -34,6 +34,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
   String _currentPath = "/sdcard/";
   late final TextEditingController _addressBarEditingController;
   late final TextEditingController _renameFieldController;
+  final ScrollController _filesGridScrollController=ScrollController();
 
   final _addressBarFocus = FocusNode();
   final _renameItemFocus = FocusNode();
@@ -185,6 +186,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
     _addressBarFocus.dispose();
     _renameItemFocus.dispose();
     _animationController.dispose();
+    _filesGridScrollController.dispose();
     super.dispose();
   }
 
@@ -389,6 +391,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3, mainAxisExtent: 75
                         ),
+                        controller: _filesGridScrollController,
                         itemCount: int.parse((MediaQuery.of(context).size.height/25).toStringAsFixed(0)),
                         itemBuilder: (context,index){
                           return Row(
