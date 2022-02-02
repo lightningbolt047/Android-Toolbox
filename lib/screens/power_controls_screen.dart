@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/utils/vars.dart';

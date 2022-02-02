@@ -32,6 +32,12 @@ class _SetAppInstallerDialogState extends State<SetAppInstallerDialog> {
   }
 
   @override
+  void dispose() {
+    appInstallerController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: const RoundedRectangleBorder(

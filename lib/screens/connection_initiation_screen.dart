@@ -251,6 +251,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
     _addressFieldController.dispose();
     _pairingCodeFieldController.dispose();
     _pairingAddressFieldController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 

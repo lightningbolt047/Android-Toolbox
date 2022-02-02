@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:adb_gui/services/update_services.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';

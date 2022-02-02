@@ -146,6 +146,36 @@ class ADBService{
     return packageInfoMap;
   }
 
+  Future<List<String>> getUninstalledSystemApps() async{
+    ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-s"]);
+    List<String> systemApps = result.stdout.toString().split("\n");
+    systemApps.removeLast();
+    for(int i=0;i<systemApps.length;i++){
+      systemApps[i] = systemApps[i].trim();
+    }
+
+    result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-u","-s"]);
+    List<String> systemAppsIncludingUninstalled = result.stdout.toString().split("\n");
+    systemAppsIncludingUninstalled.removeLast();
+    for(int i=0;i<systemAppsIncludingUninstalled.length;i++){
+      systemAppsIncludingUninstalled[i]=systemAppsIncludingUninstalled[i].trim();
+    }
+
+    List<String> uninstalledSystemApps=[];
+
+    for(int i=0;i<systemAppsIncludingUninstalled.length;i++){
+      if(!systemApps.contains(systemAppsIncludingUninstalled[i])){
+        uninstalledSystemApps.add(systemAppsIncludingUninstalled[i].split(":")[1]);
+      }
+    }
+
+    return uninstalledSystemApps;
+  }
+
+  Future<Process> reinstallSystemApp(String packageName) async{
+    return await Process.start(adbExecutable, ["-s",device.id,"shell","pm","install-existing",packageName]);
+  }
+
   Future<void> forceStopPackage(String packageName) async{
     await Process.run(adbExecutable, ["-s",device.id,"shell","am","force-stop",packageName]);
   }
@@ -158,6 +188,20 @@ class ADBService{
       result=await Process.run(adbExecutable, ["-s",device.id,"uninstall",packageName]);
     }
     return result.exitCode;
+  }
+
+  Future<String> getCurrentUserID() async{
+    ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","am","get-current-user"]);
+    return result.stdout.toString().trim();
+  }
+
+  Future<int> uninstallSystemAppForUser({required String packageName}) async{
+    ProcessResult result =  await Process.run(adbExecutable, ["-s",device.id,"shell","pm","uninstall","-k","--user",await getCurrentUserID(),packageName]);
+    return result.exitCode;
+  }
+
+  Future<Process> reinstallSystemAppForUser({required String packageName}) async{
+    return await Process.start(adbExecutable, ["-s",device.id,"shell","pm","install-existing",packageName]);
   }
 
   Future<Process> installSingleApk(String apkFilePath) async{

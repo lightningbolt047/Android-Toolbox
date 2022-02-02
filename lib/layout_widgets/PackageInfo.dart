@@ -17,6 +17,13 @@ class PackageInfo extends StatelessWidget {
 
   const PackageInfo({Key? key,required this.device,required this.packageInfo, required this.adbService,required this.onUninstallComplete}) : super(key: key);
 
+  Future<int> performUninstall() async{
+    if(packageInfo['appType']==AppType.user){
+      return await adbService.uninstallApp(packageName: packageInfo['packageName']!);
+    }
+    return await adbService.uninstallSystemAppForUser(packageName: packageInfo['packageName']!);
+  }
+
   @override
   Widget build(BuildContext context) {
     if(packageInfo['packageName']==null){
@@ -55,14 +62,17 @@ class PackageInfo extends StatelessWidget {
               Icon(Icons.android,color: Colors.green,size: 60,)
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(packageInfo['packageName']!,maxLines: 2,overflow: TextOverflow.ellipsis,style: const TextStyle(
-                fontSize: 20,
-                color: Colors.blue,
-              ),),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(packageInfo['packageName']!,maxLines: 2,overflow: TextOverflow.ellipsis,style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.blue,
+                ),),
+              ],
+            ),
           ),
           Divider(
             thickness: 2,
@@ -129,8 +139,8 @@ class PackageInfo extends StatelessWidget {
                   );
                 },
               ),
-              if(packageInfo['appType']==AppType.user)
-                SimpleRectangleIconMaterialButton(
+              // if(packageInfo['appType']==AppType.user)
+              SimpleRectangleIconMaterialButton(
                 buttonText: "Uninstall",
                 buttonIcon: const Icon(Icons.delete,color: Colors.blue,),
                 onPressed: (){
@@ -138,9 +148,9 @@ class PackageInfo extends StatelessWidget {
                     context: context,
                     builder: (context)=>PromptDialog(
                       title: packageInfo['packageName']!,
-                      contentText: "Do you want to uninstall this app?",
+                      contentText: packageInfo['appType']==AppType.system?"This is a system app and uninstalling it will only uninstall for the active user. Proceed?":"Do you want to uninstall this app?",
                       onConfirm: () async{
-                        if(await adbService.uninstallApp(packageName: packageInfo['packageName']!)!=0){
+                        if(await performUninstall()!=0){
                           await showDialog(
                             context: context,
                             builder: (context)=>AlertDialog(

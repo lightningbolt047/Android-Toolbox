@@ -2,6 +2,7 @@ import 'package:adb_gui/components/apk_install_dialog.dart';
 import 'package:adb_gui/components/custom_list_tile.dart';
 import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/material_ribbon.dart';
+import 'package:adb_gui/components/reinstall_system_app_dialog.dart';
 import 'package:adb_gui/layout_widgets/PackageInfo.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/adb_services.dart';
@@ -32,7 +33,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
   Map<String,dynamic> _selectedPackageInfo={};
 
   final TextEditingController _searchbarController=TextEditingController();
-
+  final ScrollController _appsListScrollController=ScrollController();
 
   @override
   void initState() {
@@ -43,6 +44,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
   @override
   void dispose() {
     _searchbarController.dispose();
+    _appsListScrollController.dispose();
     super.dispose();
   }
 
@@ -68,11 +70,15 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                           color: Colors.blue,
                           fontSize: 20
                         ),),
-                        onPressed: (){
-                          showDialog(
+                        onPressed: () async{
+                          await showDialog(
                             context: context,
                             builder: (context)=>ApkInstallDialog(device: device,),
                           );
+                          setState(() {
+                            _appType = AppType.user;
+                            _searchbarController.text="";
+                          });
                         },
                       )
                     ),
@@ -97,33 +103,55 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                     ),
                   ],
                 ),
-                DropdownButton(
-                  underline: Container(),
-                  value: _appType,
-                  items: [
-                    DropdownMenuItem(
-                      value: AppType.user,
-                      child: CustomListTile(
-                        icon: const Icon(FontAwesomeIcons.user,color: Colors.blue,),
-                        title: isPreIceCreamSandwichAndroid(device.androidAPILevel)?"All apps":"User apps",
-                      ),
+                Row(
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: IconNameMaterialButton(
+                          icon: const Icon(Icons.system_update_alt_rounded,color: Colors.blue,size: 30,),
+                          spacing: 4,
+                          text: const Text("Reinstall system app",style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 15
+                          ),),
+                          onPressed: () async{
+                            await showDialog(
+                              context: context,
+                              builder: (context)=>ReinstallSystemAppDialog(adbService: adbService,),
+                            );
+                            setState(() {});
+                          },
+                        )
                     ),
-                    const DropdownMenuItem(
-                      value: AppType.system,
-                      child: CustomListTile(
-                        icon: Icon(Icons.system_update,color: Colors.blue,),
-                        title: "System apps",
-                      ),
+                    DropdownButton(
+                      underline: Container(),
+                      value: _appType,
+                      items: [
+                        DropdownMenuItem(
+                          value: AppType.user,
+                          child: CustomListTile(
+                            icon: const Icon(FontAwesomeIcons.user,color: Colors.blue,),
+                            title: isPreIceCreamSandwichAndroid(device.androidAPILevel)?"All apps":"User apps",
+                          ),
+                        ),
+                        const DropdownMenuItem(
+                          value: AppType.system,
+                          child: CustomListTile(
+                            icon: Icon(Icons.system_update,color: Colors.blue,),
+                            title: "System apps",
+                          ),
+                        ),
+                      ],
+                      onChanged: isPreIceCreamSandwichAndroid(device.androidAPILevel)?null:(AppType? appType){
+                        if(_appType!=appType!){
+                          setState(() {
+                            _selectedPackageInfo={};
+                            _appType=appType;
+                          });
+                        }
+                      },
                     ),
                   ],
-                  onChanged: isPreIceCreamSandwichAndroid(device.androidAPILevel)?null:(AppType? appType){
-                    if(_appType!=appType!){
-                      setState(() {
-                        _selectedPackageInfo={};
-                        _appType=appType;
-                      });
-                    }
-                  },
                 ),
               ],
             ),
@@ -143,6 +171,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                         return const ShimmerAppsList();
                       }
                       return ListView.builder(
+                        controller: _appsListScrollController,
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context,index){
                           if(snapshot.data![index]['packageName']!="" && !snapshot.data![index]['packageName']!.contains(_searchbarController.text)){

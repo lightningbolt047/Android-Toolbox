@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:adb_gui/components/console_output.dart';
 import 'package:adb_gui/components/page_subheading.dart';
-import 'package:adb_gui/components/simple_rectangle_icon_material_button.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/services/adb_services.dart';
 import 'package:adb_gui/services/file_services.dart';
 import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

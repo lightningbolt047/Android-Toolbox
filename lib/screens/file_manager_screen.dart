@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../utils/vars.dart';
 
 class FileManagerScreen extends StatefulWidget {
@@ -185,6 +184,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
     _addressBarEditingController.dispose();
     _addressBarFocus.dispose();
     _renameItemFocus.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -374,53 +374,56 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
         Expanded(
           child: FutureBuilder(
             future: adbService.getDirectoryContents(_currentPath),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
+
+              _animationController.forward(from: 0);
+
               if (snapshot.connectionState!=ConnectionState.done || !snapshot.hasData) {
-                return Shimmer.fromColors(
-                  baseColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFE0E0E0):Colors.black12,
-                  highlightColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFF5F5F5):Colors.blueGrey,
-                  enabled: true,
-                  child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, mainAxisExtent: 75
-                      ),
-                      itemCount: int.parse((MediaQuery.of(context).size.height/25).toStringAsFixed(0)),
-                      itemBuilder: (context,index){
-                        return Row(
-                          children: [
-                            SizedBox.fromSize(
-                              size: const Size(25, 0),
-                            ),
-                            Container(
-                              height:20,
-                              width:20,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.black,
+                return FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Shimmer.fromColors(
+                    baseColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFE0E0E0):Colors.black12,
+                    highlightColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFF5F5F5):Colors.blueGrey,
+                    enabled: true,
+                    child: GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, mainAxisExtent: 75
+                        ),
+                        itemCount: int.parse((MediaQuery.of(context).size.height/25).toStringAsFixed(0)),
+                        itemBuilder: (context,index){
+                          return Row(
+                            children: [
+                              SizedBox.fromSize(
+                                size: const Size(25, 0),
                               ),
-                            ),
-                            SizedBox.fromSize(
-                              size: const Size(25, 0),
-                            ),
-                            Expanded(
-                              child: Container(
-                                width: double.infinity,
-                                height: 25,
-                                decoration: BoxDecoration(
+                              Container(
+                                height:20,
+                                width:20,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
                                   color: Colors.black,
-                                  borderRadius: BorderRadius.circular(25)
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
+                              SizedBox.fromSize(
+                                size: const Size(25, 0),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(25)
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                    ),
                   ),
                 );
               }
-
-              _animationController.forward(from: 0);
 
               if (snapshot.data!.isEmpty) {
                 return FadeTransition(
@@ -599,21 +602,23 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                           adbService.deleteItem(
                                             itemPath: _currentPath+snapshot.data![index].itemName,
                                             beforeExecution: (){
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(
-                                                children: [
-                                                  const CircularProgressIndicator(
-                                                    valueColor: AlwaysStoppedAnimation<Color?>(Colors.blue),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 12,
-                                                  ),
-                                                  Text("Deleting ${snapshot.data![index].itemName}"),
-                                                ],
+                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                duration: const Duration(seconds: 2),
+                                                content: Row(
+                                                  children: [
+                                                    const CircularProgressIndicator(
+                                                      valueColor: AlwaysStoppedAnimation<Color?>(Colors.blue),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 12,
+                                                    ),
+                                                    Text("Deleting ${snapshot.data![index].itemName}"),
+                                                  ],
                                               )));
                                               ScaffoldMessenger.of(context).deactivate();
                                             },
                                             onSuccess: (){
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${snapshot.data![index].itemName} deleted successfully")));
+                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: const Duration(seconds: 2),content: Text("${snapshot.data![index].itemName} deleted successfully")));
                                               ScaffoldMessenger.of(context).deactivate();
                                               setState(() {});
                                             }
