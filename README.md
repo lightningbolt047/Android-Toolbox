@@ -13,7 +13,7 @@
 
 <div>
     <h2>What does it do?</h2>
-    <p><strike>As of now, you can only use it to access your internal storage either on your phone or on WSA.</strike>
+    <p><strike>As of now, you can only use it to access your internal storage either on your phone or on WSA.</strike><br/>
         Current features:
         <ul>
             <li>
@@ -23,7 +23,10 @@
                 Reboot to system, recovery, fastboot, bootloader or simply power off using the power controls
             </li>
             <li>
-                You can offload, suspend, un-suspend, install, uninstall, kill or recompile apps. <em>(Apps are currently shown as package names only. I couldn't find a way to find app titles without pushing aapt to the mobile device.)</em>
+                You can offload, suspend, un-suspend, install, uninstall, kill or recompile apps. <em>(Apps are currently shown as package names only. I couldn't find a way to get app titles without pushing aapt to the mobile device.)</em>
+            </li>
+            <li>
+                <b>Bloatware or other system apps can now be uninstalled</b>
             </li>
             <li>
                 <em>More soon......</em>
