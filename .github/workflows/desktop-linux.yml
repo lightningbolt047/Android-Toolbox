@@ -31,7 +31,9 @@ jobs:
         with:
             channel: 'stable'
 
-      # Runs a single command using the runners shell
+      - name: Enable Desktop platforms
+        run: flutter config --enable-linux-desktop
+
       - name: Get Project Dependencies
         run: flutter pub get
         
