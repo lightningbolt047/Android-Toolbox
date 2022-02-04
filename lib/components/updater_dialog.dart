@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:adb_gui/services/update_services.dart';
+import 'package:adb_gui/utils/enums.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
@@ -98,6 +99,78 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
   }
 }
 
+class BackgroundUpdateUI extends StatefulWidget {
+  final Map<String,dynamic> updateInfo;
+  const BackgroundUpdateUI({Key? key,required this.updateInfo}) : super(key: key);
+
+  @override
+  _BackgroundUpdateUIState createState() => _BackgroundUpdateUIState(updateInfo);
+}
+
+class _BackgroundUpdateUIState extends State<BackgroundUpdateUI> {
+
+  ProcessStatus processStatus = ProcessStatus.notStarted;
+  final Map<String,dynamic> updateInfo;
+
+  _BackgroundUpdateUIState(this.updateInfo);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        if(processStatus==ProcessStatus.notStarted)...[
+          const Icon(Icons.update_rounded),
+          const SizedBox(
+            width: 16,
+          ),
+          Text("A new update is available to download! Version: ${updateInfo['version']} ${(updateInfo['preRelease']!=null && updateInfo['preRelease'])?"(Prerelease)":""}"),
+          const Spacer(),
+          UpdateNowButton(
+            updateFileLink: updateInfo['assetLink'],
+            beforeExecution: (){
+              setState(() {
+                processStatus = ProcessStatus.working;
+              });
+            },
+            onError: (){
+              setState(() {
+                processStatus = ProcessStatus.fail;
+              });
+            },
+            afterExecution: (){
+              setState(() {
+                processStatus = ProcessStatus.success;
+              });
+            },
+          ),
+        ],
+        if(processStatus==ProcessStatus.working)...[
+          const CircularProgressIndicator(),
+          const SizedBox(
+            width: 16,
+          ),
+          const Text("Downloading Update"),
+        ],
+        if(processStatus==ProcessStatus.fail)...[
+          const Icon(Icons.cancel,color: Colors.red,),
+          const SizedBox(
+            width: 16,
+          ),
+          const Text("Failed to download update"),
+        ],
+        if(processStatus==ProcessStatus.success)...[
+          const Icon(Icons.check_circle,color: Colors.green,),
+          const SizedBox(
+            width: 16,
+          ),
+          const Text("Update download successful"),
+        ],
+      ],
+    );
+  }
+}
+
+
 class UpdateNowButton extends CloseWindowButton{
   final VoidCallback beforeExecution;
   final VoidCallback onError;
@@ -129,6 +202,7 @@ class UpdateNowButton extends CloseWindowButton{
 
         }catch(e){
           onError();
+          return;
         }
         afterExecution();
       },

@@ -79,12 +79,24 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
   }
 
   void checkUpdatesBackground() async {
+    bool? checkUpdatesDuringStartupPreference=await getCheckUpdatesDuringStartupPreference();
+    if(checkUpdatesDuringStartupPreference==false){
+      return;
+    }
     Map<String, dynamic> updateInfo = await checkForUpdates();
     if (updateInfo['updateAvailable']!=null && updateInfo['updateAvailable']) {
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) => UpdaterDialog(updateInfo: updateInfo),
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        MaterialBanner(
+          content: BackgroundUpdateUI(updateInfo: updateInfo,),
+          actions: [
+            TextButton(
+              onPressed: (){
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              },
+              child: const Text("Dismiss"),
+            ),
+          ],
+        ),
       );
     }
   }
@@ -96,11 +108,15 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
   }
 
   Future<Device> getDeviceAllProperties(Device device) async{
+    Future<String> model = getDeviceProperty(device.id, "ro.product.model");
+    Future<String> manufacturer = getDeviceProperty(device.id, "ro.product.manufacturer");
+    Future<String> androidVersion = getDeviceProperty(device.id, "ro.build.version.release");
+    Future<String> androidSDKVersion = getDeviceProperty(device.id, "ro.build.version.sdk");
     device.setOtherDeviceAttributes(
-      await getDeviceProperty(device.id, "ro.product.model"),
-      await getDeviceProperty(device.id, "ro.product.manufacturer"),
-      await getDeviceProperty(device.id, "ro.build.version.release"),
-      int.parse(await getDeviceProperty(device.id, "ro.build.version.sdk")),
+      await model,
+      await manufacturer,
+      await androidVersion,
+      int.parse(await androidSDKVersion),
     );
     return device;
   }

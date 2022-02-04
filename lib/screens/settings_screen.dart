@@ -165,6 +165,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const PageSubheading(subheadingName: "Updates",),
               PreferenceToggle(
+                titleText: "Check for updates during application startup",
+                subtitleText: "If you disable this option, you will have to manually check for updates to even know if a new version has been released",
+                getPreference: getCheckUpdatesDuringStartupPreference,
+                onChanged: (value) async{
+                  await setCheckUpdatesDuringStartupPreference(value);
+                },
+              ),
+              PreferenceToggle(
                 titleText: "Allow pre-release updates",
                 subtitleText: "Pre-Release builds may be unstable and are not for the faint of hearts. Pre-Release builds may even break updates forcing you to install some upcoming builds manually",
                 getPreference: getAllowPreReleasePreference,

@@ -57,3 +57,17 @@ Future<bool?> getKillADBOnExitPreference() async{
   }
   return pref.getBool("killADBOnExit");
 }
+
+Future<bool?> getCheckUpdatesDuringStartupPreference() async{
+  SharedPreferences pref=await SharedPreferences.getInstance();
+  if(pref.getBool("checkUpdatesDuringStartup")==null){
+    await setCheckUpdatesDuringStartupPreference(true);
+    return true;
+  }
+  return pref.getBool("checkUpdatesDuringStartup");
+}
+
+Future<void> setCheckUpdatesDuringStartupPreference(bool value) async{
+  SharedPreferences pref=await SharedPreferences.getInstance();
+  pref.setBool("checkUpdatesDuringStartup", value);
+}
