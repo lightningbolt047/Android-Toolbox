@@ -45,6 +45,7 @@ dependencies:
   shimmer: ^2.0.0
   percent_indicator: ^3.4.0
   google_fonts: ^2.2.0
+  flutter_acrylic: ^1.0.0+1
 
 msix_config:
   display_name: Android-Toolbox

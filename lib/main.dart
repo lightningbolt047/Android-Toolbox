@@ -3,6 +3,8 @@ import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'utils/vars.dart';
 import 'dart:io';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,10 +21,26 @@ void main() async {
     }
   }
 
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Window.initialize();
+
+  await Window.hideWindowControls();
+
+  ThemeMode themeModePreference=await getThemeModePreference();
+
+  if(Platform.isWindows){
+    await Window.setEffect(
+        effect: WindowEffect.mica,
+        dark: themeModePreference==ThemeMode.dark?true:themeModePreference==ThemeMode.light?false:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark
+    );
+  }
+
   runApp(MaterialApp(
-    themeMode: await getThemeModePreference(),
+    themeMode: themeModePreference,
     theme: ThemeData(
       primaryColor: Colors.blue,
+      scaffoldBackgroundColor: Colors.transparent,
       textTheme: TextTheme(
         headline1: GoogleFonts.quicksand(),
         headline2: GoogleFonts.quicksand(),
@@ -39,10 +57,31 @@ void main() async {
       ),
     ),
     darkTheme: ThemeData.dark().copyWith(
+      scaffoldBackgroundColor: Platform.isLinux?Colors.black26:Colors.transparent,
       primaryColor: Colors.blueGrey,
+      cardColor: Colors.transparent,
+      popupMenuTheme: const PopupMenuThemeData(
+        color: Color(0xFF212121)
+      ),
+      bannerTheme: const MaterialBannerThemeData(
+        backgroundColor: Color(0xFF212121)
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+      ),
       listTileTheme: const ListTileThemeData(
         textColor: Colors.white,
         iconColor: Colors.blue,
+      ),
+      drawerTheme: DrawerThemeData(
+        backgroundColor: Colors.grey[900],
+      ),
+      dialogBackgroundColor: Colors.grey[900],
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: Colors.grey[900],
+        contentTextStyle: const TextStyle(
+          color: Colors.white
+        )
       ),
       textTheme: TextTheme(
         headline1: GoogleFonts.quicksand(),
