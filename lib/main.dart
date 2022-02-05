@@ -25,14 +25,18 @@ void main() async {
 
   await Window.initialize();
 
-  await Window.hideWindowControls();
-
   ThemeMode themeModePreference=await getThemeModePreference();
 
   if(Platform.isWindows){
+    await Window.hideWindowControls();
     await Window.setEffect(
         effect: WindowEffect.mica,
         dark: themeModePreference==ThemeMode.dark?true:themeModePreference==ThemeMode.light?false:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark
+    );
+  }else if(Platform.isLinux){
+    await Window.setEffect(
+      effect: WindowEffect.solid,
+      color: themeModePreference==ThemeMode.dark?const Color(0xFF212121):themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark?const Color(0xFF212121):Colors.white70,
     );
   }
 
