@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:adb_gui/components/preference_toggle.dart';
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/updater_dialog.dart';
@@ -277,6 +278,14 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       });
                     },
                   ),
+                  const PageSubheading(subheadingName: "Info"),
+                  ListTile(
+                    dense: true,
+                    title: const Text("Built with Flutter",style: TextStyle(
+                      fontSize: 20,
+                    ),),
+                    subtitle: Text("Dart:  ${Platform.version}"),
+                  ),
                   const PageSubheading(subheadingName: "Legal"),
                   ListTile(
                     dense: true,
@@ -291,7 +300,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                         applicationLegalese: "The developer shall not be responsible in case of loss or damage to life and property resulting from use of this application"
                       );
                     },
-                  )
+                  ),
                 ],
               ),
             ),
