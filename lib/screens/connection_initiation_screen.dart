@@ -153,7 +153,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               Text("Wi-Fi pairing code",style: TextStyle(
-                color: Colors.grey[600]
+                color: Colors.grey[200]
               ),),
               const SizedBox(
                 height: 8,
@@ -168,7 +168,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                   hintText: "000000",
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.w400,
-                    color: Colors.grey[500]
+                    color: Colors.grey[600]
                   ),
                 ),
                 style: const TextStyle(
@@ -181,7 +181,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
               ),
               // Text("136271"),
               Text("IP address & Port",style: TextStyle(
-                color: Colors.grey[500]
+                color: Colors.grey[200]
               ),),
               const SizedBox(
                 height: 8,
