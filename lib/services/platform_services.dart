@@ -11,11 +11,14 @@ String getPlatformName(){
 }
 
 bool isWindows11(){
-  String versionInfo=Platform.operatingSystemVersion;
-  String buildNumber=versionInfo.split(" ").last;
-  buildNumber=buildNumber.replaceAll(")", "");
-  return int.parse(buildNumber)>=22000;
-
+  try{
+    String versionInfo=Platform.operatingSystemVersion;
+    String buildNumber=versionInfo.split(" ").last;
+    buildNumber=buildNumber.replaceAll(")", "");
+    return int.parse(buildNumber)>=22000;
+  }catch(e){
+    return false;
+  }
 }
 
 bool isWSA(String deviceID){

@@ -38,7 +38,7 @@ void main() async {
     }else{
       await Window.setEffect(
         effect: WindowEffect.solid,
-        color: themeModePreference==ThemeMode.dark?const Color(0xFF212121):themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark?const Color(0xFF212121):Colors.white70,
+        color: const Color(0xFF212121),
       );
     }
   }else if(Platform.isLinux){

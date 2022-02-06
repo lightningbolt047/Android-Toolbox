@@ -9,6 +9,8 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../services/platform_services.dart';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
@@ -99,6 +101,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   PopupMenuButton(
                     tooltip: "Select Theme Mode",
                     offset: Offset(MediaQuery.of(context).size.width,0),
+                    enabled: !(Platform.isWindows && !isWindows11()),
                     child: ListTile(
                       dense: true,
                       title: const Text("Theme Mode",style: TextStyle(
