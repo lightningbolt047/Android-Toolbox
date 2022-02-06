@@ -104,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                     enabled: !(Platform.isWindows && !isWindows11()),
                     child: ListTile(
                       dense: true,
-                      title: Text("Theme Mode ${(!(Platform.isWindows && !isWindows11()))?"(Disabled for Windows 10)":""}",style: const TextStyle(
+                      title: Text("Theme Mode ${(Platform.isWindows && !isWindows11())?"(Disabled for Windows 10 and below versions)":""}",style: const TextStyle(
                         fontSize: 20
                       ),),
                       subtitle: const Text("Requires restart for change to take effect"),
