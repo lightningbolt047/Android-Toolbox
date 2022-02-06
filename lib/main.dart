@@ -53,6 +53,9 @@ void main() async {
     theme: ThemeData(
       primaryColor: Colors.blue,
       scaffoldBackgroundColor: Colors.transparent,
+      bannerTheme: const MaterialBannerThemeData(
+          backgroundColor: Colors.transparent
+      ),
       textTheme: TextTheme(
         headline1: GoogleFonts.quicksand(),
         headline2: GoogleFonts.quicksand(),
@@ -76,7 +79,7 @@ void main() async {
         color: Color(0xFF212121)
       ),
       bannerTheme: const MaterialBannerThemeData(
-        backgroundColor: Color(0xFF212121)
+        backgroundColor: Colors.transparent
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
