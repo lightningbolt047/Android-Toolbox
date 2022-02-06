@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'utils/vars.dart';
 import 'dart:io';
+import 'services/platform_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
@@ -29,10 +30,17 @@ void main() async {
 
   if(Platform.isWindows){
     await Window.hideWindowControls();
-    await Window.setEffect(
-        effect: WindowEffect.mica,
-        dark: themeModePreference==ThemeMode.dark?true:themeModePreference==ThemeMode.light?false:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark
-    );
+    if(isWindows11()){
+      await Window.setEffect(
+          effect: WindowEffect.mica,
+          dark: themeModePreference==ThemeMode.dark?true:themeModePreference==ThemeMode.light?false:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark
+      );
+    }else{
+      await Window.setEffect(
+        effect: WindowEffect.solid,
+        color: themeModePreference==ThemeMode.dark?const Color(0xFF212121):themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark?const Color(0xFF212121):Colors.white70,
+      );
+    }
   }else if(Platform.isLinux){
     await Window.setEffect(
       effect: WindowEffect.solid,
