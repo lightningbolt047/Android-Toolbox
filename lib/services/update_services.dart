@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:adb_gui/services/platform_services.dart';
 import 'package:adb_gui/services/shared_prefs.dart';
+import 'package:adb_gui/utils/vars.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:version/version.dart';
@@ -87,16 +89,16 @@ Future<Map<String,dynamic>> getLatestGithubReleaseInfo() async{
 Future<String> downloadRelease(String url) async{
   Directory saveDirectory=await getTemporaryDirectory();
   String appendSymbol=Platform.isWindows?"\\":"/";
-  File latestRelease=File(saveDirectory.path+appendSymbol+"update.msix");
+  File latestRelease=File(saveDirectory.path+appendSymbol+"update.exe");
   if(await latestRelease.exists()){
     await latestRelease.delete();
   }
   http.Response response=await http.get(Uri.parse(url));
   if(response.statusCode==200){
-    //Save file and return path to file;
+    //TODO Save file and return path to file;
     await latestRelease.create();
     await latestRelease.writeAsBytes(response.bodyBytes);
-    return saveDirectory.path+appendSymbol+"update.msix";
+    return saveDirectory.path+appendSymbol+"update.exe";
   }
   throw "Error occurred when attempting to download file";
 }

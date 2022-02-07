@@ -51,9 +51,8 @@ msix_config:
   display_name: Android-Toolbox
   publisher_display_name: LightningBolt
   identity_name: com.lightning.adbgui
-  msix_version: 1.5.4.0
-  logo_path: C:\Users\sasha\AndroidStudioProjects\adb_gui\icons\StoreLogo.scale-400.png
-  output_name: Android-Toolbox-windows
+  msix_version: 1.5.3.0
+  logo_path: C:\Users\sasha\AndroidStudioProjects\adb_gui\assets\logo512.png
   capabilities: "internetClient"
   store: false
 
