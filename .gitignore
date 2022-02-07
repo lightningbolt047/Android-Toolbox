@@ -62,3 +62,5 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+
+Inno_Setup_Script.iss
