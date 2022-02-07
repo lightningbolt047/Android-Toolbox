@@ -47,14 +47,14 @@ dependencies:
   google_fonts: ^2.2.0
   flutter_acrylic: ^1.0.0+1
 
-msix_config:
-  display_name: Android-Toolbox
-  publisher_display_name: LightningBolt
-  identity_name: com.lightning.adbgui
-  msix_version: 1.5.3.0
-  logo_path: C:\Users\sasha\AndroidStudioProjects\adb_gui\assets\logo512.png
-  capabilities: "internetClient"
-  store: false
+#msix_config:
+#  display_name: Android-Toolbox
+#  publisher_display_name: LightningBolt
+#  identity_name: com.lightning.adbgui
+#  msix_version: 1.5.3.0
+#  logo_path: C:\Users\sasha\AndroidStudioProjects\adb_gui\assets\logo512.png
+#  capabilities: "internetClient"
+#  store: false
 
 
 dev_dependencies:
@@ -67,7 +67,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
-  msix: ^2.8.13
+#  msix: ^2.8.13
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
