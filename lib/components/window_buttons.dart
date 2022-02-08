@@ -71,7 +71,8 @@ class WindowMaterialButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       shape: const CircleBorder(),
-      color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.grey[800],
+      // color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.grey[800],
+      color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.transparent,
       elevation: 0,
       minWidth: 8,
       hoverColor: Theme.of(context).brightness==Brightness.light?hoverColor:darkModeHoverColor,

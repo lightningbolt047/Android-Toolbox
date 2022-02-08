@@ -44,6 +44,13 @@ class PowerControlsScreen extends StatelessWidget {
           arguments: const ["reboot","recovery"],
         ),
         ActionTile(
+          leadingIcon: const Icon(Icons.system_update_rounded,color: Colors.blueAccent),
+          titleText: "Reboot to sideload",
+          subtitleText: "Reboot directly into recovery's sideload mode (May vary by device)",
+          deviceID: device.id,
+          arguments: const ["reboot","sideload"],
+        ),
+        ActionTile(
           leadingIcon: const Icon(Icons.warning,color: Colors.amber),
           titleText: "Reboot to fastboot",
           subtitleText: "Reboot and boot into fastboot mode (May vary by device)",

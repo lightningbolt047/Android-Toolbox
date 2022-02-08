@@ -1,5 +1,7 @@
+import 'package:adb_gui/services/platform_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 Future<void> setAllowPreReleasePreference(bool value) async {
   SharedPreferences pref=await SharedPreferences.getInstance();
@@ -24,8 +26,9 @@ Future<ThemeMode> getThemeModePreference() async{
   SharedPreferences pref=await SharedPreferences.getInstance();
 
   if(pref.getInt("themeMode")==null){
-    await setThemeModePreference(ThemeMode.system);
-    return ThemeMode.system;
+    ThemeMode themeMode=(Platform.isWindows && !isWindows11())?ThemeMode.dark:ThemeMode.system;
+    await setThemeModePreference(themeMode);
+    return themeMode;
   }
   return ThemeMode.values[pref.getInt("themeMode")!];
 }
