@@ -81,65 +81,30 @@ class PackageInfo extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if(packageInfo['appType']==AppType.user)
-                SimpleRectangleIconMaterialButton(
-                buttonText: "Offload",
-                buttonIcon: const Icon(FontAwesomeIcons.archive,color: Colors.blue,),
-                onPressed: (){
-                  showDialog(
-                    context: context,
-                    builder: (context)=>PromptDialog(
-                      title: "Offload ${packageInfo['packageName']!}?",
-                      contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off (Similar to what offloading in iOS does). If you want to remove the data completely, install the app again and uninstall normally.",
-                      onConfirm: () async{
-                        if(await adbService.uninstallApp(packageName: packageInfo['packageName']!,keepData: true)!=0){
-                          await showDialog(
-                            context: context,
-                            builder: (context)=>AlertDialog(
-                              title: const Text("Error",style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w600
-                              ),),
-                              content: const Text("An error occurred"),
-                              actions: [
-                                TextButton(
-                                  onPressed: (){
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("OK",style: TextStyle(
-                                      color: Colors.blue
-                                  ),),
-                                ),
-                              ],
-                            ),
-                          );
-                        }else{
-                          onUninstallComplete();
-                        }
-                        Navigator.pop(context);
-                      },
-                    ),
-                  );
-                },
-              ),
               SimpleRectangleIconMaterialButton(
-                buttonText: "Force stop",
-                buttonIcon: const Icon(Icons.warning_amber_rounded,color: Colors.blue,),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context)=>PromptDialog(
-                      title: "Force Stop?",
-                      contentText: "If you force stop an app, it may misbehave",
-                      onConfirm: () async{
-                        await adbService.forceStopPackage(packageInfo['packageName']!);
-                        Navigator.pop(context);
-                      },
-                    ),
-                  );
+                buttonText: "Open",
+                buttonIcon: const Icon(Icons.open_in_new,color: Colors.blue,),
+                onPressed: () async{
+                  int exitCode=await adbService.launchApp(packageName: packageInfo['packageName']!);
+                  if(exitCode!=0){
+                    showDialog(
+                      context: context,
+                      builder: (context)=>AlertDialog(
+                        title: const Text("Error"),
+                        content: Text("Unable to launch application!${exitCode==252?" No activity found":""}. Exit Code: $exitCode"),
+                        actions: [
+                          TextButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                            child: const Text("OK"),
+                          )
+                        ],
+                      ),
+                    );
+                  }
                 },
-              ),
-              // if(packageInfo['appType']==AppType.user)
+              ), // if(packageInfo['appType']==AppType.user)
               SimpleRectangleIconMaterialButton(
                 buttonText: "Uninstall",
                 buttonIcon: const Icon(Icons.delete,color: Colors.blue,),
@@ -174,6 +139,23 @@ class PackageInfo extends StatelessWidget {
                         }else{
                           onUninstallComplete();
                         }
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                },
+              ),
+              SimpleRectangleIconMaterialButton(
+                buttonText: "Force stop",
+                buttonIcon: const Icon(Icons.warning_amber_rounded,color: Colors.blue,),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context)=>PromptDialog(
+                      title: "Force Stop?",
+                      contentText: "If you force stop an app, it may misbehave",
+                      onConfirm: () async{
+                        await adbService.forceStopPackage(packageInfo['packageName']!);
                         Navigator.pop(context);
                       },
                     ),
@@ -222,6 +204,47 @@ class PackageInfo extends StatelessWidget {
                       },
                     ),
                   ),
+                  if(packageInfo['appType']==AppType.user)
+                    SimpleRectangleIconMaterialButton(
+                      buttonText: "Offload",
+                      buttonIcon: const Icon(FontAwesomeIcons.archive,color: Colors.blue,),
+                      onPressed: (){
+                        showDialog(
+                          context: context,
+                          builder: (context)=>PromptDialog(
+                            title: "Offload ${packageInfo['packageName']!}?",
+                            contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off (Similar to what offloading in iOS does). If you want to remove the data completely, install the app again and uninstall normally.",
+                            onConfirm: () async{
+                              if(await adbService.uninstallApp(packageName: packageInfo['packageName']!,keepData: true)!=0){
+                                await showDialog(
+                                  context: context,
+                                  builder: (context)=>AlertDialog(
+                                    title: const Text("Error",style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.w600
+                                    ),),
+                                    content: const Text("An error occurred"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: (){
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("OK",style: TextStyle(
+                                            color: Colors.blue
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }else{
+                                onUninstallComplete();
+                              }
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   if(appCompilationSupported(device.androidAPILevel))
                     Tooltip(
                       message: "You can opt to trade speed for space or vice versa. Applications may take up less or more space depending on your choice",

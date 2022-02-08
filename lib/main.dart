@@ -59,7 +59,7 @@ void main() async {
         headline3: GoogleFonts.quicksand(color: Colors.blue,fontSize: 40,),
         headline4: GoogleFonts.quicksand(),
         headline5: GoogleFonts.quicksand(color: Colors.blue,fontSize: 25,fontWeight: FontWeight.w600),
-        headline6: GoogleFonts.quicksand(fontSize: 20,fontWeight: FontWeight.w500),
+        headline6: GoogleFonts.quicksand(fontSize: 20,fontWeight: FontWeight.w500,),
         subtitle1: GoogleFonts.quicksand(fontSize: 15),
         subtitle2: GoogleFonts.quicksand(),
         bodyText1: GoogleFonts.quicksand(),
@@ -67,6 +67,13 @@ void main() async {
         button: GoogleFonts.quicksand(),
         caption: GoogleFonts.quicksand(),
       ),
+      dialogTheme: DialogTheme(
+        titleTextStyle: GoogleFonts.quicksand(
+          fontSize: 20,
+          color: Colors.blue,
+          fontWeight: FontWeight.w500,
+        ),
+      )
     ),
     darkTheme: ThemeData.dark().copyWith(
       scaffoldBackgroundColor: Platform.isLinux?Colors.black26:Colors.transparent,

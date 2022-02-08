@@ -200,6 +200,11 @@ class ADBService{
     return result.exitCode;
   }
 
+  Future<int> launchApp({required String packageName}) async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","monkey","-p",packageName,"1"]);
+    return result.exitCode;
+  }
+
   Future<Process> reinstallSystemAppForUser({required String packageName}) async{
     return await Process.start(adbExecutable, ["-s",device.id,"shell","pm","install-existing",packageName]);
   }
