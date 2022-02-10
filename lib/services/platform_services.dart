@@ -10,6 +10,13 @@ String getPlatformName(){
   return "linux";
 }
 
+String getPlatformDelimiter(){
+  if(Platform.isWindows){
+    return "\\";
+  }
+  return "/";
+}
+
 bool isWindows11(){
   try{
     String versionInfo=Platform.operatingSystemVersion;

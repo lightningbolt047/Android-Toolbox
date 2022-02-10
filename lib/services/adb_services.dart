@@ -5,6 +5,7 @@ import 'package:adb_gui/models/item.dart';
 import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/utils/vars.dart';
+import 'package:path_provider/path_provider.dart';
 import 'android_api_checks.dart';
 import 'file_services.dart';
 
@@ -233,6 +234,42 @@ class ADBService{
   Future<int> suspendApp(String packageName) async{
     ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","suspend",packageName]);
     return result.exitCode;
+  }
+  
+  Future<List<String>> getAPKFilePathOnDevice(String packageName) async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","path",packageName]);
+    List<String> lines=result.stdout.toString().split("\n");
+    lines.removeLast();
+    List<String> paths=[];
+    for(int i=0;i<lines.length;i++){
+      paths.add(lines[i].split(":")[1].trim());
+    }
+    return paths;
+  }
+
+  Future<int> downloadAPKs(String packageName) async{
+    List<String> paths=await getAPKFilePathOnDevice(packageName);
+    Directory? downloadDir=await getDownloadsDirectory();
+    ProcessResult result;
+    try{
+      if(paths.length==1){
+        result=await Process.run(adbExecutable, ["-s",device.id,"pull",paths[0],downloadDir!.path]);
+        File apkFile=File(downloadDir.path+getPlatformDelimiter()+"base.apk");
+        await apkFile.rename(downloadDir.path+getPlatformDelimiter()+"$packageName.apk");
+      }else{
+        Directory apkDownloadDirectory=Directory(downloadDir!.path+getPlatformDelimiter()+packageName);
+        await apkDownloadDirectory.create();
+        for(int i=0;i<paths.length;i++){
+          result=await Process.run(adbExecutable, ["-s",device.id,"pull",paths[i],apkDownloadDirectory.path]);
+          if(result.exitCode!=0){
+            return result.exitCode;
+          }
+        }
+      }
+      return 0;
+    }catch(e){
+      return 1;
+    }
   }
 
   Future<int> unsuspendApp(String packageName) async{

@@ -73,6 +73,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                         onPressed: () async{
                           await showDialog(
                             context: context,
+                            barrierDismissible: false,
                             builder: (context)=>ApkInstallDialog(device: device,),
                           );
                           setState(() {

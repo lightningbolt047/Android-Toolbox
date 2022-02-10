@@ -58,7 +58,10 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
         if(appInstallType==AppInstallType.multiApks){
           process = await adbService.installMultipleForSinglePackage(selectedFiles);
         }else{
-          process = await adbService.batchInstallApk(selectedFiles);
+          // process = await adbService.batchInstallApk(selectedFiles);
+          for(int i=0;i<selectedFiles.length;i++){
+            process = await adbService.installSingleApk(selectedFiles[i]);
+          }
         }
       }
     }
@@ -128,22 +131,22 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                           appInstallType=AppInstallType.single;
                         });
                       }),
-                      // AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.multiApks, label: "Multi APKs", onChanged: (value){
-                      //   setState(() {
-                      //     if(appInstallType!=AppInstallType.multiApks){
-                      //       selectedFiles.clear();
-                      //     }
-                      //     appInstallType=AppInstallType.multiApks;
-                      //   });
-                      // }),
-                      // AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
-                      //   setState(() {
-                      //     if(appInstallType!=AppInstallType.batch){
-                      //       selectedFiles.clear();
-                      //     }
-                      //     appInstallType=AppInstallType.batch;
-                      //   });
-                      // }),
+                      AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.multiApks, label: "Multi APKs", onChanged: (value){
+                        setState(() {
+                          if(appInstallType!=AppInstallType.multiApks){
+                            selectedFiles.clear();
+                          }
+                          appInstallType=AppInstallType.multiApks;
+                        });
+                      }),
+                      AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
+                        setState(() {
+                          if(appInstallType!=AppInstallType.batch){
+                            selectedFiles.clear();
+                          }
+                          appInstallType=AppInstallType.batch;
+                        });
+                      }),
                     ],
                   ),
                   Row(
