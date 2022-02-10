@@ -27,6 +27,8 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
   AppInstallType appInstallType = AppInstallType.single;
   String consoleOutput = "";
   late ADBService adbService;
+  int totalInstallations=0;
+  int installed=0;
 
   ProcessStatus processStatus = ProcessStatus.notStarted;
 
@@ -36,7 +38,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
 
 
   void pickApksAndInstall() async{
-    Process? process;
+    List<Process> processes=[];
     if(appInstallType==AppInstallType.single){
       String? filePath=await pickFileFolderFromDesktop(uploadType: FileItemType.file, dialogTitle: "Select Single APK", allowedExtensions: ["apk"]);
       if(filePath!=null){
@@ -44,7 +46,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
           selectedFiles.clear();
           selectedFiles.add(filePath);
         });
-        process = await adbService.installSingleApk(filePath);
+        processes.add(await adbService.installSingleApk(filePath));
       }
     }else{
       List<String?> filePaths = await pickMultipleFilesFromDesktop(dialogTitle: "Select APKs to install",allowedExtensions: ["apk"]);
@@ -56,42 +58,55 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
           }
         });
         if(appInstallType==AppInstallType.multiApks){
-          process = await adbService.installMultipleForSinglePackage(selectedFiles);
+          processes.add(await adbService.installMultipleForSinglePackage(selectedFiles));
         }else{
           // process = await adbService.batchInstallApk(selectedFiles);
           for(int i=0;i<selectedFiles.length;i++){
-            process = await adbService.installSingleApk(selectedFiles[i]);
+            processes.add(await adbService.installSingleApk(selectedFiles[i]));
           }
         }
       }
     }
-    if(process!=null){
+    if(processes.isNotEmpty){
       setState(() {
+        totalInstallations=processes.length;
+        installed=0;
         consoleOutput="";
         processStatus=ProcessStatus.working;
       });
-      process.stdout.listen((event) {
-        setState(() {
-          consoleOutput+=String.fromCharCodes(event);
+      for(int i=0;i<processes.length;i++){
+        processes[i].stdout.listen((event) {
+          setState(() {
+            consoleOutput+=String.fromCharCodes(event);
+          });
         });
-      });
-      monitorProgress(process);
+        monitorProgress(i,processes);
+      }
     }
   }
 
-  void monitorProgress(Process process) async {
-    int exitCode = await process.exitCode;
+  void monitorProgress(int index, List<Process> processes) async {
+    int exitCode = await processes[index].exitCode;
 
     setState(() {
       if(exitCode==0){
-        consoleOutput+="\nProcess completed successfully with exit code $exitCode\n\n";
-        processStatus=ProcessStatus.success;
+        if(totalInstallations==installed+1){
+          consoleOutput+="\nProcess completed successfully\n\n";
+          processStatus=ProcessStatus.success;
+        }
+        installed++;
       }else{
-        consoleOutput+="\nProcess failed with exit code $exitCode\n\n";
+        cancelAllInstallations(processes);
+        consoleOutput+="\nAPK install failed with exit code $exitCode\n\n";
         processStatus=ProcessStatus.fail;
       }
     });
+  }
 
+  void cancelAllInstallations(List<Process> processes){
+    for(int i=0;i<processes.length;i++){
+      processes[i].kill();
+    }
   }
 
 
@@ -131,7 +146,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                           appInstallType=AppInstallType.single;
                         });
                       }),
-                      AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.multiApks, label: "Multi APKs", onChanged: (value){
+                      AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.multiApks, label: "Split APKs", onChanged: (value){
                         setState(() {
                           if(appInstallType!=AppInstallType.multiApks){
                             selectedFiles.clear();
@@ -185,7 +200,24 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                   if(processStatus==ProcessStatus.working)
                     SizedBox(
                       width: constraints.maxWidth*0.5,
-                      child: const LinearProgressIndicator(),
+                      child: Column(
+                        children: [
+                          LinearProgressIndicator(
+                            value: appInstallType==AppInstallType.batch?installed/totalInstallations:null,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("$installed of $totalInstallations app(s) installed",style: const TextStyle(
+                                fontWeight: FontWeight.w600
+                              ),),
+                              Text("${((installed/totalInstallations)*100).toStringAsFixed(2)}%",style: const TextStyle(
+                                fontWeight: FontWeight.w600
+                              ),)
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   const SizedBox(
                     height: 8,
