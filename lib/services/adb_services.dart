@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/models/item.dart';
+import 'package:adb_gui/models/storage.dart';
 import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/utils/vars.dart';
@@ -31,6 +32,19 @@ class ADBService{
     }
     return directoryItems;
   }
+
+  Future<List<Storage>> getExternalStorages() async{
+    List<Item> storages=await getDirectoryContents("/storage/");
+    List<Storage> externalStorages=[];
+    for(int i=0;i<storages.length;i++){
+      if(storages[i].itemName!="self" && storages[i].itemName!="emulated"){
+        externalStorages.add(Storage("/storage/${storages[i].itemName}/", storages[i].itemName));
+      }
+    }
+    return externalStorages;
+  }
+
+
 
   void deleteItem({required String itemPath,Function? beforeExecution, Function? onSuccess, Function? onFail}) async {
     if(beforeExecution != null){
