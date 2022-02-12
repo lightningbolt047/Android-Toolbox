@@ -53,6 +53,13 @@ void main() async {
     themeMode: themeModePreference,
     theme: ThemeData(
       primaryColor: kAccentColor,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: kAccentColor,
+      ),
+      toggleableActiveColor: kAccentColor,
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: kAccentColor,
+      ),
       scaffoldBackgroundColor: Colors.transparent,
       textTheme: TextTheme(
         headline1: GoogleFonts.quicksand(),
