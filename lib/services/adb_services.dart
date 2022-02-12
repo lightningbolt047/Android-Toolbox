@@ -28,7 +28,7 @@ class ADBService{
     List<Item> directoryItems=[];
     directoryContentDetails=getTrimmedStringList(directoryContentDetails);
     for(int i=0;i<directoryContentDetails.length;i++){
-      directoryItems.add(Item(directoryContentDetails[i].endsWith("/")?directoryContentDetails[i].replaceAll("/", ""):directoryContentDetails[i],await getFileType(device:device,currentPath:currentPath,fileName:directoryContentDetails[i])));
+      directoryItems.add(Item(directoryContentDetails[i].endsWith("/")?directoryContentDetails[i].replaceAll("/", ""):directoryContentDetails[i],getFileType(device:device,currentPath:currentPath,fileName:directoryContentDetails[i])));
     }
     return directoryItems;
   }

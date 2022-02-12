@@ -518,8 +518,8 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         return _renameFieldController.text!=snapshot.data![index].itemName?MaterialButton(
-                          onPressed: () {
-                            if(snapshot.data![index].itemContentType==FileContentTypes.directory){
+                          onPressed: () async {
+                            if(await snapshot.data![index].itemContentType==FileContentTypes.directory){
                               setState(() {
                                 addPath(snapshot.data![index].itemName);
                               });
@@ -544,7 +544,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                               SizedBox.fromSize(
                                 size: const Size(25, 0),
                               ),
-                              Icon(getFileIconByType(snapshot.data![index].itemContentType),color: kAccentColor,),
+                              FutureIcon(iconData: getFileIconByType(snapshot.data![index].itemContentType)),
                               SizedBox.fromSize(
                                 size: const Size(25, 0),
                               ),
@@ -696,7 +696,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                             SizedBox.fromSize(
                               size: const Size(25, 0),
                             ),
-                            Icon(getFileIconByType(snapshot.data![index].itemContentType),color: kAccentColor,),
+                            FutureIcon(iconData: getFileIconByType(snapshot.data![index].itemContentType)),
                             SizedBox.fromSize(
                               size: const Size(25, 0),
                             ),
@@ -800,6 +800,26 @@ class ClipboardChip extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+
+class FutureIcon extends StatelessWidget {
+
+  final Future<IconData> iconData;
+  const FutureIcon({Key? key,required this.iconData}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: iconData,
+      builder: (BuildContext context, AsyncSnapshot<IconData> snapshot){
+        if(!snapshot.hasData){
+          return const CircularProgressIndicator();
+        }
+        return Icon(snapshot.data,color: kAccentColor,);
+      },
     );
   }
 }

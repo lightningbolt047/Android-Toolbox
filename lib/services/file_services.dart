@@ -145,8 +145,8 @@ Future<int> getDesktopFileSize(String filePath) async{
 }
 
 
-IconData getFileIconByType(FileContentTypes fileType) {
-  switch(fileType){
+Future<IconData> getFileIconByType(Future<FileContentTypes> fileType) async {
+  switch(await fileType){
     case FileContentTypes.pdf: return FontAwesomeIcons.filePdf;
     case FileContentTypes.wordDocument: return FontAwesomeIcons.fileWord;
     case FileContentTypes.powerpoint: return FontAwesomeIcons.filePowerpoint;
