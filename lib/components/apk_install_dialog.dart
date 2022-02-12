@@ -10,6 +10,8 @@ import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../utils/const.dart';
+
 class ApkInstallDialog extends StatefulWidget {
   final Device device;
   const ApkInstallDialog({Key? key,required this.device}) : super(key: key);
@@ -174,7 +176,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.blueGrey,
+                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.blueGrey,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
@@ -226,7 +228,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)
                     ),
-                    color: Colors.blue,
+                    color: kAccentColor,
                     disabledColor: Colors.grey,
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20,vertical: 8),

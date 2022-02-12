@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../utils/const.dart';
+
 
 class ConnectionInitiationScreen extends StatefulWidget {
   const ConnectionInitiationScreen({Key? key}) : super(key: key);
@@ -164,7 +166,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                     ),
-                    focusColor: Colors.blue,
+                    focusColor: kAccentColor,
                   hintText: "000000",
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.w400,
@@ -193,7 +195,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    focusColor: Colors.blue,
+                    focusColor: kAccentColor,
                     hintText: "192.168.0.1:12345",
                     hintStyle: TextStyle(
                       color: Colors.grey[500]
@@ -210,7 +212,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     Navigator.pop(context);
                   },
                   child: const Text("OK",style: TextStyle(
-                    color: Colors.blue
+                    color: kAccentColor
                   ),),
               ),
             ),
@@ -313,9 +315,9 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
               children: [
                 Text("Lets get you connected",style: Theme.of(context).textTheme.headline3,),
                 IconNameMaterialButton(
-                    icon: Icon(Icons.refresh_rounded, size: 35,color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.white,),
+                    icon: Icon(Icons.refresh_rounded, size: 35,color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.white,),
                     text: Text("Refresh", style: TextStyle(
-                        color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.white,
+                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.white,
                         fontSize: 20
                     ),),
                     onPressed: (){
@@ -404,7 +406,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                             ),
                             suffixIcon: MaterialButton(
                               child: const Text("Connect",style: TextStyle(
-                                  color: Colors.blue
+                                  color: kAccentColor
                               ),),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
@@ -417,7 +419,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                             hintStyle: TextStyle(
                               color: Colors.grey[500]
                             ),
-                            focusColor: Colors.blue,
+                            focusColor: kAccentColor,
                           ),
                         ),
                       ),
@@ -426,7 +428,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.blueGrey,
+                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.blueGrey,
                         child: Row(
                           children: [
                             SizedBox(
@@ -449,7 +451,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                           showDialog(context: context, builder: (context){
                             return AlertDialog(
                               title: const Text("Unable to connect",style: TextStyle(
-                                color: Colors.blue
+                                color: kAccentColor
                               ),),
                               content: const Text("Make sure to start Windows Subsystem for Android and enable Developer Mode before attempting to connect"),
                               actions: [
@@ -460,7 +462,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                                     child: const Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Text("OK",style: TextStyle(
-                                        color: Colors.blue,
+                                        color: kAccentColor,
                                       ),),
                                     )
                                 ),
@@ -474,7 +476,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                             return MaterialButton(
                               shape: const CircleBorder(),
                               // color: Colors.blue,
-                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.blueGrey,
+                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.blueGrey,
                               disabledColor: Colors.grey,
                               child: const Padding(
                                   padding: EdgeInsets.all(8.0),

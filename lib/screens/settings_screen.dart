@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../services/platform_services.dart';
+import '../utils/const.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -115,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                               return const CircularProgressIndicator();
                             }
                             return Text(snapshot.data!,style: TextStyle(
-                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                               fontSize: 20
                             ),);
                           },
@@ -126,13 +127,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                         child: ListTile(
                             leading: Icon(
                               Icons.wb_sunny_rounded,
-                              color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                             ),
                             dense:false,
                             title: Text(
                               "Light Mode",
                               style: TextStyle(
-                                color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                               ),
                             ),
                         ),
@@ -145,13 +146,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           child: ListTile(
                               leading: Icon(
                                 Icons.mode_night_rounded,
-                                color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                               ),
                               dense:false,
                               title: Text(
                                 "Dark Mode",
                                 style: TextStyle(
-                                  color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                 ),
                               )),
                           onTap: () async{
@@ -163,13 +164,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           child: ListTile(
                               leading: Icon(
                                 Icons.brightness_auto,
-                                color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                               ),
                               dense:false,
                               title: Text(
                                 "Follow System",
                                 style: TextStyle(
-                                  color: Theme.of(context).brightness==Brightness.light?Colors.blue:null,
+                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                 ),
                               )),
                           onTap: () async{
@@ -242,7 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       }else if(updateInfo['updateAvailable']!=null && !updateInfo['updateAvailable']){
                         showDialog(context: context, builder: (context)=>AlertDialog(
                           title: const Text("No update available!",style: TextStyle(
-                              color: Colors.blue
+                              color: kAccentColor
                           ),),
                           content: const Text("You are already on the latest version"),
                           actions: [
@@ -259,7 +260,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           context: context,
                           builder: (context)=>AlertDialog(
                             title: const Text("Failed to check update",style: TextStyle(
-                              color: Colors.blue
+                              color: kAccentColor
                             ),),
                             content: const Text("Check your internet connection and try again"),
                             actions: [

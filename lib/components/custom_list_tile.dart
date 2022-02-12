@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/const.dart';
+
 class CustomListTile extends StatelessWidget {
   final String title;
   final Icon icon;
@@ -14,7 +16,7 @@ class CustomListTile extends StatelessWidget {
           width: 4  ,
         ),
         Text(title,style: const TextStyle(
-          color: Colors.blue,
+          color: kAccentColor,
         ),)
       ],
     );

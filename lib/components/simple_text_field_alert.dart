@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/const.dart';
+
 class SimpleTextFieldAlert extends StatelessWidget {
   final String title;
   final TextEditingController textFieldController;
@@ -11,7 +13,7 @@ class SimpleTextFieldAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title,style: const TextStyle(
-        color: Colors.blue
+        color: kAccentColor
       ),),
       content: TextField(
         controller: textFieldController,
@@ -19,12 +21,12 @@ class SimpleTextFieldAlert extends StatelessWidget {
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10)
           ),
-          focusColor: Colors.blue,
+          focusColor: kAccentColor,
           hintText: hintText,
         ),
       ),
       actions: [
-        TextButton(onPressed: action, child: const Text("OK",style: TextStyle(color: Colors.blue),))
+        TextButton(onPressed: action, child: const Text("OK",style: TextStyle(color: kAccentColor),))
       ],
     );
   }
