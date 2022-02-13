@@ -11,6 +11,7 @@ import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:adb_gui/services/file_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:shimmer/shimmer.dart';
@@ -246,9 +247,11 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                   focusNode: _addressBarFocus,
                                   textAlign: TextAlign.left,
                                   textAlignVertical: TextAlignVertical.top,
+                                  maxLengthEnforcement: MaxLengthEnforcement.none,
                                   maxLines: 1,
                                   onSubmitted: updatePathFromTextField,
                                   decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.all(8),
                                     border: const OutlineInputBorder(
                                         borderRadius: BorderRadius.zero),
                                     focusColor: kAccentColor,
