@@ -112,6 +112,11 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
       }
       _currentPath += fileItemName + "/";
       _addressBarEditingController.text = _currentPath;
+      _addressBarFocus.requestFocus();
+      _addressBarEditingController.selection=TextSelection.fromPosition(TextPosition(offset: _addressBarEditingController.text.length));
+      Future.delayed(const Duration(microseconds: 1),(){
+        _addressBarFocus.unfocus();
+      });
     });
   }
 
@@ -240,8 +245,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                           ),
                           Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 4, horizontal: 4),
+                                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
                                 child: TextField(
                                   controller: _addressBarEditingController,
                                   focusNode: _addressBarFocus,
