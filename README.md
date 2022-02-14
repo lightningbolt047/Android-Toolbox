@@ -29,6 +29,9 @@
                 <b>Bloatware or other system apps can now be uninstalled</b>
             </li>
             <li>
+                <b>Full Windows Subsystem for Android (WSA) compatibility</b>
+            </li>
+            <li>
                 <em>More soon......</em>
             </li>
         </ul>
