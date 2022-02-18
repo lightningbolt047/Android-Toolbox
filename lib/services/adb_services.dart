@@ -46,7 +46,7 @@ class ADBService{
 
 
 
-  void deleteItem({required String itemPath,Function? beforeExecution, Function? onSuccess, Function? onFail}) async {
+  Future<int> deleteItem({required String itemPath,Function? beforeExecution, Function? onSuccess, Function? onFail}) async {
     if(beforeExecution != null){
       beforeExecution();
     }
@@ -61,6 +61,7 @@ class ADBService{
     if(result.exitCode == 0 && onSuccess!=null) {
       onSuccess();
     }
+    return result.exitCode;
   }
 
   void uploadContent({required currentPath, required FileItemType uploadType, Function? onProgress}) async {
@@ -294,6 +295,16 @@ class ADBService{
   Future<int> compileApp(String packageName, CompilationMode compilationMode) async{
     ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","compile","-m",getCompilationModeAsString(compilationMode),"-f",packageName]);
     return result.exitCode;
+  }
+
+  //TODO: See if these work
+  Future<int> excludeFromMediaScanner(String path) async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","touch","\"${path}hello\""]);
+    return result.exitCode;
+  }
+
+  Future<int> includeInMediaScanner(String path) async{
+    return deleteItem(itemPath: path+".nomedia");
   }
 
 

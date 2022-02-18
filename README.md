@@ -17,7 +17,7 @@
         Current features:
         <ul>
             <li>
-                You can now perform some file management tasks
+                You can now perform some file management tasks (External SD card supported)
             </li>
             <li>
                 Reboot to system, recovery, fastboot, bootloader or simply power off using the power controls

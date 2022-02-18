@@ -156,14 +156,14 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                           appInstallType=AppInstallType.multiApks;
                         });
                       }),
-                      AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
-                        setState(() {
-                          if(appInstallType!=AppInstallType.batch){
-                            selectedFiles.clear();
-                          }
-                          appInstallType=AppInstallType.batch;
-                        });
-                      }),
+                      // AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
+                      //   setState(() {
+                      //     if(appInstallType!=AppInstallType.batch){
+                      //       selectedFiles.clear();
+                      //     }
+                      //     appInstallType=AppInstallType.batch;
+                      //   });
+                      // }),
                     ],
                   ),
                   Row(

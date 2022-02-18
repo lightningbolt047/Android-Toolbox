@@ -695,6 +695,40 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                             );
                                           },
                                         ),
+                                        // PopupMenuItem(
+                                        //   child: ListTile(
+                                        //       leading: Icon(
+                                        //         FontAwesomeIcons.trash,
+                                        //         color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                        //       ),
+                                        //       dense:false,
+                                        //       title: Text(
+                                        //         "Include in Media Scanner",
+                                        //         style: TextStyle(
+                                        //           color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                        //         ),
+                                        //       )),
+                                        //   onTap: () {
+                                        //     adbService.includeInMediaScanner(_currentPath);
+                                        //   },
+                                        // ),
+                                        // PopupMenuItem(
+                                        //   child: ListTile(
+                                        //       leading: Icon(
+                                        //         FontAwesomeIcons.trash,
+                                        //         color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                        //       ),
+                                        //       dense:false,
+                                        //       title: Text(
+                                        //         "Exclude from Media Scanner",
+                                        //         style: TextStyle(
+                                        //           color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                        //         ),
+                                        //       )),
+                                        //   onTap: () {
+                                        //     adbService.excludeFromMediaScanner(_currentPath);
+                                        //   },
+                                        // ),
                                       ])
                             ],
                           ),
