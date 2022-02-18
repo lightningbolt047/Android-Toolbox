@@ -5,6 +5,7 @@ import 'package:adb_gui/components/updater_dialog.dart';
 import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/screens/home_screen.dart';
 import 'package:adb_gui/screens/settings_screen.dart';
+import 'package:adb_gui/services/platform_services.dart';
 import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/update_services.dart';
 import 'package:adb_gui/utils/vars.dart';
@@ -423,7 +424,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                           ),
                         ),
                       ),
-                      if(Platform.isWindows)
+                      if(Platform.isWindows && isWindows11())
                         MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
