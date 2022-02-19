@@ -40,7 +40,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
 
 
   void pickApksAndInstall() async{
-    List<Process> processes=[];
+    Process? process;
     if(appInstallType==AppInstallType.single){
       String? filePath=await pickFileFolderFromDesktop(uploadType: FileItemType.file, dialogTitle: "Select Single APK", allowedExtensions: ["apk"]);
       if(filePath!=null){
@@ -48,7 +48,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
           selectedFiles.clear();
           selectedFiles.add(filePath);
         });
-        processes.add(await adbService.installSingleApk(filePath));
+        process=await adbService.installSingleApk(filePath);
       }
     }else{
       List<String?> filePaths = await pickMultipleFilesFromDesktop(dialogTitle: "Select APKs to install",allowedExtensions: ["apk"]);
@@ -60,55 +60,67 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
           }
         });
         if(appInstallType==AppInstallType.multiApks){
-          processes.add(await adbService.installMultipleForSinglePackage(selectedFiles));
+          process=await adbService.installMultipleForSinglePackage(selectedFiles);
         }else{
           // process = await adbService.batchInstallApk(selectedFiles);
+          if(selectedFiles.isNotEmpty){
+            setState(() {
+              totalInstallations=selectedFiles.length;
+              installed=0;
+              consoleOutput="";
+              processStatus=ProcessStatus.working;
+            });
+          }
           for(int i=0;i<selectedFiles.length;i++){
-            processes.add(await adbService.installSingleApk(selectedFiles[i]));
+            ProcessResult appInstallResult=await adbService.installSingleApkComplete(selectedFiles[i]);
+            if(appInstallResult.exitCode==0){
+              setState(() {
+                consoleOutput+=appInstallResult.stdout+"\n";
+                installed+=1;
+                if(installed==totalInstallations){
+                  processStatus=ProcessStatus.success;
+                }
+              });
+            }else{
+              setState(() {
+                consoleOutput+=appInstallResult.stdout+"\n";
+                consoleOutput+="Failed to install ${selectedFiles[i]} with exit code ${appInstallResult.exitCode}";
+                processStatus=ProcessStatus.fail;
+              });
+              break;
+            }
           }
         }
       }
     }
-    if(processes.isNotEmpty){
+    if(process!=null){
       setState(() {
-        totalInstallations=processes.length;
+        totalInstallations=0;
         installed=0;
         consoleOutput="";
         processStatus=ProcessStatus.working;
       });
-      for(int i=0;i<processes.length;i++){
-        processes[i].stdout.listen((event) {
-          setState(() {
-            consoleOutput+=String.fromCharCodes(event);
-          });
+      process.stdout.listen((event) {
+        setState(() {
+          consoleOutput+=String.fromCharCodes(event);
         });
-        monitorProgress(i,processes);
-      }
+      });
+      monitorProgress(process);
     }
   }
 
-  void monitorProgress(int index, List<Process> processes) async {
-    int exitCode = await processes[index].exitCode;
+  void monitorProgress(Process process) async {
+    int exitCode = await process.exitCode;
 
     setState(() {
       if(exitCode==0){
-        if(totalInstallations==installed+1){
-          consoleOutput+="\nProcess completed successfully\n\n";
-          processStatus=ProcessStatus.success;
-        }
-        installed++;
+        consoleOutput+="\nProcess completed successfully\n\n";
+        processStatus=ProcessStatus.success;
       }else{
-        cancelAllInstallations(processes);
         consoleOutput+="\nAPK install failed with exit code $exitCode\n\n";
         processStatus=ProcessStatus.fail;
       }
     });
-  }
-
-  void cancelAllInstallations(List<Process> processes){
-    for(int i=0;i<processes.length;i++){
-      processes[i].kill();
-    }
   }
 
 
@@ -156,14 +168,14 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                           appInstallType=AppInstallType.multiApks;
                         });
                       }),
-                      // AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
-                      //   setState(() {
-                      //     if(appInstallType!=AppInstallType.batch){
-                      //       selectedFiles.clear();
-                      //     }
-                      //     appInstallType=AppInstallType.batch;
-                      //   });
-                      // }),
+                      AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
+                        setState(() {
+                          if(appInstallType!=AppInstallType.batch){
+                            selectedFiles.clear();
+                          }
+                          appInstallType=AppInstallType.batch;
+                        });
+                      }),
                     ],
                   ),
                   Row(
@@ -207,17 +219,18 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                           LinearProgressIndicator(
                             value: appInstallType==AppInstallType.batch?installed/totalInstallations:null,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("$installed of $totalInstallations app(s) installed",style: const TextStyle(
-                                fontWeight: FontWeight.w600
-                              ),),
-                              Text("${((installed/totalInstallations)*100).toStringAsFixed(2)}%",style: const TextStyle(
-                                fontWeight: FontWeight.w600
-                              ),)
-                            ],
-                          )
+                          if(appInstallType==AppInstallType.batch)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("$installed of $totalInstallations app(s) installed",style: const TextStyle(
+                                  fontWeight: FontWeight.w600
+                                ),),
+                                Text("${((installed/totalInstallations)*100).toStringAsFixed(2)}%",style: const TextStyle(
+                                  fontWeight: FontWeight.w600
+                                ),)
+                              ],
+                            ),
                         ],
                       ),
                     ),

@@ -238,13 +238,17 @@ class ADBService{
     return await Process.start(adbExecutable, processArgs);
   }
 
-  Future<Process> batchInstallApk(List<String> apkFilePaths) async{
-    List<String> processArgs=["-s",device.id,"install-multi-package"];
-    for(int i=0;i<apkFilePaths.length;i++){
-      processArgs.add(apkFilePaths[i]);
-    }
-    return await Process.start(adbExecutable, processArgs);
+  Future<ProcessResult> installSingleApkComplete(String apkFilePath) async{
+    return await Process.run(adbExecutable, ["-s",device.id,"install",apkFilePath]);
   }
+
+  // Future<Process> batchInstallApk(List<String> apkFilePaths) async{
+  //   List<String> processArgs=["-s",device.id,"install-multi-package"];
+  //   for(int i=0;i<apkFilePaths.length;i++){
+  //     processArgs.add(apkFilePaths[i]);
+  //   }
+  //   return await Process.start(adbExecutable, processArgs);
+  // }
 
   Future<int> suspendApp(String packageName) async{
     ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","suspend",packageName]);
