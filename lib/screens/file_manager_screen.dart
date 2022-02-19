@@ -57,11 +57,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
 
   Future<void> fetchExternalStorages() async{
     storages=[];
-    if(newStoragePathSupported(device.androidAPILevel)){
-      storages.add(Storage("/storage/emulated/0/", "0"));
-    }else{
-      storages.add(Storage("/sdcard/", "0"));
-    }
+    storages.add(Storage("/sdcard/", "0"));
     storages.addAll(await adbService.getExternalStorages());
     setState(() {
       selectedStorage=storages.first;
@@ -563,128 +559,135 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                   style: const TextStyle(fontSize: 15),
                                 ),
                               ),
-                              PopupMenuButton(
-                                  icon: const Icon(
-                                    Icons.more_vert_rounded,
-                                    color: Colors.blueGrey,
-                                  ),
-                                  itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                          child: ListTile(
-                                              leading: Icon(
-                                                FontAwesomeIcons.download,
+                              FutureBuilder(
+                                future: snapshot.data![index].itemContentType,
+                                builder: (BuildContext context, AsyncSnapshot<FileContentTypes> fileContentTypeSnapshot){
+                                  if(!snapshot.hasData){
+                                    return const CircularProgressIndicator();
+                                  }
+
+                                  return PopupMenuButton(
+                                    icon: const Icon(
+                                      Icons.more_vert_rounded,
+                                      color: Colors.blueGrey,
+                                    ),
+                                    itemBuilder: (context) => [
+                                      PopupMenuItem(
+                                        child: ListTile(
+                                            leading: Icon(
+                                              FontAwesomeIcons.download,
+                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                            ),
+                                            dense:false,
+                                            title: Text(
+                                              "Download",
+                                              style: TextStyle(
                                                 color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                               ),
-                                              dense:false,
-                                              title: Text(
-                                                "Download",
-                                                style: TextStyle(
-                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                                ),
-                                              )),
-                                          onTap: () {
-                                            adbService.downloadContent(
-                                                itemPath:_currentPath+snapshot.data![index].itemName,
-                                                onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
-                                                  await showDialog(
-                                                      context: context,
-                                                      barrierDismissible: false,
-                                                      builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.phoneToPC,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
-                                                  setState(() {});
-                                                }
-                                            );
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: ListTile(
-                                              leading: Icon(
-                                                Icons.drive_file_rename_outline,
+                                            )),
+                                        onTap: () {
+                                          adbService.downloadContent(
+                                              itemPath:_currentPath+snapshot.data![index].itemName,
+                                              onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
+                                                await showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.phoneToPC,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
+                                                setState(() {});
+                                              }
+                                          );
+                                        },
+                                      ),
+                                      PopupMenuItem(
+                                        child: ListTile(
+                                            leading: Icon(
+                                              Icons.drive_file_rename_outline,
+                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                            ),
+                                            dense:false,
+                                            title: Text(
+                                              "Rename",
+                                              style: TextStyle(
                                                 color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                               ),
-                                              dense:false,
-                                              title: Text(
-                                                "Rename",
-                                                style: TextStyle(
-                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                                ),
-                                              )),
-                                          onTap: () async {
-                                            _renameItemFocus.requestFocus();
-                                            setState(() {
-                                              _renameFieldController.text=snapshot.data![index].itemName;
-                                            });
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: ListTile(
-                                              leading: Icon(
-                                                FontAwesomeIcons.copy,
+                                            )),
+                                        onTap: () async {
+                                          _renameItemFocus.requestFocus();
+                                          setState(() {
+                                            _renameFieldController.text=snapshot.data![index].itemName;
+                                          });
+                                        },
+                                      ),
+                                      PopupMenuItem(
+                                        child: ListTile(
+                                            leading: Icon(
+                                              FontAwesomeIcons.copy,
+                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                            ),
+                                            dense:false,
+                                            title: Text(
+                                              "Copy",
+                                              style: TextStyle(
                                                 color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                               ),
-                                              dense:false,
-                                              title: Text(
-                                                "Copy",
-                                                style: TextStyle(
-                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                                ),
-                                              )),
-                                          onTap: () {
-                                            addFileTransferJob(
-                                                FileTransferType.copy,
-                                                snapshot.data![index].itemName
-                                            );
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: ListTile(
-                                              leading: Icon(
-                                                FontAwesomeIcons.cut,
+                                            )),
+                                        onTap: () {
+                                          addFileTransferJob(
+                                              FileTransferType.copy,
+                                              snapshot.data![index].itemName
+                                          );
+                                        },
+                                      ),
+                                      PopupMenuItem(
+                                        child: ListTile(
+                                            leading: Icon(
+                                              FontAwesomeIcons.cut,
+                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                            ),
+                                            dense:false,
+                                            title: Text(
+                                              "Cut",
+                                              style: TextStyle(
                                                 color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                               ),
-                                              dense:false,
-                                              title: Text(
-                                                "Cut",
-                                                style: TextStyle(
-                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                                ),
-                                              )),
-                                          onTap: () {
-                                            addFileTransferJob(
-                                                FileTransferType.move,
-                                                snapshot.data![index].itemName
-                                            );
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: ListTile(
-                                              leading: Icon(
-                                                FontAwesomeIcons.trash,
+                                            )),
+                                        onTap: () {
+                                          addFileTransferJob(
+                                              FileTransferType.move,
+                                              snapshot.data![index].itemName
+                                          );
+                                        },
+                                      ),
+                                      PopupMenuItem(
+                                        child: ListTile(
+                                            leading: Icon(
+                                              FontAwesomeIcons.trash,
+                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                            ),
+                                            dense:false,
+                                            title: Text(
+                                              "Delete",
+                                              style: TextStyle(
                                                 color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                               ),
-                                              dense:false,
-                                              title: Text(
-                                                "Delete",
-                                                style: TextStyle(
-                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                                ),
-                                              )),
-                                          onTap: () {
-                                            adbService.deleteItem(
+                                            )),
+                                        onTap: () {
+                                          adbService.deleteItem(
                                               itemPath: _currentPath+snapshot.data![index].itemName,
                                               beforeExecution: (){
                                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                  duration: const Duration(seconds: 2),
-                                                  content: Row(
-                                                    children: [
-                                                      const CircularProgressIndicator(
-                                                        valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 12,
-                                                      ),
-                                                      Text("Deleting ${snapshot.data![index].itemName}"),
-                                                    ],
-                                                )));
+                                                    duration: const Duration(seconds: 2),
+                                                    content: Row(
+                                                      children: [
+                                                        const CircularProgressIndicator(
+                                                          valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 12,
+                                                        ),
+                                                        Text("Deleting ${snapshot.data![index].itemName}"),
+                                                      ],
+                                                    )));
                                                 ScaffoldMessenger.of(context).deactivate();
                                               },
                                               onSuccess: (){
@@ -692,44 +695,57 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                                 ScaffoldMessenger.of(context).deactivate();
                                                 setState(() {});
                                               }
-                                            );
+                                          );
+                                        },
+                                      ),
+                                      if(fileContentTypeSnapshot.data==FileContentTypes.directory)...[
+                                        PopupMenuItem(
+                                          child: ListTile(
+                                              leading: Icon(
+                                                Icons.perm_media_rounded,
+                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                              ),
+                                              dense:false,
+                                              title: Text(
+                                                "Include in Media Scanner",
+                                                style: TextStyle(
+                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                ),
+                                              )),
+                                          onTap: () async {
+                                            if(await adbService.includeInMediaScanner(_currentPath+snapshot.data![index].itemName+"/")==0){
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully included in media scanner"),));
+                                            }else{
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to include in media scanner"),));
+                                            }
                                           },
                                         ),
-                                        // PopupMenuItem(
-                                        //   child: ListTile(
-                                        //       leading: Icon(
-                                        //         FontAwesomeIcons.trash,
-                                        //         color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                        //       ),
-                                        //       dense:false,
-                                        //       title: Text(
-                                        //         "Include in Media Scanner",
-                                        //         style: TextStyle(
-                                        //           color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                        //         ),
-                                        //       )),
-                                        //   onTap: () {
-                                        //     adbService.includeInMediaScanner(_currentPath);
-                                        //   },
-                                        // ),
-                                        // PopupMenuItem(
-                                        //   child: ListTile(
-                                        //       leading: Icon(
-                                        //         FontAwesomeIcons.trash,
-                                        //         color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                        //       ),
-                                        //       dense:false,
-                                        //       title: Text(
-                                        //         "Exclude from Media Scanner",
-                                        //         style: TextStyle(
-                                        //           color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                        //         ),
-                                        //       )),
-                                        //   onTap: () {
-                                        //     adbService.excludeFromMediaScanner(_currentPath);
-                                        //   },
-                                        // ),
-                                      ])
+                                        PopupMenuItem(
+                                          child: ListTile(
+                                              leading: Icon(
+                                                Icons.remove_circle_rounded,
+                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                              ),
+                                              dense:false,
+                                              title: Text(
+                                                "Exclude from Media Scanner",
+                                                style: TextStyle(
+                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                ),
+                                              )),
+                                          onTap: () async {
+                                            if(await adbService.excludeFromMediaScanner(_currentPath+snapshot.data![index].itemName+"/")==0){
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully excluded from media scanner"),));
+                                            }else{
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to exclude from media scanner"),));
+                                            }
+                                          },
+                                        ),
+                                      ]
+                                    ],
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ):Row(

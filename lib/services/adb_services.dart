@@ -18,9 +18,9 @@ class ADBService{
   Future<List<Item>> getDirectoryContents(String currentPath) async {
     ProcessResult result;
     if(isPreMarshmallowAndroid(device.androidAPILevel)){
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls", "\"$currentPath\""]);
+      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-a", "\"$currentPath\""]);
     }else{
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-p", "\"$currentPath\""]);
+      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-ap", "\"$currentPath\""]);
     }
     // result=await Process.run(adbExecutable, ["-s", deviceID, "shell", "ls","-p", "\"$_currentPath\""]);
     List<String> directoryContentDetails = (result.stdout).split("\n");
@@ -37,7 +37,7 @@ class ADBService{
     List<Item> storages=await getDirectoryContents("/storage/");
     List<Storage> externalStorages=[];
     for(int i=0;i<storages.length;i++){
-      if(storages[i].itemName!="self" && storages[i].itemName!="emulated"){
+      if(storages[i].itemName!="self" && storages[i].itemName!="emulated" && storages[i].itemName!="." && storages[i].itemName!=".."){
         externalStorages.add(Storage("/storage/${storages[i].itemName}/", storages[i].itemName));
       }
     }
@@ -299,7 +299,7 @@ class ADBService{
 
   //TODO: See if these work
   Future<int> excludeFromMediaScanner(String path) async{
-    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","touch","\"${path}hello\""]);
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","touch","\"$path.nomedia\""]);
     return result.exitCode;
   }
 
