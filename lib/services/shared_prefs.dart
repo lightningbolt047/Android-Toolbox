@@ -74,3 +74,17 @@ Future<void> setCheckUpdatesDuringStartupPreference(bool value) async{
   SharedPreferences pref=await SharedPreferences.getInstance();
   pref.setBool("checkUpdatesDuringStartup", value);
 }
+
+Future<void> setShowHiddenFilesPreference(bool value) async{
+  SharedPreferences pref=await SharedPreferences.getInstance();
+  pref.setBool("showHiddenFiles", value);
+}
+
+Future<bool?> getShowHiddenFilesPreference() async{
+  SharedPreferences pref=await SharedPreferences.getInstance();
+  if(pref.getBool("showHiddenFiles")==null){
+    await setShowHiddenFilesPreference(false);
+    return false;
+  }
+  return pref.getBool("showHiddenFiles");
+}

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/models/item.dart';
 import 'package:adb_gui/models/storage.dart';
+import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/utils/vars.dart';
@@ -16,18 +17,25 @@ class ADBService{
   ADBService({required this.device});
 
   Future<List<Item>> getDirectoryContents(String currentPath) async {
-    ProcessResult result;
-    if(isPreMarshmallowAndroid(device.androidAPILevel)){
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-a", "\"$currentPath\""]);
-    }else{
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-ap", "\"$currentPath\""]);
+    List<String> arguments=["-s", device.id, "shell", "ls"];
+    bool? showHiddenFilesPreference=await getShowHiddenFilesPreference();
+    if(showHiddenFilesPreference!=null && showHiddenFilesPreference){
+      arguments.add("-a");
     }
+    if(!isPreMarshmallowAndroid(device.androidAPILevel)){
+      arguments.add("-p");
+    }
+    arguments.add("\"$currentPath\"");
+    ProcessResult result=await Process.run(adbExecutable, arguments);
     // result=await Process.run(adbExecutable, ["-s", deviceID, "shell", "ls","-p", "\"$_currentPath\""]);
     List<String> directoryContentDetails = (result.stdout).split("\n");
     directoryContentDetails.removeLast();
     List<Item> directoryItems=[];
     directoryContentDetails=getTrimmedStringList(directoryContentDetails);
     for(int i=0;i<directoryContentDetails.length;i++){
+      if(directoryContentDetails[i]=="./" || directoryContentDetails[i]=="../"){
+        continue;
+      }
       directoryItems.add(Item(directoryContentDetails[i].endsWith("/")?directoryContentDetails[i].replaceAll("/", ""):directoryContentDetails[i],getFileType(device:device,currentPath:currentPath,fileName:directoryContentDetails[i])));
     }
     return directoryItems;

@@ -180,6 +180,15 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       ),
                     ],
                   ),
+                  const PageSubheading(subheadingName: "Files"),
+                  PreferenceToggle(
+                    titleText: "Show Hidden Files",
+                    subtitleText: "Enabling this setting will let you see files or directories whose names begin with a '.'.",
+                    getPreference: getShowHiddenFilesPreference,
+                    onChanged: (value) async{
+                      await setShowHiddenFilesPreference(value);
+                    },
+                  ),
                   const PageSubheading(subheadingName: "ADB behavior"),
                   PreferenceToggle(
                     titleText: "Kill ADB server during start",
