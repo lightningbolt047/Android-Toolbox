@@ -38,8 +38,8 @@ void main() async {
       );
     }else{
       await Window.setEffect(
-        effect: WindowEffect.solid,
-        color: kDarkModeMenuColor,
+        effect: WindowEffect.acrylic,
+        color: kDarkModeMenuColor.withOpacity(0.5),
       );
     }
   }else if(Platform.isLinux){
