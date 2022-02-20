@@ -1,5 +1,6 @@
 import 'package:adb_gui/screens/connection_initiation_screen.dart';
 import 'package:adb_gui/services/shared_prefs.dart';
+import 'package:adb_gui/utils/const.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -37,28 +38,35 @@ void main() async {
       );
     }else{
       await Window.setEffect(
-        effect: WindowEffect.solid,
-        color: const Color(0xFF212121),
+        effect: WindowEffect.acrylic,
+        color: kDarkModeMenuColor.withOpacity(0.5),
       );
     }
   }else if(Platform.isLinux){
     await Window.setEffect(
       effect: WindowEffect.solid,
-      color: themeModePreference==ThemeMode.dark?const Color(0xFF212121):themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark?const Color(0xFF212121):Colors.white70,
+      color: themeModePreference==ThemeMode.dark?kDarkModeMenuColor:themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark?kDarkModeMenuColor:Colors.white70,
     );
   }
 
   runApp(MaterialApp(
     themeMode: themeModePreference,
     theme: ThemeData(
-      primaryColor: Colors.blue,
+      primaryColor: kAccentColor,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: kAccentColor,
+      ),
+      toggleableActiveColor: kAccentColor,
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: kAccentColor,
+      ),
       scaffoldBackgroundColor: Colors.transparent,
       textTheme: TextTheme(
         headline1: GoogleFonts.quicksand(),
         headline2: GoogleFonts.quicksand(),
-        headline3: GoogleFonts.quicksand(color: Colors.blue,fontSize: 40,),
+        headline3: GoogleFonts.quicksand(color: kAccentColor,fontSize: 40,),
         headline4: GoogleFonts.quicksand(),
-        headline5: GoogleFonts.quicksand(color: Colors.blue,fontSize: 25,fontWeight: FontWeight.w600),
+        headline5: GoogleFonts.quicksand(color: kAccentColor,fontSize: 25,fontWeight: FontWeight.w600),
         headline6: GoogleFonts.quicksand(fontSize: 20,fontWeight: FontWeight.w500,),
         subtitle1: GoogleFonts.quicksand(fontSize: 15),
         subtitle2: GoogleFonts.quicksand(),
@@ -70,7 +78,7 @@ void main() async {
       dialogTheme: DialogTheme(
         titleTextStyle: GoogleFonts.quicksand(
           fontSize: 20,
-          color: Colors.blue,
+          color: kAccentColor,
           fontWeight: FontWeight.w500,
         ),
       )
@@ -80,25 +88,26 @@ void main() async {
       primaryColor: Colors.blueGrey,
       cardColor: Colors.transparent,
       popupMenuTheme: const PopupMenuThemeData(
-        color: Color(0xFF212121)
+        color: kDarkModeMenuColor
       ),
       bannerTheme: const MaterialBannerThemeData(
-        backgroundColor: Color(0xFF212121)
+        backgroundColor: kDarkModeMenuColor
       ),
       appBarTheme: const AppBarTheme(
+        shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
       ),
       listTileTheme: const ListTileThemeData(
         textColor: Colors.white,
-        iconColor: Colors.blue,
+        iconColor: kAccentColor,
       ),
-      drawerTheme: DrawerThemeData(
-        backgroundColor: Colors.grey[900],
+      drawerTheme: const DrawerThemeData(
+        backgroundColor: kDarkModeMenuColor,
       ),
-      dialogBackgroundColor: Colors.grey[900],
-      snackBarTheme: SnackBarThemeData(
-        backgroundColor: Colors.grey[900],
-        contentTextStyle: const TextStyle(
+      dialogBackgroundColor: kDarkModeMenuColor,
+      snackBarTheme: const SnackBarThemeData(
+        backgroundColor: kDarkModeMenuColor,
+        contentTextStyle: TextStyle(
           color: Colors.white
         )
       ),
@@ -122,7 +131,7 @@ void main() async {
       buttonTheme: const ButtonThemeData(
         buttonColor: Colors.black
       ),
-      toggleableActiveColor: Colors.blueGrey
+      toggleableActiveColor: Colors.blueGrey,
     ),
     home: const ConnectionInitiationScreen(),
   ));

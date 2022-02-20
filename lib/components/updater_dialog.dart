@@ -4,6 +4,8 @@ import 'package:adb_gui/utils/enums.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/const.dart';
+
 class UpdaterDialog extends StatefulWidget {
   final Map<String,dynamic> updateInfo;
   const UpdaterDialog({Key? key,required this.updateInfo}) : super(key: key);
@@ -24,13 +26,13 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
   Widget _getDialogTitle(){
     if(_isDownloading){
       return const Text("Downloading Update",style: TextStyle(
-        color: Colors.blue
+        color: kAccentColor
       ),);
     }else if(_error){
       return const Text("Download failed");
     }
     return Text("New update available! ${(updateInfo['preRelease']!=null && updateInfo['preRelease'])?"(Prerelease)":""}",style: const TextStyle(
-        color: Colors.blue
+        color: kAccentColor
     ),);
   }
 
@@ -65,7 +67,7 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
             padding: const EdgeInsets.all(8.0),
             child: TextButton(
               child: const Text("Close",style: TextStyle(
-                  color: Colors.blue
+                  color: kAccentColor
               ),),
               onPressed: (){
                 Navigator.pop(context);
@@ -192,7 +194,7 @@ class UpdateNowButton extends CloseWindowButton{
   Widget build(BuildContext context){
     return TextButton(
       child: const Text("Update Now",style: TextStyle(
-          color: Colors.blue
+          color: kAccentColor
       ),),
       onPressed: disabled?null:() async{
         beforeExecution();

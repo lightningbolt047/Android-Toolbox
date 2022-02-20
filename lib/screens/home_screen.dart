@@ -9,6 +9,8 @@ import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/const.dart';
+
 class HomeScreen extends StatefulWidget {
   final Device device;
   const HomeScreen({Key? key,required this.device}) : super(key: key);
@@ -68,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       context: context,
                       builder: (context)=>AlertDialog(
                         title: const Text("Stability Alert",style: TextStyle(
-                          color: Colors.blue
+                          color: kAccentColor
                         ),),
                         content: Text("You may experience degraded performance/glitches since your device runs on Android ${device.androidVersion} .\nThe recommended Android version is 7.0 and above"),
                         actions: [
@@ -79,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text("OK",style: TextStyle(
-                                color: Colors.blue
+                                color: kAccentColor
                               ),),
                             ),
                           ),

@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../utils/const.dart';
+
 class PackageManagerScreen extends StatefulWidget {
   final Device device;
   const PackageManagerScreen({Key? key,required this.device}) : super(key: key);
@@ -64,15 +66,16 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                     Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: IconNameMaterialButton(
-                        icon: const Icon(Icons.android_rounded,color: Colors.blue,size: 35,),
+                        icon: const Icon(Icons.android_rounded,color: kAccentColor,size: 35,),
                         spacing: 4,
                         text: const Text("Install",style: TextStyle(
-                          color: Colors.blue,
+                          color: kAccentColor,
                           fontSize: 20
                         ),),
                         onPressed: () async{
                           await showDialog(
                             context: context,
+                            barrierDismissible: false,
                             builder: (context)=>ApkInstallDialog(device: device,),
                           );
                           setState(() {
@@ -93,7 +96,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                             ),
                             hintText: "Search by package name",
                           suffixIcon: IconButton(
-                            icon: const Icon(Icons.search_rounded,color: Colors.blue,),
+                            icon: const Icon(Icons.search_rounded,color: kAccentColor,),
                             onPressed: (){
                               setState(() {});
                             },
@@ -108,10 +111,10 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                     Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: IconNameMaterialButton(
-                          icon: const Icon(Icons.system_update_alt_rounded,color: Colors.blue,size: 30,),
+                          icon: const Icon(Icons.system_update_alt_rounded,color: kAccentColor,size: 30,),
                           spacing: 4,
                           text: const Text("Reinstall system app",style: TextStyle(
-                              color: Colors.blue,
+                              color: kAccentColor,
                               fontSize: 15
                           ),),
                           onPressed: () async{
@@ -126,18 +129,19 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                     DropdownButton(
                       underline: Container(),
                       value: _appType,
+                      dropdownColor: Theme.of(context).brightness==Brightness.light?Colors.white:kDarkModeMenuColor,
                       items: [
                         DropdownMenuItem(
                           value: AppType.user,
                           child: CustomListTile(
-                            icon: const Icon(FontAwesomeIcons.user,color: Colors.blue,),
+                            icon: const Icon(FontAwesomeIcons.user,color: kAccentColor,),
                             title: isPreIceCreamSandwichAndroid(device.androidAPILevel)?"All apps":"User apps",
                           ),
                         ),
                         const DropdownMenuItem(
                           value: AppType.system,
                           child: CustomListTile(
-                            icon: Icon(Icons.system_update,color: Colors.blue,),
+                            icon: Icon(Icons.system_update,color: kAccentColor,),
                             title: "System apps",
                           ),
                         ),

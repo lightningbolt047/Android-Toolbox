@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/const.dart';
+
 class SimpleFileTransferProgress extends StatefulWidget {
   final Process process;
   final FileTransferType fileTransferType;
@@ -38,7 +40,7 @@ class _SimpleFileTransferProgressState extends State<SimpleFileTransferProgress>
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("File ${fileTransferType==FileTransferType.move?"move":"copy"}",style: const TextStyle(
-        color: Colors.blue
+        color: kAccentColor
       ),),
       content: exitCode==20000?const LinearProgressIndicator():exitCode==0?Text("File ${fileTransferType==FileTransferType.move?"move":"copy"} complete"):Text("File ${fileTransferType==FileTransferType.move?"move":"copy"} failed"),
       actions: [
@@ -47,7 +49,7 @@ class _SimpleFileTransferProgressState extends State<SimpleFileTransferProgress>
                 Navigator.pop(context);
             },
             child: const Text("Close",style: TextStyle(
-              color: Colors.blue
+              color: kAccentColor
             ),),
         )
       ],

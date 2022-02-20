@@ -17,7 +17,7 @@
         Current features:
         <ul>
             <li>
-                You can now perform some file management tasks
+                You can now perform some file management tasks (External SD card supported)
             </li>
             <li>
                 Reboot to system, recovery, fastboot, bootloader or simply power off using the power controls
@@ -26,7 +26,13 @@
                 You can offload, suspend, un-suspend, install, uninstall, kill or recompile apps. <em>(Apps are currently shown as package names only. I couldn't find a way to get app titles without pushing aapt to the mobile device.)</em>
             </li>
             <li>
+                Support for installing split apks and batch install apk <em>(Coming Soon)</em>
+            </li>
+            <li>
                 <b>Bloatware or other system apps can now be uninstalled</b>
+            </li>
+            <li>
+                <b>Full Windows Subsystem for Android (WSA) compatibility</b>
             </li>
             <li>
                 <em>More soon......</em>

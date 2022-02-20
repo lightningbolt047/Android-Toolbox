@@ -1,3 +1,5 @@
+import 'package:adb_gui/components/apk_download_dialog.dart';
+import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/prompt_dialog.dart';
 import 'package:adb_gui/components/select_compilation_mode_dialog.dart';
 import 'package:adb_gui/components/simple_rectangle_icon_material_button.dart';
@@ -7,6 +9,8 @@ import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../utils/const.dart';
 
 class PackageInfo extends StatelessWidget {
 
@@ -49,7 +53,7 @@ class PackageInfo extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text("App info",style: TextStyle(
-            color: Colors.blue,
+            color: kAccentColor,
             fontWeight: FontWeight.w600,
             fontSize: 20
         ),),
@@ -69,7 +73,7 @@ class PackageInfo extends StatelessWidget {
               children: [
                 Text(packageInfo['packageName']!,maxLines: 2,overflow: TextOverflow.ellipsis,style: const TextStyle(
                   fontSize: 20,
-                  color: Colors.blue,
+                  color: kAccentColor,
                 ),),
               ],
             ),
@@ -83,7 +87,7 @@ class PackageInfo extends StatelessWidget {
             children: [
               SimpleRectangleIconMaterialButton(
                 buttonText: "Open",
-                buttonIcon: const Icon(Icons.open_in_new,color: Colors.blue,),
+                buttonIcon: const Icon(Icons.open_in_new,color: kAccentColor,),
                 onPressed: () async{
                   int exitCode=await adbService.launchApp(packageName: packageInfo['packageName']!);
                   if(exitCode!=0){
@@ -107,7 +111,7 @@ class PackageInfo extends StatelessWidget {
               ), // if(packageInfo['appType']==AppType.user)
               SimpleRectangleIconMaterialButton(
                 buttonText: "Uninstall",
-                buttonIcon: const Icon(Icons.delete,color: Colors.blue,),
+                buttonIcon: const Icon(Icons.delete,color: kAccentColor,),
                 onPressed: (){
                   showDialog(
                     context: context,
@@ -120,7 +124,7 @@ class PackageInfo extends StatelessWidget {
                             context: context,
                             builder: (context)=>AlertDialog(
                               title: const Text("Error",style: TextStyle(
-                                color: Colors.blue,
+                                color: kAccentColor,
                                 fontWeight: FontWeight.w600
                               ),),
                               content: const Text("An error occurred"),
@@ -130,7 +134,7 @@ class PackageInfo extends StatelessWidget {
                                     Navigator.pop(context);
                                   },
                                   child: const Text("OK",style: TextStyle(
-                                    color: Colors.blue
+                                    color: kAccentColor
                                   ),),
                                 ),
                               ],
@@ -147,7 +151,7 @@ class PackageInfo extends StatelessWidget {
               ),
               SimpleRectangleIconMaterialButton(
                 buttonText: "Force stop",
-                buttonIcon: const Icon(Icons.warning_amber_rounded,color: Colors.blue,),
+                buttonIcon: const Icon(Icons.warning_amber_rounded,color: kAccentColor,),
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -169,104 +173,116 @@ class PackageInfo extends StatelessWidget {
             color: Colors.grey[200],
           ),
           if(appSuspendSupported(device.androidAPILevel) || appCompilationSupported(device.androidAPILevel))
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if(appSuspendSupported(device.androidAPILevel))
-                    Tooltip(
-                      message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and may unsuspend them by using the unsuspend option",
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if(appSuspendSupported(device.androidAPILevel))
+                      Tooltip(
+                        message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and may unsuspend them by using the unsuspend option",
+                        child: SimpleRectangleIconMaterialButton(
+                          buttonIcon: const Icon(Icons.ac_unit, color: kAccentColor,),
+                          buttonText: "Suspend",
+                          onPressed: () async {
+                            if((await adbService.suspendApp(packageInfo['packageName']!))==0){
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Suspended")));
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Suspend App")));
+                            }
+                          },
+                        ),
+                      ),
+                    if(appSuspendSupported(device.androidAPILevel))
+                      Tooltip(
+                      message: "Unsuspending apps will restore normal functionality",
                       child: SimpleRectangleIconMaterialButton(
-                        buttonIcon: const Icon(Icons.ac_unit, color: Colors.blue,),
-                        buttonText: "Suspend",
+                        buttonIcon: const Icon(Icons.wb_sunny_rounded, color: kAccentColor,),
+                        buttonText: "Unsuspend",
                         onPressed: () async {
-                          if((await adbService.suspendApp(packageInfo['packageName']!))==0){
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Suspended")));
+                          if((await adbService.unsuspendApp(packageInfo['packageName']!))==0){
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Un-Suspended")));
                           }else{
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Suspend App")));
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Un-Suspend App")));
                           }
                         },
                       ),
                     ),
-                  if(appSuspendSupported(device.androidAPILevel))
-                    Tooltip(
-                    message: "Unsuspending apps will restore normal functionality",
-                    child: SimpleRectangleIconMaterialButton(
-                      buttonIcon: const Icon(Icons.wb_sunny_rounded, color: Colors.blue,),
-                      buttonText: "Unsuspend",
-                      onPressed: () async {
-                        if((await adbService.unsuspendApp(packageInfo['packageName']!))==0){
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("App Un-Suspended")));
-                        }else{
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to Un-Suspend App")));
-                        }
-                      },
-                    ),
-                  ),
-                  if(packageInfo['appType']==AppType.user)
-                    SimpleRectangleIconMaterialButton(
-                      buttonText: "Offload",
-                      buttonIcon: const Icon(FontAwesomeIcons.archive,color: Colors.blue,),
-                      onPressed: (){
-                        showDialog(
-                          context: context,
-                          builder: (context)=>PromptDialog(
-                            title: "Offload ${packageInfo['packageName']!}?",
-                            contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off (Similar to what offloading in iOS does). If you want to remove the data completely, install the app again and uninstall normally.",
-                            onConfirm: () async{
-                              if(await adbService.uninstallApp(packageName: packageInfo['packageName']!,keepData: true)!=0){
-                                await showDialog(
-                                  context: context,
-                                  builder: (context)=>AlertDialog(
-                                    title: const Text("Error",style: TextStyle(
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.w600
-                                    ),),
-                                    content: const Text("An error occurred"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: (){
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("OK",style: TextStyle(
-                                            color: Colors.blue
-                                        ),),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }else{
-                                onUninstallComplete();
-                              }
-                              Navigator.pop(context);
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  if(appCompilationSupported(device.androidAPILevel))
-                    Tooltip(
-                      message: "You can opt to trade speed for space or vice versa. Applications may take up less or more space depending on your choice",
-                      child: SimpleRectangleIconMaterialButton(
-                        buttonIcon: const Icon(Icons.refresh_rounded, color: Colors.blue,),
-                        buttonText: "Recompile",
-                        onPressed: () {
+                    if(packageInfo['appType']==AppType.user)
+                      SimpleRectangleIconMaterialButton(
+                        buttonText: "Offload",
+                        buttonIcon: const Icon(FontAwesomeIcons.archive,color: kAccentColor,),
+                        onPressed: (){
                           showDialog(
                             context: context,
-                            barrierDismissible: false,
-                            builder: (context)=>SelectCompilationModeDialog(packageName: packageInfo['packageName']!,adbService: adbService,),
+                            builder: (context)=>PromptDialog(
+                              title: "Offload ${packageInfo['packageName']!}?",
+                              contentText: "This will uninstall the app while retaining its data. Yes that's right! Upon re-installation, the app will continue from where it was left off (Similar to what offloading in iOS does). If you want to remove the data completely, install the app again and uninstall normally.",
+                              onConfirm: () async{
+                                if(await adbService.uninstallApp(packageName: packageInfo['packageName']!,keepData: true)!=0){
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context)=>AlertDialog(
+                                      title: const Text("Error",style: TextStyle(
+                                          color: kAccentColor,
+                                          fontWeight: FontWeight.w600
+                                      ),),
+                                      content: const Text("An error occurred"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("OK",style: TextStyle(
+                                              color: kAccentColor
+                                          ),),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }else{
+                                  onUninstallComplete();
+                                }
+                                Navigator.pop(context);
+                              },
+                            ),
                           );
                         },
                       ),
-                    ),
-                ],
-              ),
-              Divider(
-                thickness: 2,
-                color: Colors.grey[200],
-              ),
-            ],
+                    if(appCompilationSupported(device.androidAPILevel))
+                      Tooltip(
+                        message: "You can opt to trade speed for space or vice versa. Applications may take up less or more space depending on your choice",
+                        child: SimpleRectangleIconMaterialButton(
+                          buttonIcon: const Icon(Icons.refresh_rounded, color: kAccentColor,),
+                          buttonText: "Recompile",
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context)=>SelectCompilationModeDialog(packageName: packageInfo['packageName']!,adbService: adbService,),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+                Divider(
+                  thickness: 2,
+                  color: Colors.grey[200],
+                ),
+              ],
+            ),
+          AppActionListTile(
+            titleText: "Download APK",
+            subtitleText: "Save apk(s) of this app on your computer",
+            onTap: () async{
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context)=>APKDownloadDialog(exitCode: adbService.downloadAPKs(packageInfo['packageName'],))
+              );
+
+            },
           ),
           AppActionListTile(
             titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,

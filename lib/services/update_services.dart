@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:adb_gui/services/platform_services.dart';
 import 'package:adb_gui/services/shared_prefs.dart';
-import 'package:adb_gui/utils/vars.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:version/version.dart';

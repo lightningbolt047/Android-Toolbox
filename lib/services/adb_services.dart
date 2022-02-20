@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/models/item.dart';
+import 'package:adb_gui/models/storage.dart';
+import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/utils/vars.dart';
+import 'package:path_provider/path_provider.dart';
 import 'android_api_checks.dart';
 import 'file_services.dart';
 
@@ -14,24 +17,44 @@ class ADBService{
   ADBService({required this.device});
 
   Future<List<Item>> getDirectoryContents(String currentPath) async {
-    ProcessResult result;
-    if(isPreMarshmallowAndroid(device.androidAPILevel)){
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls", "\"$currentPath\""]);
-    }else{
-      result=await Process.run(adbExecutable, ["-s", device.id, "shell", "ls","-p", "\"$currentPath\""]);
+    List<String> arguments=["-s", device.id, "shell", "ls"];
+    bool? showHiddenFilesPreference=await getShowHiddenFilesPreference();
+    if(showHiddenFilesPreference!=null && showHiddenFilesPreference){
+      arguments.add("-a");
     }
+    if(!isPreMarshmallowAndroid(device.androidAPILevel)){
+      arguments.add("-p");
+    }
+    arguments.add("\"$currentPath\"");
+    ProcessResult result=await Process.run(adbExecutable, arguments);
     // result=await Process.run(adbExecutable, ["-s", deviceID, "shell", "ls","-p", "\"$_currentPath\""]);
     List<String> directoryContentDetails = (result.stdout).split("\n");
     directoryContentDetails.removeLast();
     List<Item> directoryItems=[];
     directoryContentDetails=getTrimmedStringList(directoryContentDetails);
     for(int i=0;i<directoryContentDetails.length;i++){
-      directoryItems.add(Item(directoryContentDetails[i].endsWith("/")?directoryContentDetails[i].replaceAll("/", ""):directoryContentDetails[i],await getFileType(device:device,currentPath:currentPath,fileName:directoryContentDetails[i])));
+      if(directoryContentDetails[i]=="./" || directoryContentDetails[i]=="../"){
+        continue;
+      }
+      directoryItems.add(Item(directoryContentDetails[i].endsWith("/")?directoryContentDetails[i].replaceAll("/", ""):directoryContentDetails[i],getFileType(device:device,currentPath:currentPath,fileName:directoryContentDetails[i])));
     }
     return directoryItems;
   }
 
-  void deleteItem({required String itemPath,Function? beforeExecution, Function? onSuccess, Function? onFail}) async {
+  Future<List<Storage>> getExternalStorages() async{
+    List<Item> storages=await getDirectoryContents("/storage/");
+    List<Storage> externalStorages=[];
+    for(int i=0;i<storages.length;i++){
+      if(storages[i].itemName!="self" && storages[i].itemName!="emulated" && storages[i].itemName!="." && storages[i].itemName!=".."){
+        externalStorages.add(Storage("/storage/${storages[i].itemName}/", storages[i].itemName));
+      }
+    }
+    return externalStorages;
+  }
+
+
+
+  Future<int> deleteItem({required String itemPath,Function? beforeExecution, Function? onSuccess, Function? onFail}) async {
     if(beforeExecution != null){
       beforeExecution();
     }
@@ -46,6 +69,7 @@ class ADBService{
     if(result.exitCode == 0 && onSuccess!=null) {
       onSuccess();
     }
+    return result.exitCode;
   }
 
   void uploadContent({required currentPath, required FileItemType uploadType, Function? onProgress}) async {
@@ -222,17 +246,57 @@ class ADBService{
     return await Process.start(adbExecutable, processArgs);
   }
 
-  Future<Process> batchInstallApk(List<String> apkFilePaths) async{
-    List<String> processArgs=["-s",device.id,"install-multi-package"];
-    for(int i=0;i<apkFilePaths.length;i++){
-      processArgs.add(apkFilePaths[i]);
-    }
-    return await Process.start(adbExecutable, processArgs);
+  Future<ProcessResult> installSingleApkComplete(String apkFilePath) async{
+    return await Process.run(adbExecutable, ["-s",device.id,"install",apkFilePath]);
   }
+
+  // Future<Process> batchInstallApk(List<String> apkFilePaths) async{
+  //   List<String> processArgs=["-s",device.id,"install-multi-package"];
+  //   for(int i=0;i<apkFilePaths.length;i++){
+  //     processArgs.add(apkFilePaths[i]);
+  //   }
+  //   return await Process.start(adbExecutable, processArgs);
+  // }
 
   Future<int> suspendApp(String packageName) async{
     ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","suspend",packageName]);
     return result.exitCode;
+  }
+  
+  Future<List<String>> getAPKFilePathOnDevice(String packageName) async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","path",packageName]);
+    List<String> lines=result.stdout.toString().split("\n");
+    lines.removeLast();
+    List<String> paths=[];
+    for(int i=0;i<lines.length;i++){
+      paths.add(lines[i].split(":")[1].trim());
+    }
+    return paths;
+  }
+
+  Future<int> downloadAPKs(String packageName) async{
+    List<String> paths=await getAPKFilePathOnDevice(packageName);
+    Directory? downloadDir=await getDownloadsDirectory();
+    ProcessResult result;
+    try{
+      if(paths.length==1){
+        result=await Process.run(adbExecutable, ["-s",device.id,"pull",paths[0],downloadDir!.path]);
+        File apkFile=File(downloadDir.path+getPlatformDelimiter()+"base.apk");
+        await apkFile.rename(downloadDir.path+getPlatformDelimiter()+"$packageName.apk");
+      }else{
+        Directory apkDownloadDirectory=Directory(downloadDir!.path+getPlatformDelimiter()+packageName);
+        await apkDownloadDirectory.create();
+        for(int i=0;i<paths.length;i++){
+          result=await Process.run(adbExecutable, ["-s",device.id,"pull",paths[i],apkDownloadDirectory.path]);
+          if(result.exitCode!=0){
+            return result.exitCode;
+          }
+        }
+      }
+      return 0;
+    }catch(e){
+      return 1;
+    }
   }
 
   Future<int> unsuspendApp(String packageName) async{
@@ -243,6 +307,16 @@ class ADBService{
   Future<int> compileApp(String packageName, CompilationMode compilationMode) async{
     ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","compile","-m",getCompilationModeAsString(compilationMode),"-f",packageName]);
     return result.exitCode;
+  }
+
+  //TODO: See if these work
+  Future<int> excludeFromMediaScanner(String path) async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","touch","\"$path.nomedia\""]);
+    return result.exitCode;
+  }
+
+  Future<int> includeInMediaScanner(String path) async{
+    return deleteItem(itemPath: path+".nomedia");
   }
 
 
