@@ -94,6 +94,7 @@ void main() async {
         backgroundColor: kDarkModeMenuColor
       ),
       appBarTheme: const AppBarTheme(
+        shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
       ),
       listTileTheme: const ListTileThemeData(
