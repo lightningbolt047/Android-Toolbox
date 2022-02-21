@@ -91,7 +91,7 @@ void main() async {
         color: kDarkModeMenuColor
       ),
       bannerTheme: const MaterialBannerThemeData(
-        backgroundColor: kDarkModeMenuColor
+        backgroundColor: Colors.transparent
       ),
       appBarTheme: const AppBarTheme(
         shadowColor: Colors.transparent,
