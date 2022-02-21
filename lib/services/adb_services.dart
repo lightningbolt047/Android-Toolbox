@@ -146,6 +146,41 @@ class ADBService{
     return packageInfoMap;
   }
 
+  Future<int> getAppPackages(String packageName) async{
+    String? chosenDirectory = await pickFileFolderFromDesktop(uploadType: FileItemType.directory, dialogTitle: "Where to download", allowedExtensions: ["*"]);
+    if (chosenDirectory == null) {
+      return -1;
+    }
+
+    // stdout.writeln("Destination folder: " + chosenDirectory);
+
+    ProcessResult result = await Process.run(adbExecutable, ["-s", device.id, "shell", "pm", "path", packageName]);
+    List<String> paths = result.stdout.toString().split("\n");
+
+    // TODO: make a new directory named as package name if more than one package found
+
+    int count = 0;
+    for (int i=0; i<paths.length; i++) {
+      String path = paths[i].trim();
+
+      // 8: "package:".length
+      if (path.length <= 8) {
+        continue;
+      }
+
+      path = path.substring(8);
+      // stdout.writeln("Package: " + path);
+
+      // download the package
+      ProcessResult result = await Process.run(adbExecutable, ["-s", device.id, "pull", path, chosenDirectory]);
+      // stdout.writeln(result.stdout.toString());
+
+      count++;
+    }
+
+    return count;
+  }
+
   Future<List<String>> getUninstalledSystemApps() async{
     ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","list","packages","-s"]);
     List<String> systemApps = result.stdout.toString().split("\n");

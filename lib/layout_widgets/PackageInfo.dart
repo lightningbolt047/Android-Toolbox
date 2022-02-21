@@ -79,8 +79,33 @@ class PackageInfo extends StatelessWidget {
             color: Colors.grey[200],
           ),
           Row(
+            // if(packageInfo['appType']==AppType.user)
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              SimpleRectangleIconMaterialButton(
+                buttonText: "Get Apk(s)",
+                buttonIcon: const Icon(Icons.business_center,color: Colors.blue,),
+                onPressed: () async {
+                  int exitCode = await adbService.getAppPackages(packageInfo['packageName']!);
+                  if (exitCode < 0) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Error"),
+                        content: Text("Unable to get application package(s). Exit Code: $exitCode"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("OK"),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
               SimpleRectangleIconMaterialButton(
                 buttonText: "Open",
                 buttonIcon: const Icon(Icons.open_in_new,color: Colors.blue,),
