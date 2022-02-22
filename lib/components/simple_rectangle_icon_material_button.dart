@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/const.dart';
+
 class SimpleRectangleIconMaterialButton extends StatelessWidget {
   final Icon buttonIcon;
   final String buttonText;
@@ -16,7 +18,7 @@ class SimpleRectangleIconMaterialButton extends StatelessWidget {
           children: [
             buttonIcon,
             Text(buttonText,style: const TextStyle(
-              color: Colors.blue,
+              color: kAccentColor,
               fontWeight: FontWeight.w700,
             ),),
           ],

@@ -5,6 +5,8 @@ import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../utils/const.dart';
+
 class ReinstallSystemAppDialog extends StatefulWidget {
 
   final ADBService adbService;
@@ -138,7 +140,7 @@ class _ReinstallSystemAppDialogState extends State<ReinstallSystemAppDialog> wit
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)
                     ),
-                    color: Colors.blue,
+                    color: kAccentColor,
                     disabledColor: Colors.grey,
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20,vertical: 8),
@@ -236,7 +238,7 @@ class _ReinstallProgressDialogState extends State<ReinstallProgressDialog> {
         if(exitCode!=20000)
           TextButton(
             child: const Text("OK",style: TextStyle(
-              color: Colors.blue
+              color: kAccentColor
             ),),
             onPressed: (){
               Navigator.pop(context);

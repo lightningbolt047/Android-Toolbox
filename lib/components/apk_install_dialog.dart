@@ -10,6 +10,8 @@ import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../utils/const.dart';
+
 class ApkInstallDialog extends StatefulWidget {
   final Device device;
   const ApkInstallDialog({Key? key,required this.device}) : super(key: key);
@@ -27,6 +29,8 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
   AppInstallType appInstallType = AppInstallType.single;
   String consoleOutput = "";
   late ADBService adbService;
+  int totalInstallations=0;
+  int installed=0;
 
   ProcessStatus processStatus = ProcessStatus.notStarted;
 
@@ -44,7 +48,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
           selectedFiles.clear();
           selectedFiles.add(filePath);
         });
-        process = await adbService.installSingleApk(filePath);
+        process=await adbService.installSingleApk(filePath);
       }
     }else{
       List<String?> filePaths = await pickMultipleFilesFromDesktop(dialogTitle: "Select APKs to install",allowedExtensions: ["apk"]);
@@ -56,14 +60,43 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
           }
         });
         if(appInstallType==AppInstallType.multiApks){
-          process = await adbService.installMultipleForSinglePackage(selectedFiles);
+          process=await adbService.installMultipleForSinglePackage(selectedFiles);
         }else{
-          process = await adbService.batchInstallApk(selectedFiles);
+          // process = await adbService.batchInstallApk(selectedFiles);
+          if(selectedFiles.isNotEmpty){
+            setState(() {
+              totalInstallations=selectedFiles.length;
+              installed=0;
+              consoleOutput="";
+              processStatus=ProcessStatus.working;
+            });
+          }
+          for(int i=0;i<selectedFiles.length;i++){
+            ProcessResult appInstallResult=await adbService.installSingleApkComplete(selectedFiles[i]);
+            if(appInstallResult.exitCode==0){
+              setState(() {
+                consoleOutput+=appInstallResult.stdout+"\n";
+                installed+=1;
+                if(installed==totalInstallations){
+                  processStatus=ProcessStatus.success;
+                }
+              });
+            }else{
+              setState(() {
+                consoleOutput+=appInstallResult.stdout+"\n";
+                consoleOutput+="Failed to install ${selectedFiles[i]} with exit code ${appInstallResult.exitCode}";
+                processStatus=ProcessStatus.fail;
+              });
+              break;
+            }
+          }
         }
       }
     }
     if(process!=null){
       setState(() {
+        totalInstallations=0;
+        installed=0;
         consoleOutput="";
         processStatus=ProcessStatus.working;
       });
@@ -81,14 +114,13 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
 
     setState(() {
       if(exitCode==0){
-        consoleOutput+="\nProcess completed successfully with exit code $exitCode\n\n";
+        consoleOutput+="\nProcess completed successfully\n\n";
         processStatus=ProcessStatus.success;
       }else{
-        consoleOutput+="\nProcess failed with exit code $exitCode\n\n";
+        consoleOutput+="\nAPK install failed with exit code $exitCode\n\n";
         processStatus=ProcessStatus.fail;
       }
     });
-
   }
 
 
@@ -128,22 +160,22 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                           appInstallType=AppInstallType.single;
                         });
                       }),
-                      // AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.multiApks, label: "Multi APKs", onChanged: (value){
-                      //   setState(() {
-                      //     if(appInstallType!=AppInstallType.multiApks){
-                      //       selectedFiles.clear();
-                      //     }
-                      //     appInstallType=AppInstallType.multiApks;
-                      //   });
-                      // }),
-                      // AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
-                      //   setState(() {
-                      //     if(appInstallType!=AppInstallType.batch){
-                      //       selectedFiles.clear();
-                      //     }
-                      //     appInstallType=AppInstallType.batch;
-                      //   });
-                      // }),
+                      AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.multiApks, label: "Split APKs", onChanged: (value){
+                        setState(() {
+                          if(appInstallType!=AppInstallType.multiApks){
+                            selectedFiles.clear();
+                          }
+                          appInstallType=AppInstallType.multiApks;
+                        });
+                      }),
+                      AppInstallTypeRadioText(value: appInstallType, groupValue: AppInstallType.batch, label: "Batch Install", onChanged: (value){
+                        setState(() {
+                          if(appInstallType!=AppInstallType.batch){
+                            selectedFiles.clear();
+                          }
+                          appInstallType=AppInstallType.batch;
+                        });
+                      }),
                     ],
                   ),
                   Row(
@@ -156,7 +188,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.blueGrey,
+                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.blueGrey,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
@@ -182,7 +214,25 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                   if(processStatus==ProcessStatus.working)
                     SizedBox(
                       width: constraints.maxWidth*0.5,
-                      child: const LinearProgressIndicator(),
+                      child: Column(
+                        children: [
+                          LinearProgressIndicator(
+                            value: appInstallType==AppInstallType.batch?installed/totalInstallations:null,
+                          ),
+                          if(appInstallType==AppInstallType.batch)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("$installed of $totalInstallations app(s) installed",style: const TextStyle(
+                                  fontWeight: FontWeight.w600
+                                ),),
+                                Text("${((installed/totalInstallations)*100).toStringAsFixed(2)}%",style: const TextStyle(
+                                  fontWeight: FontWeight.w600
+                                ),)
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                   const SizedBox(
                     height: 8,
@@ -191,7 +241,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)
                     ),
-                    color: Colors.blue,
+                    color: kAccentColor,
                     disabledColor: Colors.grey,
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20,vertical: 8),

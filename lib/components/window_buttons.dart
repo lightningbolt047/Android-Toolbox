@@ -4,6 +4,8 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:adb_gui/utils/vars.dart';
 
+import '../utils/const.dart';
+
 class CustomMinimizeWindowButton extends MinimizeWindowButton{
   CustomMinimizeWindowButton({Key? key}) : super(key: key);
 
@@ -72,7 +74,7 @@ class WindowMaterialButton extends StatelessWidget {
     return MaterialButton(
       shape: const CircleBorder(),
       // color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.grey[800],
-      color: Theme.of(context).brightness==Brightness.light?Colors.blue:Colors.transparent,
+      color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.transparent,
       elevation: 0,
       minWidth: 8,
       hoverColor: Theme.of(context).brightness==Brightness.light?hoverColor:darkModeHoverColor,

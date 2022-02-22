@@ -13,3 +13,7 @@ bool appSuspendSupported(int apiLevel){
 bool appCompilationSupported(int apiLevel){
   return apiLevel>=29;
 }
+
+bool newStoragePathSupported(int apiLevel){
+  return apiLevel>=23;
+}
