@@ -87,7 +87,7 @@ class PackageInfo extends StatelessWidget {
                 buttonIcon: const Icon(Icons.business_center,color: Colors.blue,),
                 onPressed: () async {
                   int exitCode = await adbService.getAppPackages(packageInfo['packageName']!);
-                  if (exitCode < 0) {
+                  if (exitCode < -1) { // -1: user cancelled
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
