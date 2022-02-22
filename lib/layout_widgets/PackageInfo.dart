@@ -1,5 +1,4 @@
 import 'package:adb_gui/components/apk_download_dialog.dart';
-import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/prompt_dialog.dart';
 import 'package:adb_gui/components/select_compilation_mode_dialog.dart';
 import 'package:adb_gui/components/simple_rectangle_icon_material_button.dart';
@@ -10,6 +9,7 @@ import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../services/file_services.dart';
 import '../utils/const.dart';
 
 class PackageInfo extends StatelessWidget {
@@ -90,24 +90,16 @@ class PackageInfo extends StatelessWidget {
                 buttonText: "Get Apk(s)",
                 buttonIcon: const Icon(Icons.business_center,color: Colors.blue,),
                 onPressed: () async {
-                  int exitCode = await adbService.getAppPackages(packageInfo['packageName']!);
-                  if (exitCode < -1) { // -1: user cancelled
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text("Error"),
-                        content: Text("Unable to get application package(s). Exit Code: $exitCode"),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("OK"),
-                          )
-                        ],
-                      ),
-                    );
+                  String? chosenDirectory = await pickFileFolderFromDesktop(uploadType: FileItemType.directory, dialogTitle: "Where to download", allowedExtensions: ["*"]);
+                  if (chosenDirectory == null) {
+                    return; // user cancelled and no app is fetched
                   }
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context)=>APKDownloadDialog(numAPKDownloaded: adbService.getAppPackages(packageInfo['packageName']!,chosenDirectory),),
+                  );
+
                 },
               ),
               SimpleRectangleIconMaterialButton(
@@ -297,18 +289,6 @@ class PackageInfo extends StatelessWidget {
                 ),
               ],
             ),
-          AppActionListTile(
-            titleText: "Download APK",
-            subtitleText: "Save apk(s) of this app on your computer",
-            onTap: () async{
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context)=>APKDownloadDialog(exitCode: adbService.downloadAPKs(packageInfo['packageName'],))
-              );
-
-            },
-          ),
           AppActionListTile(
             titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,
             subtitleText: "Installer",
