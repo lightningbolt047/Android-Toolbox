@@ -7,6 +7,7 @@ import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/utils/vars.dart';
+import 'package:path/path.dart' as pather;
 import 'package:path_provider/path_provider.dart';
 import 'android_api_checks.dart';
 import 'file_services.dart';
@@ -168,6 +169,50 @@ class ADBService{
       });
     }
     return packageInfoMap;
+  }
+
+  Future<int> getAppPackages(String packageName) async {
+    String? chosenDirectory = await pickFileFolderFromDesktop(uploadType: FileItemType.directory, dialogTitle: "Where to download", allowedExtensions: ["*"]);
+    if (chosenDirectory == null) {
+      return -1; // user cancelled
+    }
+
+    // stdout.writeln("Destination folder: " + chosenDirectory);
+
+    ProcessResult result = await Process.run(adbExecutable, ["-s", device.id, "shell", "pm", "path", packageName]);
+    List<String> lines = result.stdout.toString().split("\n");
+
+    List<String> paths = List.empty(growable: true);
+    for (int i=0; i<lines.length; i++) {
+      String line = lines[i].trim();
+      if (line.startsWith("package:")) {
+        paths.add(line.substring(8)); // 8: "package:".length
+      }
+    }
+
+    if (paths.length == 0) {
+      return 0;
+    }
+
+    if (paths.length == 1) { // only one package found, the most commnon case now
+      // rename the destination file name by package name
+      chosenDirectory = pather.join(chosenDirectory, packageName + ".apk");
+    } else {
+      // make a new directory named as package name if more than one package found
+      chosenDirectory = pather.join(chosenDirectory, packageName);
+      Directory dir =  Directory(chosenDirectory);
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+    }
+
+    for (int i=0; i<paths.length; i++) {
+      // download the package
+      ProcessResult result = await Process.run(adbExecutable, ["-s", device.id, "pull", paths[i], chosenDirectory]);
+      // stdout.writeln(result.stdout.toString());
+    }
+
+    return paths.length;
   }
 
   Future<List<String>> getUninstalledSystemApps() async{
