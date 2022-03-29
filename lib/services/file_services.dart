@@ -82,7 +82,7 @@ Future<String?> pickFileFolderFromDesktop({required FileItemType uploadType, req
     FilePickerResult? filePicker = await FilePicker.platform.pickFiles(dialogTitle: dialogTitle, type: allowedExtensions[0]=="*"?FileType.any:FileType.custom, allowedExtensions: allowedExtensions);
     return filePicker?.files.single.path;
   } else {
-    return await FilePicker.platform.getDirectoryPath(dialogTitle: dialogTitle);
+    return await FilePicker.platform.getDirectoryPath(dialogTitle: dialogTitle,lockParentWindow: true);
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:adb_gui/components/preference_toggle.dart';
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/updater_dialog.dart';
 import 'package:adb_gui/components/window_buttons.dart';
+import 'package:adb_gui/screens/theme_mode_service.dart';
 import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/update_services.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -108,7 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       title: Text("Theme Mode ${(Platform.isWindows && !isWindows11())?"(Disabled for Windows 10 and below versions)":""}",style: const TextStyle(
                         fontSize: 20
                       ),),
-                      subtitle: const Text("Requires restart for change to take effect"),
+                      subtitle: const Text("Theme changes don't require application restart anymore"),
                       trailing: FutureBuilder(
                           future: getSelectedThemeModeAsString(),
                           builder: (BuildContext context, AsyncSnapshot<String> snapshot){
@@ -138,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                             ),
                         ),
                         onTap: () async {
-                          await setThemeModePreference(ThemeMode.light);
+                          await themeModeService.setThemeMode(ThemeMode.light);
                           setState(() {});
                         }
                       ),
@@ -156,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                                 ),
                               )),
                           onTap: () async{
-                            await setThemeModePreference(ThemeMode.dark);
+                            await themeModeService.setThemeMode(ThemeMode.dark);
                             setState(() {});
                           }
                       ),
@@ -174,7 +175,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                                 ),
                               )),
                           onTap: () async{
-                            await setThemeModePreference(ThemeMode.system);
+                            await themeModeService.setThemeMode(ThemeMode.system);
                             setState(() {});
                           }
                       ),
