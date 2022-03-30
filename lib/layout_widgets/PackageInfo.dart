@@ -71,7 +71,7 @@ class PackageInfo extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(packageInfo['packageName']!,maxLines: 2,overflow: TextOverflow.ellipsis,style: const TextStyle(
+                Text(packageInfo['packageName'],maxLines: 2,overflow: TextOverflow.ellipsis,style: const TextStyle(
                   fontSize: 20,
                   color: kAccentColor,
                 ),),
@@ -289,11 +289,37 @@ class PackageInfo extends StatelessWidget {
                 ),
               ],
             ),
-          AppActionListTile(
-            titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,
-            subtitleText: "Installer",
-            onTap: (){},
-          ),
+          // Row(
+          //   // if(packageInfo['appType']==AppType.user)
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+          //     SimpleRectangleIconMaterialButton(
+          //       buttonText: "Revoke Internet Access",
+          //       buttonIcon: const Icon(Icons.block_rounded,color: Colors.blue,),
+          //       onPressed: () async {
+          //         int exitCode=await adbService.revokeInternetAccess(packageInfo['packageName']);
+          //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(exitCode==0?"Internet access revoked for ${packageInfo['packageName']}":"Failed to revoke internet access")));
+          //       },
+          //     ),
+          //     SimpleRectangleIconMaterialButton(
+          //       buttonText: "Grant internet access",
+          //       buttonIcon: const Icon(FontAwesomeIcons.globe,color: kAccentColor,),
+          //       onPressed: () async{
+          //         int exitCode=await adbService.grantInternetAccess(packageInfo['packageName']);
+          //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(exitCode==0?"Internet access granted for ${packageInfo['packageName']}":"Failed to grant internet access")));
+          //       },
+          //     ),
+          //   ],
+          // ),
+          // Divider(
+          //   thickness: 2,
+          //   color: Colors.grey[200],
+          // ),
+          // AppActionListTile(
+          //   titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,
+          //   subtitleText: "Installer",
+          //   onTap: (){},
+          // ),
         ],
       ),
     );

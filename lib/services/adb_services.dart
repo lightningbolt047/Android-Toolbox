@@ -7,7 +7,7 @@ import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/string_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/utils/vars.dart';
-import 'package:path/path.dart' as pather;
+import 'package:path/path.dart' as path;
 import 'android_api_checks.dart';
 import 'file_services.dart';
 
@@ -190,10 +190,10 @@ class ADBService{
 
     if (paths.length == 1) { // only one package found, the most common case now
       // rename the destination file name by package name
-      chosenDirectory = pather.join(chosenDirectory, packageName + ".apk");
+      chosenDirectory = path.join(chosenDirectory, packageName + ".apk");
     } else {
       // make a new directory named as package name if more than one package found
-      chosenDirectory = pather.join(chosenDirectory, packageName);
+      chosenDirectory = path.join(chosenDirectory, packageName);
       Directory dir =  Directory(chosenDirectory);
       if (!await dir.exists()) {
         await dir.create(recursive: true);
@@ -330,6 +330,25 @@ class ADBService{
 
   Future<int> includeInMediaScanner(String path) async{
     return deleteItem(itemPath: path+".nomedia");
+  }
+
+  Future<int> revokeInternetAccess(String packageName) async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","revoke",packageName,"android.permission.INTERNET"]);
+    return result.exitCode;
+  }
+
+  Future<int> grantInternetAccess(String packageName) async{
+    ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","grant",packageName,"android.permission.INTERNET"]);
+    return result.exitCode;
+  }
+
+  Future<String> getDeviceProperty(String property) async{
+    try{
+      ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","getprop",property]);
+      return result.stdout.trim();
+    }catch(e){
+      return Future.error(e);
+    }
   }
 
 

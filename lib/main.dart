@@ -127,7 +127,11 @@ class _MyAppState extends State<MyApp> {
           darkTheme: ThemeData.dark().copyWith(
             scaffoldBackgroundColor: Platform.isLinux?Colors.black26:Colors.transparent,
             primaryColor: Colors.blueGrey,
-            cardColor: Colors.transparent,
+            // cardColor: Colors.transparent,
+            cardTheme: const CardTheme(
+              shadowColor: Colors.transparent,
+              color: Colors.transparent,
+            ),
             popupMenuTheme: const PopupMenuThemeData(
                 color: kDarkModeMenuColor
             ),

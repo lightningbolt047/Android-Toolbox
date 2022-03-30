@@ -2,6 +2,7 @@ enum Screens{
   fileManager,
   packageManager,
   powerControls,
+  deviceInfo,
   other
 }
 

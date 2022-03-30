@@ -1,4 +1,5 @@
 import 'package:adb_gui/components/window_buttons.dart';
+import 'package:adb_gui/screens/device_info_screen.dart';
 import 'package:adb_gui/screens/package_manager_screen.dart';
 import 'package:adb_gui/services/platform_services.dart';
 import 'package:adb_gui/utils/enums.dart';
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case Screens.fileManager: return "Files";
       case Screens.powerControls: return "Power Controls";
       case Screens.packageManager: return "Apps";
+      case Screens.deviceInfo: return "Device Info";
       default: return "Wtf??";
     }
   }
@@ -179,6 +181,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pop(context);
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.info_outline_rounded),
+                title: const Text("Device Info"),
+                dense: false,
+                onTap: (){
+                  setState(() {
+                    _currentScreen=Screens.deviceInfo;
+                  });
+                  Navigator.pop(context);
+                },
+              ),
             ],
           );
         }),
@@ -192,6 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   case Screens.fileManager: return FileManagerScreen(device: device);
                   case Screens.powerControls: return PowerControlsScreen(device: device);
                   case Screens.packageManager: return PackageManagerScreen(device: device);
+                  case Screens.deviceInfo: return DeviceInfoScreen(device: device);
                   default: return Container();
                 }
               },
