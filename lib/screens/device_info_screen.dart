@@ -4,6 +4,7 @@ import 'package:adb_gui/services/adb_services.dart';
 import 'package:adb_gui/services/date_time_service.dart';
 import 'package:adb_gui/services/transform_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../models/device.dart';
 
 class DeviceInfoScreen extends StatefulWidget {
@@ -33,7 +34,10 @@ class _DeviceInfoScreenState extends State<DeviceInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
+      child: StaggeredGrid.count(
+        crossAxisCount: 3,
+        mainAxisSpacing: 2,
+        crossAxisSpacing: 2,
         children: [
           Card(
             color: Theme.of(context).brightness==Brightness.dark?Colors.white.withOpacity(0.05):null,
