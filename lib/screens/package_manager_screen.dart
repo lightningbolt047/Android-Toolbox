@@ -196,7 +196,10 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                   ),
                 ),
               ),
-              Expanded(child: Card(child: PackageInfo(device: device,packageInfo: _selectedPackageInfo,adbService: adbService,onUninstallComplete: (){setState(() {_selectedPackageInfo={};});},))),
+              Expanded(
+                child: Card(
+                  color: Theme.of(context).brightness==Brightness.dark?Colors.white.withOpacity(0.05):null,
+                  child: PackageInfo(device: device,packageInfo: _selectedPackageInfo,adbService: adbService,onUninstallComplete: (){setState(() {_selectedPackageInfo={};});},))),
             ],
           ),
         ),

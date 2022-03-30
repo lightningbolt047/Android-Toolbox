@@ -315,11 +315,11 @@ class PackageInfo extends StatelessWidget {
           //   thickness: 2,
           //   color: Colors.grey[200],
           // ),
-          // AppActionListTile(
-          //   titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,
-          //   subtitleText: "Installer",
-          //   onTap: (){},
-          // ),
+          AppActionListTile(
+            titleText: (packageInfo['installer'])=="null"?"Not Specified":packageInfo['installer']!,
+            subtitleText: "Installer",
+            onTap: (){},
+          ),
         ],
       ),
     );
