@@ -59,6 +59,8 @@
     <img src="readme_assets/screenshot_power_controls.png" alt="power_controls"/>
     <h3>Apps</h3>
     <img src="readme_assets/screenshot_apps.png" alt="apps"/>
+    <h3>Device Info</h3>
+    <img src="readme_assets/screenshot_device_info.png" alt="apps"/>
 </div>
 
 <div>
