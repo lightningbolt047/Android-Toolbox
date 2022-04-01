@@ -36,7 +36,7 @@ class DeviceInfoListTile extends StatelessWidget {
               ],
             );
           }
-          return Text(transformFunction==null?snapshot.data:transformFunction!(snapshot.data));
+          return SelectableText(transformFunction==null?snapshot.data:transformFunction!(snapshot.data),);
         },
       ),
     );
