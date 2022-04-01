@@ -60,7 +60,7 @@
     <h3>Apps</h3>
     <img src="readme_assets/screenshot_apps.png" alt="apps"/>
     <h3>Device Info</h3>
-    <img src="readme_assets/screenshot_device_info.png" alt="apps"/>
+    <img src="readme_assets/screenshot_device_info.png" alt="device_info"/>
 </div>
 
 <div>
