@@ -520,286 +520,294 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                               crossAxisCount: 3, mainAxisExtent: 75),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        return _renameFieldController.text!=snapshot.data![index].itemName?MaterialButton(
-                          onPressed: () async {
-                            if(await snapshot.data![index].itemContentType==FileContentTypes.directory){
-                              setState(() {
-                                addPath(snapshot.data![index].itemName);
-                              });
-                            }else{
-                              adbService.downloadContent(
-                                itemPath:_currentPath+snapshot.data![index].itemName,
-                                onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
-                                  await showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.phoneToPC,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
-                                  setState(() {});
-                                }
+
+                        return StatefulBuilder(
+                          builder: (BuildContext context, StateSetter setState){
+                            if(_renameFieldController.text!=snapshot.data![index].itemName){
+                              return MaterialButton(
+                                onPressed: () async {
+                                  if(await snapshot.data![index].itemContentType==FileContentTypes.directory){
+                                    setState(() {
+                                      addPath(snapshot.data![index].itemName);
+                                    });
+                                  }else{
+                                    adbService.downloadContent(
+                                        itemPath:_currentPath+snapshot.data![index].itemName,
+                                        onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
+                                          await showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.phoneToPC,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
+                                          setState(() {});
+                                        }
+                                    );
+                                  }
+                                },
+                                shape: const RoundedRectangleBorder(),
+                                elevation: 5,
+                                hoverElevation: 10,
+                                child: Row(
+                                  children: [
+                                    SizedBox.fromSize(
+                                      size: const Size(25, 0),
+                                    ),
+                                    FutureIcon(iconData: getFileIconByType(snapshot.data![index].itemContentType)),
+                                    SizedBox.fromSize(
+                                      size: const Size(25, 0),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        snapshot.data![index].itemName,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 15),
+                                      ),
+                                    ),
+                                    FutureBuilder(
+                                      future: snapshot.data![index].itemContentType,
+                                      builder: (BuildContext context, AsyncSnapshot<FileContentTypes> fileContentTypeSnapshot){
+                                        if(!snapshot.hasData){
+                                          return const CircularProgressIndicator();
+                                        }
+
+                                        return PopupMenuButton(
+                                          icon: const Icon(
+                                            Icons.more_vert_rounded,
+                                            color: Colors.blueGrey,
+                                          ),
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem(
+                                              child: ListTile(
+                                                  leading: Icon(
+                                                    FontAwesomeIcons.download,
+                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                  ),
+                                                  dense:false,
+                                                  title: Text(
+                                                    "Download",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    ),
+                                                  )),
+                                              onTap: () {
+                                                adbService.downloadContent(
+                                                    itemPath:_currentPath+snapshot.data![index].itemName,
+                                                    onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
+                                                      await showDialog(
+                                                          context: context,
+                                                          barrierDismissible: false,
+                                                          builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.phoneToPC,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
+                                                      setState(() {});
+                                                    }
+                                                );
+                                              },
+                                            ),
+                                            PopupMenuItem(
+                                              child: ListTile(
+                                                  leading: Icon(
+                                                    Icons.drive_file_rename_outline,
+                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                  ),
+                                                  dense:false,
+                                                  title: Text(
+                                                    "Rename",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    ),
+                                                  )),
+                                              onTap: () async {
+                                                _renameItemFocus.requestFocus();
+                                                setState(() {
+                                                  _renameFieldController.text=snapshot.data![index].itemName;
+                                                });
+                                              },
+                                            ),
+                                            PopupMenuItem(
+                                              child: ListTile(
+                                                  leading: Icon(
+                                                    FontAwesomeIcons.copy,
+                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                  ),
+                                                  dense:false,
+                                                  title: Text(
+                                                    "Copy",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    ),
+                                                  )),
+                                              onTap: () {
+                                                addFileTransferJob(
+                                                    FileTransferType.copy,
+                                                    snapshot.data![index].itemName
+                                                );
+                                              },
+                                            ),
+                                            PopupMenuItem(
+                                              child: ListTile(
+                                                  leading: Icon(
+                                                    FontAwesomeIcons.cut,
+                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                  ),
+                                                  dense:false,
+                                                  title: Text(
+                                                    "Cut",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    ),
+                                                  )),
+                                              onTap: () {
+                                                addFileTransferJob(
+                                                    FileTransferType.move,
+                                                    snapshot.data![index].itemName
+                                                );
+                                              },
+                                            ),
+                                            PopupMenuItem(
+                                              child: ListTile(
+                                                  leading: Icon(
+                                                    FontAwesomeIcons.trash,
+                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                  ),
+                                                  dense:false,
+                                                  title: Text(
+                                                    "Delete",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    ),
+                                                  )),
+                                              onTap: () {
+                                                adbService.deleteItem(
+                                                    itemPath: _currentPath+snapshot.data![index].itemName,
+                                                    beforeExecution: (){
+                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                          duration: const Duration(seconds: 2),
+                                                          content: Row(
+                                                            children: [
+                                                              const CircularProgressIndicator(
+                                                                valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 12,
+                                                              ),
+                                                              Text("Deleting ${snapshot.data![index].itemName}"),
+                                                            ],
+                                                          )));
+                                                      ScaffoldMessenger.of(context).deactivate();
+                                                    },
+                                                    onSuccess: (){
+                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: const Duration(seconds: 2),content: Text("${snapshot.data![index].itemName} deleted successfully")));
+                                                      ScaffoldMessenger.of(context).deactivate();
+                                                      setState(() {});
+                                                    }
+                                                );
+                                              },
+                                            ),
+                                            if(fileContentTypeSnapshot.data==FileContentTypes.directory)...[
+                                              PopupMenuItem(
+                                                child: ListTile(
+                                                    leading: Icon(
+                                                      Icons.perm_media_rounded,
+                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    ),
+                                                    dense:false,
+                                                    title: Text(
+                                                      "Include in Media Scanner",
+                                                      style: TextStyle(
+                                                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      ),
+                                                    )),
+                                                onTap: () async {
+                                                  if(await adbService.includeInMediaScanner(_currentPath+snapshot.data![index].itemName+"/")==0){
+                                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully included in media scanner"),));
+                                                  }else{
+                                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to include in media scanner"),));
+                                                  }
+                                                },
+                                              ),
+                                              PopupMenuItem(
+                                                child: ListTile(
+                                                    leading: Icon(
+                                                      Icons.remove_circle_rounded,
+                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    ),
+                                                    dense:false,
+                                                    title: Text(
+                                                      "Exclude from Media Scanner",
+                                                      style: TextStyle(
+                                                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      ),
+                                                    )),
+                                                onTap: () async {
+                                                  if(await adbService.excludeFromMediaScanner(_currentPath+snapshot.data![index].itemName+"/")==0){
+                                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully excluded from media scanner"),));
+                                                  }else{
+                                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to exclude from media scanner"),));
+                                                  }
+                                                },
+                                              ),
+                                            ]
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               );
                             }
-                          },
-                          shape: const RoundedRectangleBorder(),
-                          elevation: 5,
-                          hoverElevation: 10,
-                          child: Row(
-                            children: [
-                              SizedBox.fromSize(
-                                size: const Size(25, 0),
-                              ),
-                              FutureIcon(iconData: getFileIconByType(snapshot.data![index].itemContentType)),
-                              SizedBox.fromSize(
-                                size: const Size(25, 0),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  snapshot.data![index].itemName,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 15),
+                            return Row(
+                              children: [
+                                SizedBox.fromSize(
+                                  size: const Size(25, 0),
                                 ),
-                              ),
-                              FutureBuilder(
-                                future: snapshot.data![index].itemContentType,
-                                builder: (BuildContext context, AsyncSnapshot<FileContentTypes> fileContentTypeSnapshot){
-                                  if(!snapshot.hasData){
-                                    return const CircularProgressIndicator();
-                                  }
-
-                                  return PopupMenuButton(
-                                    icon: const Icon(
-                                      Icons.more_vert_rounded,
-                                      color: Colors.blueGrey,
-                                    ),
-                                    itemBuilder: (context) => [
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                            leading: Icon(
-                                              FontAwesomeIcons.download,
-                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                FutureIcon(iconData: getFileIconByType(snapshot.data![index].itemContentType)),
+                                SizedBox.fromSize(
+                                  size: const Size(25, 0),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          enabled: true,
+                                          focusNode: _renameItemFocus,
+                                          controller: _renameFieldController,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(10)
                                             ),
-                                            dense:false,
-                                            title: Text(
-                                              "Download",
-                                              style: TextStyle(
-                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                              ),
-                                            )),
-                                        onTap: () {
-                                          adbService.downloadContent(
-                                              itemPath:_currentPath+snapshot.data![index].itemName,
-                                              onProgress: (process,getSourceSize,getDestinationSize,sourcePath,destinationPath) async{
-                                                await showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder: (context) => FileTransferProgress(process: process,fileTransferType: FileTransferType.phoneToPC,getSourceSize: getSourceSize,getDestinationSize: getDestinationSize,sourcePath: sourcePath,destinationPath: destinationPath,));
-                                                setState(() {});
-                                              }
-                                          );
+                                            focusColor: kAccentColor,
+                                            hintText: "New name here",
+                                            hintStyle: TextStyle(
+                                                color: Colors.grey[500]
+                                            ),
+                                          ),
+                                          onSubmitted: (value){
+                                            renameItem(snapshot.data![index].itemName,_renameFieldController.text);
+                                          },
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.check_circle,color: Colors.green,),
+                                        splashRadius: 8,
+                                        onPressed: () {
+                                          renameItem(snapshot.data![index].itemName,_renameFieldController.text);
                                         },
                                       ),
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                            leading: Icon(
-                                              Icons.drive_file_rename_outline,
-                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                            ),
-                                            dense:false,
-                                            title: Text(
-                                              "Rename",
-                                              style: TextStyle(
-                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                              ),
-                                            )),
-                                        onTap: () async {
-                                          _renameItemFocus.requestFocus();
+                                      IconButton(
+                                        icon: const Icon(Icons.cancel,color: Colors.red,),
+                                        splashRadius: 8,
+                                        onPressed: () {
                                           setState(() {
-                                            _renameFieldController.text=snapshot.data![index].itemName;
+                                            _renameFieldController.text="";
                                           });
                                         },
                                       ),
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                            leading: Icon(
-                                              FontAwesomeIcons.copy,
-                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                            ),
-                                            dense:false,
-                                            title: Text(
-                                              "Copy",
-                                              style: TextStyle(
-                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                              ),
-                                            )),
-                                        onTap: () {
-                                          addFileTransferJob(
-                                              FileTransferType.copy,
-                                              snapshot.data![index].itemName
-                                          );
-                                        },
-                                      ),
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                            leading: Icon(
-                                              FontAwesomeIcons.cut,
-                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                            ),
-                                            dense:false,
-                                            title: Text(
-                                              "Cut",
-                                              style: TextStyle(
-                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                              ),
-                                            )),
-                                        onTap: () {
-                                          addFileTransferJob(
-                                              FileTransferType.move,
-                                              snapshot.data![index].itemName
-                                          );
-                                        },
-                                      ),
-                                      PopupMenuItem(
-                                        child: ListTile(
-                                            leading: Icon(
-                                              FontAwesomeIcons.trash,
-                                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                            ),
-                                            dense:false,
-                                            title: Text(
-                                              "Delete",
-                                              style: TextStyle(
-                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                              ),
-                                            )),
-                                        onTap: () {
-                                          adbService.deleteItem(
-                                              itemPath: _currentPath+snapshot.data![index].itemName,
-                                              beforeExecution: (){
-                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                    duration: const Duration(seconds: 2),
-                                                    content: Row(
-                                                      children: [
-                                                        const CircularProgressIndicator(
-                                                          valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 12,
-                                                        ),
-                                                        Text("Deleting ${snapshot.data![index].itemName}"),
-                                                      ],
-                                                    )));
-                                                ScaffoldMessenger.of(context).deactivate();
-                                              },
-                                              onSuccess: (){
-                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: const Duration(seconds: 2),content: Text("${snapshot.data![index].itemName} deleted successfully")));
-                                                ScaffoldMessenger.of(context).deactivate();
-                                                setState(() {});
-                                              }
-                                          );
-                                        },
-                                      ),
-                                      if(fileContentTypeSnapshot.data==FileContentTypes.directory)...[
-                                        PopupMenuItem(
-                                          child: ListTile(
-                                              leading: Icon(
-                                                Icons.perm_media_rounded,
-                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                              ),
-                                              dense:false,
-                                              title: Text(
-                                                "Include in Media Scanner",
-                                                style: TextStyle(
-                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                                ),
-                                              )),
-                                          onTap: () async {
-                                            if(await adbService.includeInMediaScanner(_currentPath+snapshot.data![index].itemName+"/")==0){
-                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully included in media scanner"),));
-                                            }else{
-                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to include in media scanner"),));
-                                            }
-                                          },
-                                        ),
-                                        PopupMenuItem(
-                                          child: ListTile(
-                                              leading: Icon(
-                                                Icons.remove_circle_rounded,
-                                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                              ),
-                                              dense:false,
-                                              title: Text(
-                                                "Exclude from Media Scanner",
-                                                style: TextStyle(
-                                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
-                                                ),
-                                              )),
-                                          onTap: () async {
-                                            if(await adbService.excludeFromMediaScanner(_currentPath+snapshot.data![index].itemName+"/")==0){
-                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully excluded from media scanner"),));
-                                            }else{
-                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to exclude from media scanner"),));
-                                            }
-                                          },
-                                        ),
-                                      ]
                                     ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ):Row(
-                          children: [
-                            SizedBox.fromSize(
-                              size: const Size(25, 0),
-                            ),
-                            FutureIcon(iconData: getFileIconByType(snapshot.data![index].itemContentType)),
-                            SizedBox.fromSize(
-                              size: const Size(25, 0),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      enabled: true,
-                                      focusNode: _renameItemFocus,
-                                      controller: _renameFieldController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        focusColor: kAccentColor,
-                                        hintText: "New name here",
-                                        hintStyle: TextStyle(
-                                            color: Colors.grey[500]
-                                        ),
-                                      ),
-                                      onSubmitted: (value){
-                                        renameItem(snapshot.data![index].itemName,_renameFieldController.text);
-                                      },
-                                    ),
                                   ),
-                                  IconButton(
-                                    icon: const Icon(Icons.check_circle,color: Colors.green,),
-                                    splashRadius: 8,
-                                    onPressed: () {
-                                      renameItem(snapshot.data![index].itemName,_renameFieldController.text);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.cancel,color: Colors.red,),
-                                    splashRadius: 8,
-                                    onPressed: () {
-                                      setState(() {
-                                        _renameFieldController.text="";
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                                ),
+                              ],
+                            );
+                          }
                         );
                       }),
                 );
