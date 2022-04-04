@@ -40,6 +40,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
   late final TextEditingController _addressBarEditingController;
   late final TextEditingController _renameFieldController;
   final ScrollController _filesGridScrollController=ScrollController();
+  late StateSetter _ribbonStateSetter;
 
   final _addressBarFocus = FocusNode();
   final _renameItemFocus = FocusNode();
@@ -81,13 +82,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
         if (_fileTransferJobs[i].jobType == newJob.jobType) {
           return;
         }
-        setState(() {
+        _ribbonStateSetter(() {
           _fileTransferJobs[i] = newJob;
         });
         return;
       }
     }
-    setState(() {
+    _ribbonStateSetter(() {
       if (_fileTransferJobs.length < 4) {
         _fileTransferJobs.add(newJob);
       } else {
@@ -395,44 +396,54 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                         ],
                       ),
                     ),
-                    if (_fileTransferJobs.isNotEmpty)
-                      MaterialRibbon(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              for (int i = 0; i < _fileTransferJobs.length; i++)
-                                ClipboardChip(
-                                  itemName: _fileTransferJobs[i].itemName,
-                                  jobIndex: i,
-                                  fileTransferType: _fileTransferJobs[i].jobType,
-                                  transferFile: transferFile,
-                                  parentContext: context,
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 250),
+                      child: StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState){
+                          _ribbonStateSetter=setState;
+                          if (_fileTransferJobs.isNotEmpty){
+                            return MaterialRibbon(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    for (int i = 0; i < _fileTransferJobs.length; i++)
+                                      ClipboardChip(
+                                        itemName: _fileTransferJobs[i].itemName,
+                                        jobIndex: i,
+                                        fileTransferType: _fileTransferJobs[i].jobType,
+                                        transferFile: transferFile,
+                                        parentContext: context,
+                                      ),
+                                    const Spacer(),
+                                    IconNameMaterialButton(
+                                        icon: const Icon(
+                                          Icons.clear_all_rounded,
+                                          size: 35,
+                                          color: Colors.blueGrey,
+                                        ),
+                                        text: const Text(
+                                          "Clear",
+                                          style: TextStyle(
+                                              color: Colors.blueGrey, fontSize: 20),
+                                        ),
+                                        onPressed: () {
+                                          _ribbonStateSetter(() {
+                                            _totalJobCount = 0;
+                                            _fileTransferJobs.clear();
+                                          });
+                                        }),
+                                  ],
                                 ),
-                              const Spacer(),
-                              IconNameMaterialButton(
-                                  icon: const Icon(
-                                    Icons.clear_all_rounded,
-                                    size: 35,
-                                    color: Colors.blueGrey,
-                                  ),
-                                  text: const Text(
-                                    "Clear",
-                                    style: TextStyle(
-                                        color: Colors.blueGrey, fontSize: 20),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _totalJobCount = 0;
-                                      _fileTransferJobs.clear();
-                                    });
-                                  }),
-                            ],
-                          ),
-                        ),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
                       ),
+                    ),
                   ],
                 )),
         if(_storagesLoaded)
