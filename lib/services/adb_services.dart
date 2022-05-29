@@ -73,7 +73,7 @@ class ADBService{
   }
 
   void uploadContent({required currentPath, required FileItemType uploadType, Function? onProgress}) async {
-    String? sourcePath = await pickFileFolderFromDesktop(uploadType: uploadType,dialogTitle:uploadType==FileItemType.file?"Select File":"Select Directory",allowedExtensions: ["*"]);
+    String? sourcePath = await pickFileFolderFromDesktop(fileItemType: uploadType,dialogTitle:uploadType==FileItemType.file?"Select File":"Select Directory",allowedExtensions: ["*"]);
 
     if (sourcePath == null) {
       return;
@@ -134,7 +134,7 @@ class ADBService{
   }
 
   void downloadContent({required String itemPath,Function? onProgress}) async {
-    String? chosenDirectory = await pickFileFolderFromDesktop(uploadType:FileItemType.directory,dialogTitle: "Where to download",allowedExtensions: ["*"]);
+    String? chosenDirectory = await pickFileFolderFromDesktop(fileItemType:FileItemType.directory,dialogTitle: "Where to download",allowedExtensions: ["*"]);
 
     if (chosenDirectory == null) {
       return;

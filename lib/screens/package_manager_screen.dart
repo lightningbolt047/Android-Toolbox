@@ -1,3 +1,4 @@
+import 'package:adb_gui/components/apk_backup_dialog.dart';
 import 'package:adb_gui/components/apk_install_dialog.dart';
 import 'package:adb_gui/components/custom_list_tile.dart';
 import 'package:adb_gui/components/icon_name_material_button.dart';
@@ -154,6 +155,38 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                           });
                         }
                       },
+                    ),
+                    PopupMenuButton(
+                      icon: const Icon(
+                        Icons.more_vert_rounded,
+                        color: Colors.blue,
+                      ),
+                      itemBuilder: (context)=>[
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: Icon(
+                              FontAwesomeIcons.download,
+                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                            ),
+                            dense:false,
+                            title: Text(
+                              "Backup APKs",
+                              style: TextStyle(
+                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                              ),
+                            ),
+                          ),
+                          onTap: (){
+                            Future.delayed(const Duration(seconds: 0),(){
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context)=>APKBackupDialog(adbService: adbService,),
+                              );
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),

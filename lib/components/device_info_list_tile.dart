@@ -1,8 +1,6 @@
 import 'package:adb_gui/services/adb_services.dart';
 import 'package:flutter/material.dart';
 
-import '../models/device.dart';
-
 class DeviceInfoListTile extends StatelessWidget {
 
   final String propertyName;

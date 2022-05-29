@@ -77,8 +77,8 @@ Future<FileContentTypes> findFileItemType(ADBService adbService, String currentP
 }
 
 
-Future<String?> pickFileFolderFromDesktop({required FileItemType uploadType, required String dialogTitle, required List<String> allowedExtensions}) async{
-  if (uploadType == FileItemType.file) {
+Future<String?> pickFileFolderFromDesktop({required FileItemType fileItemType, required String dialogTitle, List<String> allowedExtensions=const []}) async{
+  if (fileItemType == FileItemType.file) {
     FilePickerResult? filePicker = await FilePicker.platform.pickFiles(dialogTitle: dialogTitle, type: allowedExtensions[0]=="*"?FileType.any:FileType.custom, allowedExtensions: allowedExtensions);
     return filePicker?.files.single.path;
   } else {

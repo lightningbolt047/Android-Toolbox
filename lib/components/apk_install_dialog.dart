@@ -42,7 +42,7 @@ class _ApkInstallDialogState extends State<ApkInstallDialog> {
   void pickApksAndInstall() async{
     Process? process;
     if(appInstallType==AppInstallType.single){
-      String? filePath=await pickFileFolderFromDesktop(uploadType: FileItemType.file, dialogTitle: "Select Single APK", allowedExtensions: ["apk"]);
+      String? filePath=await pickFileFolderFromDesktop(fileItemType: FileItemType.file, dialogTitle: "Select Single APK", allowedExtensions: ["apk"]);
       if(filePath!=null){
         setState(() {
           selectedFiles.clear();

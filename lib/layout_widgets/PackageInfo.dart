@@ -90,7 +90,7 @@ class PackageInfo extends StatelessWidget {
                 buttonText: "Get Apk(s)",
                 buttonIcon: const Icon(Icons.business_center,color: Colors.blue,),
                 onPressed: () async {
-                  String? chosenDirectory = await pickFileFolderFromDesktop(uploadType: FileItemType.directory, dialogTitle: "Where to download", allowedExtensions: ["*"]);
+                  String? chosenDirectory = await pickFileFolderFromDesktop(fileItemType: FileItemType.directory, dialogTitle: "Where to download", allowedExtensions: ["*"]);
                   if (chosenDirectory == null) {
                     return; // user cancelled and no app is fetched
                   }
