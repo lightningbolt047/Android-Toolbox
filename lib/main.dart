@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
       if(isWindows11()){
         await Window.setEffect(
             effect: WindowEffect.mica,
-            dark: themeModePreference==ThemeMode.dark?true:themeModePreference==ThemeMode.light?false:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark
+            dark: themeModePreference==ThemeMode.dark?true:themeModePreference==ThemeMode.light?false:SchedulerBinding.instance.window.platformBrightness==Brightness.dark
         );
       }else{
         await Window.setEffect(
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
     }else if(Platform.isLinux){
       await Window.setEffect(
         effect: WindowEffect.solid,
-        color: themeModePreference==ThemeMode.dark?kDarkModeMenuColor:themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance!.window.platformBrightness==Brightness.dark?kDarkModeMenuColor:Colors.white70,
+        color: themeModePreference==ThemeMode.dark?kDarkModeMenuColor:themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance.window.platformBrightness==Brightness.dark?kDarkModeMenuColor:Colors.white70,
       );
     }
   }

@@ -32,7 +32,9 @@ class DeviceInfoListTile extends StatelessWidget {
                 SizedBox(
                   width: 12,
                 ),
-                Text("Error fetching information. Property might not be available on your device")
+                Flexible(
+                  child: Text("Error fetching information. Property might not be available on your device"),
+                ),
               ],
             );
           }
