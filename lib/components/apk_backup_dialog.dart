@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adb_gui/components/console_output.dart';
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/reinstall_system_app_dialog.dart';
 import 'package:adb_gui/services/adb_services.dart';
@@ -31,10 +32,12 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
   String? saveDirectoryPath;
 
   List<Map<String,dynamic>> _appPackageInfo=[];
-  bool fetchedAppPackageNamesOnce=false;
+  bool _fetchedAppPackageNamesOnce=false;
   ProcessStatus _processStatus=ProcessStatus.notStarted;
+  
+  String _consoleOutput="";
 
-  Map<String,dynamic> backupProgress={
+  final Map<String,dynamic> _backupProgress={
     'currentPackage':"",
     'success': 0,
     'fail': 0,
@@ -43,7 +46,7 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
 
 
   Future<void> fetchAppPackageNamesOnce() async{
-    if(!fetchedAppPackageNamesOnce){
+    if(!_fetchedAppPackageNamesOnce){
       _appPackageInfo=await adbService.getAppPackageInfo(AppType.user);
 
       for(int i=0;i<_appPackageInfo.length;i++){
@@ -51,7 +54,7 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
       }
 
       setState((){
-        fetchedAppPackageNamesOnce=true;
+        _fetchedAppPackageNamesOnce=true;
       });
     }
   }
@@ -119,19 +122,22 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
     if(checkPrerequisites()){
       setState((){
         _processStatus=ProcessStatus.working;
-        backupProgress['total']=countSelected();
+        _backupProgress['total']=countSelected();
       });
       for(int i=0;i<_appPackageInfo.length;i++){
         if(_appPackageInfo[i]['selected']){
           setState((){
-            backupProgress['currentPackage']=_appPackageInfo[i]['packageName'];
+            _backupProgress['currentPackage']=_appPackageInfo[i]['packageName'];
+            _consoleOutput+="Backing up ${_appPackageInfo[i]['packageName']}...";
           });
           if(await adbService.getAppPackages(_appPackageInfo[i]['packageName'], saveDirectoryPath!) != 0){
-            backupProgress['success']++;
+            _backupProgress['success']++;
+            _consoleOutput+="success\n\n";
           }else{
-            backupProgress['fail']++;
+            _backupProgress['fail']++;
+            _consoleOutput+="fail\n\n";
           }
-          if(backupProgress['success']+backupProgress['fail']==backupProgress['total']){
+          if(_backupProgress['success']+_backupProgress['fail']==_backupProgress['total']){
             setState((){
               _processStatus=ProcessStatus.success;
             });
@@ -160,7 +166,7 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
       child: LayoutBuilder(
         builder: (context,constraints){
           return SizedBox(
-            height: _processStatus==ProcessStatus.notStarted?constraints.maxHeight*0.95:constraints.maxHeight*0.4,
+            height: _processStatus==ProcessStatus.notStarted?constraints.maxHeight*0.95:constraints.maxHeight*0.7,
             width: constraints.maxWidth*0.5,
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -173,7 +179,7 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
                     Expanded(
                       child: Builder(
                           builder: (context) {
-                            if(!fetchedAppPackageNamesOnce){
+                            if(!_fetchedAppPackageNamesOnce){
                               return Shimmer.fromColors(
                                   baseColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFE0E0E0):Colors.black12,
                                   highlightColor: Theme.of(context).brightness==Brightness.light?const Color(0xFFF5F5F5):Colors.blueGrey,
@@ -250,54 +256,52 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
                     ),
                   ],
                   if(_processStatus!=ProcessStatus.notStarted)...[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            const Text("Backing up: ",style: TextStyle(
-                              fontSize: 18,
-                            ),),
-                            Flexible(
-                              child: Text(backupProgress['currentPackage'],style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18
-                              ),),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        LinearProgressIndicator(
-                          value: (backupProgress['success']+backupProgress['fail'])/backupProgress['total'],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("${(backupProgress['success']+backupProgress['fail'])}/${backupProgress['total']}",style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),),
-                            _processStatus==ProcessStatus.working?Text((((backupProgress['success']+backupProgress['fail'])/backupProgress['total'])*100).toStringAsFixed(2)+"%",style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),):const Icon(Icons.check,color: Colors.green,),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text("Fail: ${backupProgress['fail']}",style: const TextStyle(
+                        const Text("Backing up: ",style: TextStyle(
+                          fontSize: 18,
+                        ),),
+                        Flexible(
+                          child: Text(_backupProgress['currentPackage'],maxLines: 3,overflow: TextOverflow.ellipsis,style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18
+                          ),),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    ConsoleOutput(consoleOutput: _consoleOutput),
+                    LinearProgressIndicator(
+                      value: (_backupProgress['success']+_backupProgress['fail'])/_backupProgress['total'],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("${(_backupProgress['success']+_backupProgress['fail'])}/${_backupProgress['total']}",style: const TextStyle(
                           fontWeight: FontWeight.w600,
                         ),),
+                        _processStatus==ProcessStatus.working?Text((((_backupProgress['success']+_backupProgress['fail'])/_backupProgress['total'])*100).toStringAsFixed(2)+"%",style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),):const Icon(Icons.check,color: Colors.green,),
                       ],
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("${_backupProgress['fail']} failed",style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),),
                     )
                   ]else
                     const SizedBox(
                       height: 8,
                     ),
-                  if(_processStatus!=ProcessStatus.notStarted)
-                    const Spacer(),
+                  // if(_processStatus!=ProcessStatus.notStarted)
+                  //   const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
