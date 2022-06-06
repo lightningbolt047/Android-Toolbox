@@ -1,6 +1,7 @@
 import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/screens/device_info_screen.dart';
 import 'package:adb_gui/screens/package_manager_screen.dart';
+import 'package:adb_gui/services/adb_services.dart';
 import 'package:adb_gui/services/platform_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/models/device.dart';
@@ -95,7 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 WindowMaterialButton(
                   // buttonColor: Colors.blue,
                   buttonIcon: const Icon(Icons.exit_to_app_rounded,color: Colors.white,),
-                  onPressed: (){
+                  onPressed: () async{
+                    await ADBService(device: device).disconnect();
                     Navigator.pop(context);
                   },
                 ),

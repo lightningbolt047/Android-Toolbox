@@ -351,5 +351,30 @@ class ADBService{
     }
   }
 
+  Future<bool> amIRoot() async{
+    try{
+      ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","whoami"]);
+      return result.stdout.trim()=="root";
+    }catch(e){
+      return Future.error(e);
+    }
+  }
+
+  Future<bool> obtainRoot() async{
+    try{
+      ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"root"]);
+      return !result.stdout.contains("disabled") && result.exitCode==0;
+    }catch(e){
+      return Future.error(e);
+    }
+  }
+
+  Future<void> disconnect() async{
+    try{
+      await Process.run(adbExecutable, ["disconnect"]);
+    }catch(e){
+      return Future.error(e);
+    }
+  }
 
 }

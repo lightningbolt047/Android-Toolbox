@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:adb_gui/components/file_transfer_progress.dart';
 import 'package:adb_gui/components/icon_name_material_button.dart';
 import 'package:adb_gui/components/material_ribbon.dart';
+import 'package:adb_gui/components/obtainRootDialog.dart';
 import 'package:adb_gui/components/simple_file_transfer_progress.dart';
 import 'package:adb_gui/models/file_transfer_job.dart';
 import 'package:adb_gui/models/item.dart';
@@ -190,6 +191,10 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
       _addressBarEditingController.text = _currentPath;
     });
     _addressBarFocus.previousFocus();
+  }
+
+  void onObtainingRoot(){
+    setState((){});
   }
 
 
@@ -392,6 +397,44 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                 ),
                               ],
                             ),
+                          ),
+                          PopupMenuButton(
+                            icon: const Icon(
+                              Icons.more_vert_rounded,
+                              color: Colors.blue,
+                            ),
+                            itemBuilder: (context)=>[
+                              PopupMenuItem(
+                                child: FutureBuilder(
+                                  future: adbService.amIRoot(),
+                                  builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
+                                    return ListTile(
+                                      leading: Icon(
+                                        FontAwesomeIcons.hashtag,
+                                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                      ),
+                                      dense:false,
+                                      enabled: snapshot.connectionState==ConnectionState.waiting?false:!snapshot.data!,
+                                      title: snapshot.connectionState==ConnectionState.waiting?const LinearProgressIndicator():Text(
+                                        "Root Mode",
+                                        style: TextStyle(
+                                          color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                onTap: (){
+                                  Future.delayed(const Duration(seconds: 0),() async {
+                                    await showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (context)=>ObtainRootDialog(obtainRoot: adbService.obtainRoot, onCompleted: onObtainingRoot),
+                                    );
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
