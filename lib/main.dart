@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
       }else{
         await Window.setEffect(
           effect: WindowEffect.acrylic,
-          color: kDarkModeMenuColor.withOpacity(0.5),
+          color: kDarkModeMenuColor.withOpacity(0.75),
         );
       }
     }else if(Platform.isLinux){
