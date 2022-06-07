@@ -87,7 +87,7 @@ Future<Map<String,dynamic>> getLatestGithubReleaseInfo() async{
 Future<String> downloadRelease(String url) async{
   Directory saveDirectory=await getTemporaryDirectory();
   String appendSymbol=Platform.isWindows?"\\":"/";
-  File latestRelease=File(saveDirectory.path+appendSymbol+"update.exe");
+  File latestRelease=File(saveDirectory.path+appendSymbol+"update.${Platform.isWindows?"exe":"tar.gz"}");
   if(await latestRelease.exists()){
     await latestRelease.delete();
   }
@@ -96,7 +96,7 @@ Future<String> downloadRelease(String url) async{
     //TODO Save file and return path to file;
     await latestRelease.create();
     await latestRelease.writeAsBytes(response.bodyBytes);
-    return saveDirectory.path+appendSymbol+"update.exe";
+    return saveDirectory.path+appendSymbol+"update.${Platform.isWindows?"exe":"tar.gz"}";
   }
   throw "Error occurred when attempting to download file";
 }

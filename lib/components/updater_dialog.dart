@@ -186,6 +186,8 @@ class UpdateNowButton extends CloseWindowButton{
     if(Platform.isWindows){
       Process.run("start",[pathToFile],runInShell: true);
       Process.run("taskkill", ["/IM","adb.exe","/F"],runInShell: true);
+    }else if(Platform.isLinux){
+      Process.run("nautilus", [pathToFile],runInShell: true);
     }
     super.onPressed!();
   }
