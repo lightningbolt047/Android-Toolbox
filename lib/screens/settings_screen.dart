@@ -103,10 +103,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   PopupMenuButton(
                     tooltip: "Select Theme Mode",
                     offset: Offset(MediaQuery.of(context).size.width,0),
-                    enabled: !(Platform.isWindows && !isWindows11()),
                     child: ListTile(
                       dense: true,
-                      title: Text("Theme Mode ${(Platform.isWindows && !isWindows11())?"(Disabled for Windows 10 and below versions)":""}",style: const TextStyle(
+                      title: const Text("Theme Mode",style: TextStyle(
                         fontSize: 20
                       ),),
                       subtitle: const Text("Theme changes don't require application restart anymore"),
