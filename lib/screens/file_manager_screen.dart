@@ -509,6 +509,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                               crossAxisCount: 3, mainAxisExtent: 75
                           ),
                           controller: _filesGridScrollController,
+                          cacheExtent: 20,
                           itemCount: int.parse((MediaQuery.of(context).size.height/25).toStringAsFixed(0)),
                           itemBuilder: (context,index){
                             return Row(
