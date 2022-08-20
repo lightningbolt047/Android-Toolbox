@@ -9,8 +9,6 @@ import 'package:adb_gui/services/update_services.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
-import '../services/platform_services.dart';
 import '../utils/const.dart';
 
 class SettingsScreen extends StatefulWidget {

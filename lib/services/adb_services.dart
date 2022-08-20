@@ -73,6 +73,7 @@ class ADBService{
   }
 
   void uploadContent({required currentPath, required FileItemType uploadType, Function? onProgress}) async {
+    //Send file/directory to Android device using adb push
     String? sourcePath = await pickFileFolderFromDesktop(fileItemType: uploadType,dialogTitle:uploadType==FileItemType.file?"Select File":"Select Directory",allowedExtensions: ["*"]);
 
     if (sourcePath == null) {
@@ -298,11 +299,15 @@ class ADBService{
   // }
 
   Future<int> suspendApp(String packageName) async{
+    //Suspending an app will prevent the user from launching the application from their Android device
+    //Un-suspending is required to use suspended apps
     ProcessResult result = await Process.run(adbExecutable, ["-s",device.id,"shell","pm","suspend",packageName]);
     return result.exitCode;
   }
   
   Future<List<String>> getAPKFilePathOnDevice(String packageName) async{
+    //Returns a List of apk files belonging to an app
+    //Returns a single String if there is only one apk (if app does not use app bundle packaging)
     ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","pm","path",packageName]);
     List<String> lines=result.stdout.toString().split("\n");
     lines.removeLast();
@@ -324,11 +329,13 @@ class ADBService{
   }
 
   Future<int> excludeFromMediaScanner(String path) async{
+    //Adds an empty .nomedia file to a directory to exclude it from the Android media scanner
     ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","touch","\"$path.nomedia\""]);
     return result.exitCode;
   }
 
   Future<int> includeInMediaScanner(String path) async{
+    //Removes the .nomedia file from the specified directory. Media scanner refresh required
     return deleteItem(itemPath: path+".nomedia");
   }
 
