@@ -17,7 +17,7 @@ Future<Map<String,dynamic>> checkForUpdates() async{
 
   //An 'Update is available' dialog is showed only if one of the release assets contains the respective platform name (Eg. windows, linux)
   //If current version is 1.0.0 and a release version 1.0.1 is available
-  //For Windows, only if there is an asset containing 'windows' as its name will the "Update is available" show
+  //Example: For Windows, only if there is an asset containing 'windows' as its name will the "Update is available" show
 
   PackageInfo currentPackageInfo = await PackageInfo.fromPlatform();
   List<String> currentVersionByType = currentPackageInfo.version.split(".");
