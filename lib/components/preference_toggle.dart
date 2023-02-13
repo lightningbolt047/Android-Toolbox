@@ -37,6 +37,9 @@ class _PreferenceToggleState extends State<PreferenceToggle> {
           ),),
           dense: true,
           subtitle: Text(subtitleText),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18)
+          ),
           value: snapshot.data!,
           onChanged: (value) async {
             await onChanged(value);

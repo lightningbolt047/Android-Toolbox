@@ -93,38 +93,41 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           themeMode: snapshot.data!,
           theme: ThemeData(
-              primaryColor: kAccentColor,
-              appBarTheme: const AppBarTheme(
-                backgroundColor: kAccentColor,
-              ),
-              toggleableActiveColor: kAccentColor,
-              progressIndicatorTheme: const ProgressIndicatorThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(seedColor: kAccentColor),
+            // primaryColor: kAccentColor,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: kAccentColor,
+            ),
+            // toggleableActiveColor: kAccentColor,
+            progressIndicatorTheme: const ProgressIndicatorThemeData(
+              color: kAccentColor,
+            ),
+            scaffoldBackgroundColor: Colors.transparent,
+            textTheme: TextTheme(
+              displayLarge: GoogleFonts.quicksand(),
+              displayMedium: GoogleFonts.quicksand(),
+              displaySmall: GoogleFonts.quicksand(color: kAccentColor,fontSize: 40,),
+              headlineMedium: GoogleFonts.quicksand(),
+              headlineSmall: GoogleFonts.quicksand(color: kAccentColor,fontSize: 25,fontWeight: FontWeight.w600),
+              titleLarge: GoogleFonts.quicksand(fontSize: 20,fontWeight: FontWeight.w500,),
+              titleMedium: GoogleFonts.quicksand(fontSize: 15),
+              titleSmall: GoogleFonts.quicksand(),
+              bodyLarge: GoogleFonts.quicksand(),
+              bodyMedium: GoogleFonts.quicksand(),
+              labelLarge: GoogleFonts.quicksand(),
+              bodySmall: GoogleFonts.quicksand(),
+            ),
+            dialogTheme: DialogTheme(
+              titleTextStyle: GoogleFonts.quicksand(
+                fontSize: 20,
                 color: kAccentColor,
+                fontWeight: FontWeight.w500,
               ),
-              scaffoldBackgroundColor: Colors.transparent,
-              textTheme: TextTheme(
-                headline1: GoogleFonts.quicksand(),
-                headline2: GoogleFonts.quicksand(),
-                headline3: GoogleFonts.quicksand(color: kAccentColor,fontSize: 40,),
-                headline4: GoogleFonts.quicksand(),
-                headline5: GoogleFonts.quicksand(color: kAccentColor,fontSize: 25,fontWeight: FontWeight.w600),
-                headline6: GoogleFonts.quicksand(fontSize: 20,fontWeight: FontWeight.w500,),
-                subtitle1: GoogleFonts.quicksand(fontSize: 15),
-                subtitle2: GoogleFonts.quicksand(),
-                bodyText1: GoogleFonts.quicksand(),
-                bodyText2: GoogleFonts.quicksand(),
-                button: GoogleFonts.quicksand(),
-                caption: GoogleFonts.quicksand(),
-              ),
-              dialogTheme: DialogTheme(
-                titleTextStyle: GoogleFonts.quicksand(
-                  fontSize: 20,
-                  color: kAccentColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              )
+            )
           ),
           darkTheme: ThemeData.dark().copyWith(
+            useMaterial3: true,
             scaffoldBackgroundColor: Platform.isLinux?Colors.black26:Colors.transparent,
             primaryColor: Colors.blueGrey,
             // cardColor: Colors.transparent,
@@ -157,18 +160,18 @@ class _MyAppState extends State<MyApp> {
                 )
             ),
             textTheme: TextTheme(
-              headline1: GoogleFonts.quicksand(),
-              headline2: GoogleFonts.quicksand(),
-              headline3: GoogleFonts.quicksand(color: Colors.white,fontSize: 40),
-              headline4: GoogleFonts.quicksand(),
-              headline5: GoogleFonts.quicksand(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w600),
-              headline6: GoogleFonts.quicksand(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w500),
-              subtitle1: GoogleFonts.quicksand(color: Colors.white,fontSize: 15),
-              subtitle2: GoogleFonts.quicksand(),
-              bodyText1: GoogleFonts.quicksand(),
-              bodyText2: GoogleFonts.quicksand(color: Colors.white70),
-              caption: GoogleFonts.quicksand(),
-              button: GoogleFonts.quicksand(),
+              displayLarge: GoogleFonts.quicksand(),
+              displayMedium: GoogleFonts.quicksand(),
+              displaySmall: GoogleFonts.quicksand(color: Colors.white,fontSize: 40),
+              headlineMedium: GoogleFonts.quicksand(),
+              headlineSmall: GoogleFonts.quicksand(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w600),
+              titleLarge: GoogleFonts.quicksand(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w500),
+              titleMedium: GoogleFonts.quicksand(color: Colors.white,fontSize: 15),
+              titleSmall: GoogleFonts.quicksand(),
+              bodyLarge: GoogleFonts.quicksand(),
+              bodyMedium: GoogleFonts.quicksand(color: Colors.white70),
+              bodySmall: GoogleFonts.quicksand(),
+              labelLarge: GoogleFonts.quicksand(),
             ),
             radioTheme: RadioThemeData(
               fillColor: MaterialStateProperty.resolveWith((states) => Colors.blueGrey),
@@ -176,7 +179,7 @@ class _MyAppState extends State<MyApp> {
             buttonTheme: const ButtonThemeData(
                 buttonColor: Colors.black
             ),
-            toggleableActiveColor: Colors.blueGrey,
+            // toggleableActiveColor: Colors.blueGrey,
           ),
           home: const ConnectionInitiationScreen(),
         );

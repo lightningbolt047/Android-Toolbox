@@ -118,12 +118,13 @@ class _HomeScreenState extends State<HomeScreen> {
           return ListView(
             children: [
               DrawerHeader(
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.blueGrey, Colors.grey],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      )),
+                  decoration: BoxDecoration(
+                    gradient: Theme.of(context).brightness==Brightness.light?const LinearGradient(
+                      colors: [Colors.blueGrey, Colors.grey],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ):null,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

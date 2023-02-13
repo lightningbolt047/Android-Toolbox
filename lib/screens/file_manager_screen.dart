@@ -108,7 +108,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
       if (_currentPath[_currentPath.length - 1] != "/") {
         _currentPath += "/";
       }
-      _currentPath += fileItemName + "/";
+      _currentPath += "$fileItemName/";
       _addressBarEditingController.text = _currentPath;
       _addressBarFocus.requestFocus();
       _addressBarEditingController.selection=TextSelection.fromPosition(TextPosition(offset: _addressBarEditingController.text.length));
@@ -126,7 +126,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
     String newPath = "";
     int toRemove = _currentPath[_currentPath.length - 1] == "/" ? 2 : 1;
     for (int i = 0; i < directories.length - toRemove; i++) {
-      newPath += directories[i] + "/";
+      newPath += "${directories[i]}/";
     }
     setState(() {
       _currentPath = newPath;
@@ -187,7 +187,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
         _addressBarEditingController.text = "/";
         return;
       }
-      _currentPath = value[value.length - 1] == "/" ? value : value + "/";
+      _currentPath = value[value.length - 1] == "/" ? value : "$value/";
       _addressBarEditingController.text = _currentPath;
     });
     _addressBarFocus.previousFocus();
@@ -258,8 +258,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                   onSubmitted: updatePathFromTextField,
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.all(8),
-                                    border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.zero),
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(18)
+                                    ),
                                     focusColor: kAccentColor,
                                     suffixIcon: _addressBarFocus.hasFocus
                                         ? IconButton(
@@ -598,7 +599,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                     );
                                   }
                                 },
-                                shape: const RoundedRectangleBorder(),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18)
+                                ),
                                 elevation: 5,
                                 hoverElevation: 10,
                                 child: Row(
@@ -629,6 +632,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                           icon: const Icon(
                                             Icons.more_vert_rounded,
                                             color: Colors.blueGrey,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(18)
                                           ),
                                           itemBuilder: (context) => [
                                             PopupMenuItem(
@@ -733,26 +739,26 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                               onTap: () {
                                                 adbService.deleteItem(
                                                     itemPath: _currentPath+snapshot.data![index].itemName,
-                                                    beforeExecution: (){
-                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                          duration: const Duration(seconds: 2),
-                                                          content: Row(
-                                                            children: [
-                                                              const CircularProgressIndicator(
-                                                                valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 12,
-                                                              ),
-                                                              Text("Deleting ${snapshot.data![index].itemName}"),
-                                                            ],
-                                                          )));
-                                                      ScaffoldMessenger.of(context).deactivate();
-                                                    },
+                                                    // beforeExecution: (){
+                                                    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                    //       duration: const Duration(seconds: 2),
+                                                    //       content: Row(
+                                                    //         children: [
+                                                    //           const CircularProgressIndicator(
+                                                    //             valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
+                                                    //           ),
+                                                    //           const SizedBox(
+                                                    //             width: 12,
+                                                    //           ),
+                                                    //           Text("Deleting ${snapshot.data![index].itemName}"),
+                                                    //         ],
+                                                    //       )));
+                                                    //   ScaffoldMessenger.of(context).deactivate();
+                                                    // },
                                                     onSuccess: (){
+                                                      setState(() {});
                                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: const Duration(seconds: 2),content: Text("${snapshot.data![index].itemName} deleted successfully")));
                                                       ScaffoldMessenger.of(context).deactivate();
-                                                      setState(() {});
                                                     }
                                                 );
                                               },
@@ -772,7 +778,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                                       ),
                                                     )),
                                                 onTap: () async {
-                                                  if(await adbService.includeInMediaScanner(_currentPath+snapshot.data![index].itemName+"/")==0){
+                                                  if(await adbService.includeInMediaScanner("$_currentPath${snapshot.data![index].itemName}/")==0){
                                                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully included in media scanner"),));
                                                   }else{
                                                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to include in media scanner"),));

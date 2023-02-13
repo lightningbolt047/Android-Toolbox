@@ -403,18 +403,18 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                           decoration: InputDecoration(
                             labelText: "Wireless ADB Address (optional)",
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             suffixIcon: MaterialButton(
-                              child: const Text("Connect",style: TextStyle(
-                                  color: kAccentColor
-                              ),),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               ),
                               onPressed: (){
                                 onAddressSubmit(_addressFieldController.text);
                               },
+                              child: const Text("Connect",style: TextStyle(
+                                  color: kAccentColor
+                              ),),
                             ),
                             hintText: "192.168.0.1:1246",
                             hintStyle: TextStyle(
@@ -526,6 +526,7 @@ class DevicesDataTable extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection:Axis.vertical,
       child: DataTable(
+        dividerThickness: 0,
         columns: [
           DataColumn(
               label: Text("Select",maxLines: 3,style: Theme.of(context).textTheme.headline6,)

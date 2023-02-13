@@ -12,7 +12,7 @@ class ConsoleOutput extends StatelessWidget {
     return Expanded(
       child: Container(
         width: double.infinity,
-        color: Theme.of(context).brightness==Brightness.light?Colors.grey[200]:Colors.black,
+        color: Theme.of(context).brightness==Brightness.light?Colors.grey[300]:Colors.black,
         child: SingleChildScrollView(
           reverse: true,
           scrollDirection: Axis.vertical,

@@ -100,9 +100,15 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   const PageSubheading(subheadingName: "Appearance"),
                   PopupMenuButton(
                     tooltip: "Select Theme Mode",
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18)
+                    ),
                     offset: Offset(MediaQuery.of(context).size.width,0),
                     child: ListTile(
                       dense: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18)
+                      ),
                       title: const Text("Theme Mode",style: TextStyle(
                         fontSize: 20
                       ),),
@@ -223,6 +229,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   ),
                   ListTile(
                     dense: true,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18)
+                    ),
                     title: const Text("Check for updates",style: TextStyle(
                       fontSize: 20,
                     ),),
@@ -300,6 +309,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   const PageSubheading(subheadingName: "Legal"),
                   ListTile(
                     dense: true,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18)
+                    ),
                     title: const Text("Licenses",style: TextStyle(
                       fontSize: 20,
                     ),),
