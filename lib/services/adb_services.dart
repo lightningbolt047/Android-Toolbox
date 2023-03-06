@@ -363,14 +363,14 @@ class ADBService{
       ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"shell","whoami"]);
       return result.stdout.trim()=="root";
     }catch(e){
-      return Future.error(e);
+      return false;
     }
   }
 
   Future<bool> obtainRoot() async{
     try{
       ProcessResult result=await Process.run(adbExecutable, ["-s",device.id,"root"]);
-      return !result.stdout.contains("disabled") && result.exitCode==0;
+      return result.stdout.toString().trim()=="" && result.exitCode==0;
     }catch(e){
       return Future.error(e);
     }

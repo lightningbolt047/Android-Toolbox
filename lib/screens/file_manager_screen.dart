@@ -148,9 +148,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
         context: context,
         barrierDismissible: false,
         builder: (context) => SimpleFileTransferProgress(
-              process: process,
-              fileTransferType: fileTransferType,
-            ));
+          process: process,
+          fileTransferType: fileTransferType,
+        ));
     setState(() {
       _fileTransferJobs.removeAt(index);
     });
@@ -288,54 +288,63 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                 ),
                               )),
                           if(_storagesLoaded)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: DropdownButton(
-                                underline: Container(),
-                                value: selectedStorage,
-                                dropdownColor: Theme.of(context).brightness==Brightness.light?Colors.white:kDarkModeMenuColor,
-                                items: [
-                                  for(int i=0;i<storages.length;i++)
-                                    DropdownMenuItem(
-                                      value: storages[i],
-                                      child: CustomListTile(
-                                          icon: Icon(storages[i].name=="0"?Icons.storage_rounded:Icons.sd_card_rounded,color: kAccentColor,),
-                                          title: storages[i].name=="0"?"Internal Storage":storages[i].name
-                                      ),
+                            DropdownButton(
+                              borderRadius: BorderRadius.circular(18),
+                              underline: Container(),
+                              value: selectedStorage,
+                              dropdownColor: Theme.of(context).brightness==Brightness.light?Colors.white:null,
+                              items: [
+                                for(int i=0;i<storages.length;i++)
+                                  DropdownMenuItem(
+                                    value: storages[i],
+                                    child: CustomListTile(
+                                        icon: Icon(storages[i].name=="0"?Icons.storage_rounded:Icons.sd_card_rounded,color: kAccentColor,),
+                                        title: storages[i].name=="0"?"Internal Storage":storages[i].name
                                     ),
-                                ],
-                                onChanged: (value){
-                                  if(!newStoragePathSupported(device.androidAPILevel)){
-                                    return;
-                                  }
-                                  if(value!=selectedStorage){
-                                    setState(() {
-                                      selectedStorage=value as Storage;
-                                      _currentPath=selectedStorage.path;
-                                      _addressBarEditingController.text=_currentPath;
-                                    });
-                                  }
+                                  ),
+                              ],
+                              onChanged: (value){
+                                if(!newStoragePathSupported(device.androidAPILevel)){
+                                  return;
                                 }
-                              ),
+                                if(value!=selectedStorage){
+                                  setState(() {
+                                    selectedStorage=value as Storage;
+                                    _currentPath=selectedStorage.path;
+                                    _addressBarEditingController.text=_currentPath;
+                                  });
+                                }
+                              }
                             ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(left:8.0),
                             child: PopupMenuButton(
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    FontAwesomeIcons.upload,
-                                    color: kAccentColor,
-                                  ),
-                                  SizedBox.fromSize(
-                                    size: const Size(4, 0),
-                                  ),
-                                  const Text(
-                                    "Upload Items",
-                                    style: TextStyle(
-                                        fontSize: 15, color: kAccentColor),
-                                  ),
-                                ],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      FontAwesomeIcons.upload,
+                                      color: kAccentColor,
+                                    ),
+                                    SizedBox.fromSize(
+                                      size: const Size(4, 0),
+                                    ),
+                                    const Text(
+                                      "Upload Items",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: kAccentColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               itemBuilder: (context) => [
                                 PopupMenuItem(
@@ -344,7 +353,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                     MainAxisAlignment.spaceBetween,
                                     children: const [
                                       Icon(
-                                        FontAwesomeIcons.fileUpload,
+                                        FontAwesomeIcons.fileArrowUp,
                                         color: kAccentColor,
                                       ),
                                       Text(
@@ -403,6 +412,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                             icon: const Icon(
                               Icons.more_vert_rounded,
                               color: Colors.blue,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
                             ),
                             itemBuilder: (context)=>[
                               PopupMenuItem(
@@ -706,7 +718,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                             PopupMenuItem(
                                               child: ListTile(
                                                   leading: Icon(
-                                                    FontAwesomeIcons.cut,
+                                                    FontAwesomeIcons.scissors,
                                                     color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                                   ),
                                                   dense:false,
@@ -739,24 +751,24 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                               onTap: () {
                                                 adbService.deleteItem(
                                                     itemPath: _currentPath+snapshot.data![index].itemName,
-                                                    // beforeExecution: (){
-                                                    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                    //       duration: const Duration(seconds: 2),
-                                                    //       content: Row(
-                                                    //         children: [
-                                                    //           const CircularProgressIndicator(
-                                                    //             valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
-                                                    //           ),
-                                                    //           const SizedBox(
-                                                    //             width: 12,
-                                                    //           ),
-                                                    //           Text("Deleting ${snapshot.data![index].itemName}"),
-                                                    //         ],
-                                                    //       )));
-                                                    //   ScaffoldMessenger.of(context).deactivate();
-                                                    // },
+                                                    beforeExecution: (){
+                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                          duration: const Duration(seconds: 2),
+                                                          content: Row(
+                                                            children: [
+                                                              const CircularProgressIndicator(
+                                                                valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 12,
+                                                              ),
+                                                              Text("Deleting ${snapshot.data![index].itemName}"),
+                                                            ],
+                                                          )));
+                                                      ScaffoldMessenger.of(context).deactivate();
+                                                    },
                                                     onSuccess: (){
-                                                      setState(() {});
+                                                      super.setState(() {});
                                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: const Duration(seconds: 2),content: Text("${snapshot.data![index].itemName} deleted successfully")));
                                                       ScaffoldMessenger.of(context).deactivate();
                                                     }
@@ -912,9 +924,8 @@ class ClipboardChip extends StatelessWidget {
           },
           deleteButtonTooltipMessage: "Paste here",
           deleteIcon: Icon(
-            fileTransferType == FileTransferType.move
-                ? Icons.drive_file_move
-                : Icons.paste,
+            size: 18,
+            fileTransferType == FileTransferType.move ? FontAwesomeIcons.scissors : FontAwesomeIcons.copy,
             color: clipboardChipColors[colorIndex],
           ),
           materialTapTargetSize: MaterialTapTargetSize.padded,

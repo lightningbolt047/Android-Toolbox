@@ -341,6 +341,9 @@ class AppActionListTile extends StatelessWidget {
       title: Text(titleText,style: const TextStyle(
         fontSize: 20
       ),),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+      ),
       dense: true,
       onTap: onTap,
       subtitle: Text(subtitleText),

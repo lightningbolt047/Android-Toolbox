@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.8.0
+version: 1.9.1
 
 environment:
   sdk: ">=2.19.2 <3.0.0"
@@ -35,18 +35,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 #  cupertino_icons: ^1.0.2
 #  process_run: ^0.12.3+1
-  file_picker: ^5.2.0
-  font_awesome_flutter: ^10.2.1
+  file_picker: ^5.2.5
+  font_awesome_flutter: ^10.4.0
   bitsdojo_window: ^0.1.5
   package_info_plus: ^3.0.3
-  shared_preferences: ^2.0.11
-  path_provider: ^2.0.8
+  shared_preferences: ^2.0.18
+  path_provider: ^2.0.13
   version: ^3.0.2
   shimmer: ^2.0.0
-  percent_indicator: ^4.2.2
+  percent_indicator: ^4.2.3
   google_fonts: ^4.0.3
-  flutter_acrylic: ^1.0.0+1
-  flutter_staggered_grid_view: ^0.6.1
+  flutter_acrylic: ^1.1.1
+  flutter_staggered_grid_view: ^0.6.2
 
 #msix_config:
 #  display_name: Android-Toolbox

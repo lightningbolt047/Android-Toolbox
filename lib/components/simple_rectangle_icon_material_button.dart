@@ -11,7 +11,9 @@ class SimpleRectangleIconMaterialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      shape: const RoundedRectangleBorder(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18)
+      ),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(

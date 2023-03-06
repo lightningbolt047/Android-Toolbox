@@ -107,88 +107,92 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: IconNameMaterialButton(
-                          icon: const Icon(Icons.system_update_alt_rounded,color: kAccentColor,size: 30,),
-                          spacing: 4,
-                          text: const Text("Reinstall system app",style: TextStyle(
-                              color: kAccentColor,
-                              fontSize: 15
-                          ),),
-                          onPressed: () async{
-                            await showDialog(
-                              context: context,
-                              builder: (context)=>ReinstallSystemAppDialog(adbService: adbService,),
-                            );
-                            setState(() {});
-                          },
-                        )
-                    ),
-                    DropdownButton(
-                      underline: Container(),
-                      value: _appType,
-                      dropdownColor: Theme.of(context).brightness==Brightness.light?Colors.white:kDarkModeMenuColor,
-                      items: [
-                        DropdownMenuItem(
-                          value: AppType.user,
-                          child: CustomListTile(
-                            icon: const Icon(FontAwesomeIcons.user,color: kAccentColor,),
-                            title: isPreIceCreamSandwichAndroid(device.androidAPILevel)?"All apps":"User apps",
-                          ),
-                        ),
-                        const DropdownMenuItem(
-                          value: AppType.system,
-                          child: CustomListTile(
-                            icon: Icon(Icons.system_update,color: kAccentColor,),
-                            title: "System apps",
-                          ),
-                        ),
-                      ],
-                      onChanged: isPreIceCreamSandwichAndroid(device.androidAPILevel)?null:(AppType? appType){
-                        if(_appType!=appType!){
-                          setState(() {
-                            _selectedPackageInfo={};
-                            _appType=appType;
-                          });
-                        }
-                      },
-                    ),
-                    PopupMenuButton(
-                      icon: const Icon(
-                        Icons.more_vert_rounded,
-                        color: Colors.blue,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      IconNameMaterialButton(
+                        icon: const Icon(Icons.system_update_alt_rounded,color: kAccentColor,size: 30,),
+                        spacing: 4,
+                        text: const Text("Reinstall system app",style: TextStyle(
+                            color: kAccentColor,
+                            fontSize: 15
+                        ),),
+                        onPressed: () async{
+                          await showDialog(
+                            context: context,
+                            builder: (context)=>ReinstallSystemAppDialog(adbService: adbService,),
+                          );
+                          setState(() {});
+                        },
                       ),
-                      itemBuilder: (context)=>[
-                        PopupMenuItem(
-                          child: ListTile(
-                            leading: Icon(
-                              FontAwesomeIcons.download,
-                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                      DropdownButton(
+                        underline: Container(),
+                        value: _appType,
+                        borderRadius: BorderRadius.circular(18),
+                        dropdownColor: Theme.of(context).brightness==Brightness.light?Colors.white:kDarkModeMenuColor,
+                        items: [
+                          DropdownMenuItem(
+                            value: AppType.user,
+                            child: CustomListTile(
+                              icon: const Icon(FontAwesomeIcons.user,color: kAccentColor,),
+                              title: isPreIceCreamSandwichAndroid(device.androidAPILevel)?"All apps":"User apps",
                             ),
-                            dense:false,
-                            title: Text(
-                              "Backup APKs",
-                              style: TextStyle(
+                          ),
+                          const DropdownMenuItem(
+                            value: AppType.system,
+                            child: CustomListTile(
+                              icon: Icon(Icons.system_update,color: kAccentColor,),
+                              title: "System apps",
+                            ),
+                          ),
+                        ],
+                        onChanged: isPreIceCreamSandwichAndroid(device.androidAPILevel)?null:(AppType? appType){
+                          if(_appType!=appType!){
+                            setState(() {
+                              _selectedPackageInfo={};
+                              _appType=appType;
+                            });
+                          }
+                        },
+                      ),
+                      PopupMenuButton(
+                        icon: const Icon(
+                          Icons.more_vert_rounded,
+                          color: Colors.blue,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        itemBuilder: (context)=>[
+                          PopupMenuItem(
+                            child: ListTile(
+                              leading: Icon(
+                                FontAwesomeIcons.download,
                                 color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                               ),
+                              dense:false,
+                              title: Text(
+                                "Backup APKs",
+                                style: TextStyle(
+                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                ),
+                              ),
                             ),
+                            onTap: (){
+                              Future.delayed(const Duration(seconds: 0),(){
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context)=>APKBackupDialog(adbService: adbService,),
+                                );
+                              });
+                            },
                           ),
-                          onTap: (){
-                            Future.delayed(const Duration(seconds: 0),(){
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context)=>APKBackupDialog(adbService: adbService,),
-                              );
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
