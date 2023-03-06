@@ -9,6 +9,7 @@ import 'package:adb_gui/services/update_services.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../services/platform_services.dart';
 import '../utils/const.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -104,12 +105,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       borderRadius: BorderRadius.circular(18)
                     ),
                     offset: Offset(MediaQuery.of(context).size.width,0),
+                    enabled: !(Platform.isWindows && !isWindows11()),
                     child: ListTile(
                       dense: true,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18)
                       ),
-                      title: const Text("Theme Mode",style: TextStyle(
+                      title: Text("Theme Mode ${(Platform.isWindows && !isWindows11())?"(Disabled for Windows 10 and below versions)":""}",style: const TextStyle(
                         fontSize: 20
                       ),),
                       subtitle: const Text("Theme changes don't require application restart anymore"),
