@@ -76,14 +76,15 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   fontSize: 20,
                 ),),
                 const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomMinimizeWindowButton(),
-                    CustomMaximizeWindowButton(),
-                    CustomCloseWindowButton(),
-                  ],
-                ),
+                if (!Platform.isMacOS)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomMinimizeWindowButton(),
+                      CustomMaximizeWindowButton(),
+                      CustomCloseWindowButton(),
+                    ],
+                  ),
               ],
             ),
           ),

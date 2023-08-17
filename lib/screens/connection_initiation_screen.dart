@@ -57,6 +57,8 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
     devicesResultFromConsole.removeLast();
     devicesResultFromConsole.removeAt(0);
 
+    devicesResultFromConsole.removeWhere((element) => element.contains("offline"));
+
     if(selectedDeviceIndex>=devicesResultFromConsole.length && devicesResultFromConsole.isNotEmpty){
       selectedDeviceIndex=devicesResultFromConsole.length-1;
     }
@@ -298,9 +300,11 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     Navigator.push(context, CupertinoPageRoute(builder: (context)=>const SettingsScreen()));
                   },
                 ),
-                CustomMinimizeWindowButton(),
-                CustomMaximizeWindowButton(),
-                CustomCloseWindowButton(),
+                if (!Platform.isMacOS)...[
+                  CustomMinimizeWindowButton(),
+                  CustomMaximizeWindowButton(),
+                  CustomCloseWindowButton(),
+                ]
               ],
             ),
           ),

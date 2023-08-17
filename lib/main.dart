@@ -14,13 +14,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
 
-  if(kDebugMode && Platform.isWindows){
+  if(kDebugMode && (Platform.isWindows || Platform.isMacOS)){
     adbExecutable="adb";
   }else{
     if(Platform.isWindows){
       adbExecutable="data/flutter_assets/assets/adb.exe";
     }else if(Platform.isLinux){
       adbExecutable="data/flutter_assets/assets/adb";
+    }else if(Platform.isMacOS){
+      adbExecutable="data/flutter_assets/assets/adbMac";
     }
   }
 
@@ -35,7 +37,7 @@ void main() async {
     appWindow.minSize = const Size(850, 525);
     appWindow.size = initialSize;
     appWindow.alignment = Alignment.center;
-    appWindow.title="ADB GUI";
+    appWindow.title="Android Toolbox";
     appWindow.show();
   });
 }
@@ -69,6 +71,11 @@ class _MyAppState extends State<MyApp> {
       await Window.setEffect(
         effect: WindowEffect.solid,
         color: themeModePreference==ThemeMode.dark?kDarkModeMenuColor:themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance.window.platformBrightness==Brightness.dark?kDarkModeMenuColor:Colors.white70,
+      );
+    } else if(Platform.isMacOS) {
+      await Window.setEffect(
+        effect: WindowEffect.windowBackground
+        // color: Colors.white
       );
     }
   }

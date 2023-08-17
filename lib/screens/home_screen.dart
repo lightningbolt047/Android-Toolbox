@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/screens/device_info_screen.dart';
 import 'package:adb_gui/screens/package_manager_screen.dart';
@@ -101,9 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                   },
                 ),
-                CustomMinimizeWindowButton(),
-                CustomMaximizeWindowButton(),
-                CustomCloseWindowButton(),
+                if(!Platform.isMacOS)...[
+                  CustomMinimizeWindowButton(),
+                  CustomMaximizeWindowButton(),
+                  CustomCloseWindowButton(),
+                ]
               ],
             ),
           ),
