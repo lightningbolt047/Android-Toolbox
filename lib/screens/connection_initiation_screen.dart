@@ -295,7 +295,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                 const Spacer(),
                 WindowMaterialButton(
                   // buttonColor: Colors.blue,
-                  buttonIcon: const Icon(Icons.settings,color: Colors.white,),
+                  buttonIcon: Icon(Icons.settings,color: Theme.of(context).brightness == Brightness.dark?Colors.white:kLightModeAppBarTitleColor,),
                   onPressed: (){
                     Navigator.push(context, CupertinoPageRoute(builder: (context)=>const SettingsScreen()));
                   },

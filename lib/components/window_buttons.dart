@@ -66,15 +66,16 @@ class WindowMaterialButton extends StatelessWidget {
   final Color? hoverColor;
   final Color? darkModeHoverColor;
   final Icon buttonIcon;
+  final Color? buttonColor;
   final VoidCallback onPressed;
 
-  const WindowMaterialButton({Key? key,this.hoverColor=Colors.lightBlue, this.darkModeHoverColor=Colors.black26,required this.buttonIcon,required this.onPressed}) : super(key: key);
+  const WindowMaterialButton({Key? key,this.hoverColor=Colors.black26, this.darkModeHoverColor=Colors.black26,required this.buttonIcon, this.buttonColor = Colors.transparent,required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       shape: const CircleBorder(),
-      color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:Colors.transparent,
+      color: buttonColor,
       elevation: 0,
       minWidth: 8,
       hoverColor: Theme.of(context).brightness==Brightness.light?hoverColor:darkModeHoverColor,

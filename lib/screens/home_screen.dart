@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 WindowMaterialButton(
                   // buttonColor: Colors.blue,
-                  buttonIcon: const Icon(Icons.exit_to_app_rounded,color: Colors.white,),
+                  buttonIcon: Icon(Icons.exit_to_app_rounded,color: Theme.of(context).brightness == Brightness.dark?Colors.white:kLightModeAppBarTitleColor,),
                   onPressed: () async{
                     await ADBService(device: device).disconnect();
                     Navigator.pop(context);

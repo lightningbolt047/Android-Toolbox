@@ -45,8 +45,8 @@ SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   macos_window_utils: 933f91f64805e2eb91a5bd057cf97cd097276663
   package_info_plus: 02d7a575e80f194102bef286361c6c326e4c29ce
-  path_provider_foundation: 37748e03f12783f9de2cb2c4eadfaa25fe6d4852
-  shared_preferences_foundation: 297b3ebca31b34ec92be11acd7fb0ba932c822ca
+  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   system_theme: c7b9f6659a5caa26c9bc2284da096781e9a6fcbc
 
 PODFILE CHECKSUM: 6acf97521436d16fc31cd5e1a02000905acdb3ae
