@@ -6,11 +6,11 @@ import 'package:adb_gui/components/window_buttons.dart';
 import 'package:adb_gui/screens/theme_mode_service.dart';
 import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/update_services.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:adb_gui/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:system_theme/system_theme.dart';
 import '../services/platform_services.dart';
-import '../utils/const.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -63,30 +63,28 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: MoveWindow(
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const Text("Settings",style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),),
-                const Spacer(),
-                if (!Platform.isMacOS)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomMinimizeWindowButton(),
-                      CustomMaximizeWindowButton(),
-                      CustomCloseWindowButton(),
-                    ],
-                  ),
-              ],
-            ),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(75),
+        child: AppBar(
+          toolbarHeight: 75,
+          title: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text("Settings",style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark?Colors.white:kLightModeAppBarTitleColor,
+                fontSize: 20,
+              ),),
+              const Spacer(),
+              if (!Platform.isMacOS)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomMinimizeWindowButton(),
+                    CustomMaximizeWindowButton(),
+                    CustomCloseWindowButton(),
+                  ],
+                ),
+            ],
           ),
         ),
       ),
@@ -123,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                               return const CircularProgressIndicator();
                             }
                             return Text(snapshot.data!,style: TextStyle(
-                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                              color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                               fontSize: 20
                             ),);
                           },
@@ -134,13 +132,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                         child: ListTile(
                             leading: Icon(
                               Icons.wb_sunny_rounded,
-                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                              color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                             ),
                             dense:false,
                             title: Text(
                               "Light Mode",
                               style: TextStyle(
-                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                               ),
                             ),
                         ),
@@ -153,13 +151,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           child: ListTile(
                               leading: Icon(
                                 Icons.mode_night_rounded,
-                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                               ),
                               dense:false,
                               title: Text(
                                 "Dark Mode",
                                 style: TextStyle(
-                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                  color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                 ),
                               )),
                           onTap: () async{
@@ -171,13 +169,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           child: ListTile(
                               leading: Icon(
                                 Icons.brightness_auto,
-                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                               ),
                               dense:false,
                               title: Text(
                                 "Follow System",
                                 style: TextStyle(
-                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                  color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                 ),
                               )),
                           onTap: () async{
@@ -261,8 +259,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                         );
                       }else if(updateInfo['updateAvailable']!=null && !updateInfo['updateAvailable']){
                         showDialog(context: context, builder: (context)=>AlertDialog(
-                          title: const Text("No update available!",style: TextStyle(
-                              color: kAccentColor
+                          title: Text("No update available!",style: TextStyle(
+                              color: SystemTheme.accentColor.accent
                           ),),
                           content: const Text("You are already on the latest version"),
                           actions: [
@@ -278,8 +276,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       showDialog(
                           context: context,
                           builder: (context)=>AlertDialog(
-                            title: const Text("Failed to check update",style: TextStyle(
-                              color: kAccentColor
+                            title: Text("Failed to check update",style: TextStyle(
+                              color: SystemTheme.accentColor.accent
                             ),),
                             content: const Text("Check your internet connection and try again"),
                             actions: [

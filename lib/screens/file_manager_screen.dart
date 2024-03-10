@@ -16,8 +16,8 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:system_theme/system_theme.dart';
 import '../components/custom_list_tile.dart';
-import '../utils/const.dart';
 import '../utils/vars.dart';
 
 class FileManagerScreen extends StatefulWidget {
@@ -239,7 +239,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                         children: [
                           IconButton(
                             icon: const Icon(Icons.arrow_back_rounded),
-                            color: Colors.blueGrey,
+                            color: SystemTheme.accentColor.accent,
                             splashRadius: 1,
                             onPressed: () {
                               removePath();
@@ -261,7 +261,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(18)
                                     ),
-                                    focusColor: kAccentColor,
+                                    focusColor: SystemTheme.accentColor.accent,
                                     suffixIcon: _addressBarFocus.hasFocus
                                         ? IconButton(
                                       icon: const Icon(
@@ -298,7 +298,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                   DropdownMenuItem(
                                     value: storages[i],
                                     child: CustomListTile(
-                                        icon: Icon(storages[i].name=="0"?Icons.storage_rounded:Icons.sd_card_rounded,color: kAccentColor,),
+                                        icon: Icon(storages[i].name=="0"?Icons.storage_rounded:Icons.sd_card_rounded,color: SystemTheme.accentColor.accent,),
                                         title: storages[i].name=="0"?"Internal Storage":storages[i].name
                                     ),
                                   ),
@@ -329,18 +329,18 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       FontAwesomeIcons.upload,
-                                      color: kAccentColor,
+                                      color: SystemTheme.accentColor.accent,
                                     ),
                                     SizedBox.fromSize(
                                       size: const Size(4, 0),
                                     ),
-                                    const Text(
+                                    Text(
                                       "Upload Items",
                                       style: TextStyle(
                                         fontSize: 15,
-                                        color: kAccentColor,
+                                        color: SystemTheme.accentColor.accent,
                                       ),
                                     ),
                                   ],
@@ -351,14 +351,14 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                   child: Row(
                                     mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                    children: const [
+                                    children: [
                                       Icon(
                                         FontAwesomeIcons.fileArrowUp,
-                                        color: kAccentColor,
+                                        color: SystemTheme.accentColor.accent,
                                       ),
                                       Text(
                                         "Upload File",
-                                        style: TextStyle(color: kAccentColor),
+                                        style: TextStyle(color: SystemTheme.accentColor.accent),
                                       ),
                                     ],
                                   ),
@@ -380,14 +380,14 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                   child: Row(
                                     mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                    children: const [
+                                    children: [
                                       Icon(
                                         FontAwesomeIcons.folderPlus,
-                                        color: kAccentColor,
+                                        color: SystemTheme.accentColor.accent,
                                       ),
                                       Text(
                                         "Upload Folder",
-                                        style: TextStyle(color: kAccentColor),
+                                        style: TextStyle(color: SystemTheme.accentColor.accent),
                                       )
                                     ],
                                   ),
@@ -409,9 +409,9 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                             ),
                           ),
                           PopupMenuButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.more_vert_rounded,
-                              color: Colors.blue,
+                              color: SystemTheme.accentColor.accent,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
@@ -424,14 +424,14 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                     return ListTile(
                                       leading: Icon(
                                         FontAwesomeIcons.hashtag,
-                                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                        color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                       ),
                                       dense:false,
                                       enabled: snapshot.connectionState==ConnectionState.waiting?false:!snapshot.data!,
                                       title: snapshot.connectionState==ConnectionState.waiting?const LinearProgressIndicator():Text(
                                         "Root Mode",
                                         style: TextStyle(
-                                          color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                          color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                         ),
                                       ),
                                     );
@@ -653,13 +653,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                               child: ListTile(
                                                   leading: Icon(
                                                     FontAwesomeIcons.download,
-                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                   ),
                                                   dense:false,
                                                   title: Text(
                                                     "Download",
                                                     style: TextStyle(
-                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                     ),
                                                   )),
                                               onTap: () {
@@ -679,13 +679,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                               child: ListTile(
                                                   leading: Icon(
                                                     Icons.drive_file_rename_outline,
-                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                   ),
                                                   dense:false,
                                                   title: Text(
                                                     "Rename",
                                                     style: TextStyle(
-                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                     ),
                                                   )),
                                               onTap: () async {
@@ -699,13 +699,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                               child: ListTile(
                                                   leading: Icon(
                                                     FontAwesomeIcons.copy,
-                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                   ),
                                                   dense:false,
                                                   title: Text(
                                                     "Copy",
                                                     style: TextStyle(
-                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                     ),
                                                   )),
                                               onTap: () {
@@ -719,13 +719,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                               child: ListTile(
                                                   leading: Icon(
                                                     FontAwesomeIcons.scissors,
-                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                   ),
                                                   dense:false,
                                                   title: Text(
                                                     "Cut",
                                                     style: TextStyle(
-                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                     ),
                                                   )),
                                               onTap: () {
@@ -739,13 +739,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                               child: ListTile(
                                                   leading: Icon(
                                                     FontAwesomeIcons.trash,
-                                                    color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                    color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                   ),
                                                   dense:false,
                                                   title: Text(
                                                     "Delete",
                                                     style: TextStyle(
-                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                     ),
                                                   )),
                                               onTap: () {
@@ -756,8 +756,8 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                                           duration: const Duration(seconds: 2),
                                                           content: Row(
                                                             children: [
-                                                              const CircularProgressIndicator(
-                                                                valueColor: AlwaysStoppedAnimation<Color?>(kAccentColor),
+                                                              CircularProgressIndicator(
+                                                                valueColor: AlwaysStoppedAnimation<Color?>(SystemTheme.accentColor.accent),
                                                               ),
                                                               const SizedBox(
                                                                 width: 12,
@@ -780,13 +780,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                                 child: ListTile(
                                                     leading: Icon(
                                                       Icons.perm_media_rounded,
-                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                     ),
                                                     dense:false,
                                                     title: Text(
                                                       "Include in Media Scanner",
                                                       style: TextStyle(
-                                                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                        color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                       ),
                                                     )),
                                                 onTap: () async {
@@ -801,13 +801,13 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                                 child: ListTile(
                                                     leading: Icon(
                                                       Icons.remove_circle_rounded,
-                                                      color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                      color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                     ),
                                                     dense:false,
                                                     title: Text(
                                                       "Exclude from Media Scanner",
                                                       style: TextStyle(
-                                                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                                        color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                                       ),
                                                     )),
                                                 onTap: () async {
@@ -848,7 +848,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                             border: OutlineInputBorder(
                                                 borderRadius: BorderRadius.circular(10)
                                             ),
-                                            focusColor: kAccentColor,
+                                            focusColor: SystemTheme.accentColor.accent,
                                             hintText: "New name here",
                                             hintStyle: TextStyle(
                                                 color: Colors.grey[500]
@@ -955,7 +955,7 @@ class FutureIcon extends StatelessWidget {
         if(!snapshot.hasData){
           return const CircularProgressIndicator();
         }
-        return Icon(snapshot.data,color: kAccentColor,);
+        return Icon(snapshot.data,color: SystemTheme.accentColor.accent,);
       },
     );
   }

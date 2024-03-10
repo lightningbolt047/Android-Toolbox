@@ -1,5 +1,5 @@
-import 'package:adb_gui/utils/const.dart';
 import 'package:flutter/material.dart';
+import 'package:system_theme/system_theme.dart';
 
 class ObtainRootDialog extends StatefulWidget {
 
@@ -26,12 +26,12 @@ class _ObtainRootDialogState extends State<ObtainRootDialog> {
       builder: (BuildContext context,AsyncSnapshot<bool> snapshot){
         if(snapshot.connectionState==ConnectionState.waiting){
           return AlertDialog(
-            title: const Text("Obtaining Root",style: TextStyle(
-              color: kAccentColor,
+            title: Text("Obtaining Root",style: TextStyle(
+              color: SystemTheme.accentColor.accent,
               fontWeight: FontWeight.w600,
             ),),
-            content: Row(
-              children: const [
+            content: const Row(
+              children: [
                 CircularProgressIndicator(),
                 SizedBox(
                   width: 12,
@@ -42,14 +42,14 @@ class _ObtainRootDialogState extends State<ObtainRootDialog> {
           );
         }
         return AlertDialog(
-          title: Text(snapshot.data!?"Obtained root successfully":"Failed to obtain root",style: const TextStyle(
-            color: kAccentColor,
+          title: Text(snapshot.data!?"Obtained root successfully":"Failed to obtain root",style: TextStyle(
+            color: SystemTheme.accentColor.accent,
             fontWeight: FontWeight.w600,
           ),),
           content: Text(snapshot.data!?"You are root. Act responsibly!":"Your device may not have access to root, you may not have enabled rooted debugging or you may not have granted the appropriate permissions"),
           actions: [
             TextButton(
-              child: const Text("OK",style: TextStyle(color: kAccentColor),),
+              child: Text("OK",style: TextStyle(color: SystemTheme.accentColor.accent),),
               onPressed: (){
                 Navigator.pop(context);
                 onCompleted();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:system_theme/system_theme.dart';
 
-import '../utils/const.dart';
 
 class SimpleTextFieldAlert extends StatelessWidget {
   final String title;
@@ -12,8 +12,8 @@ class SimpleTextFieldAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title,style: const TextStyle(
-        color: kAccentColor
+      title: Text(title,style: TextStyle(
+        color: SystemTheme.accentColor.accent
       ),),
       content: TextField(
         controller: textFieldController,
@@ -21,12 +21,12 @@ class SimpleTextFieldAlert extends StatelessWidget {
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10)
           ),
-          focusColor: kAccentColor,
+          focusColor: SystemTheme.accentColor.accent,
           hintText: hintText,
         ),
       ),
       actions: [
-        TextButton(onPressed: action, child: const Text("OK",style: TextStyle(color: kAccentColor),))
+        TextButton(onPressed: action, child: Text("OK",style: TextStyle(color: SystemTheme.accentColor.accent),))
       ],
     );
   }

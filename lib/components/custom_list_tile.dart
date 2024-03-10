@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../utils/const.dart';
+import 'package:system_theme/system_theme.dart';
 
 class CustomListTile extends StatelessWidget {
   final String title;
@@ -15,8 +14,8 @@ class CustomListTile extends StatelessWidget {
         const SizedBox(
           width: 4  ,
         ),
-        Text(title,style: const TextStyle(
-          color: kAccentColor,
+        Text(title,style: TextStyle(
+          color: SystemTheme.accentColor.accent,
         ),)
       ],
     );

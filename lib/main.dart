@@ -11,6 +11,7 @@ import 'utils/vars.dart';
 import 'dart:io';
 import 'services/platform_services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:system_theme/system_theme.dart';
 
 void main() async {
 
@@ -29,8 +30,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Window.initialize();
+  Window.makeTitlebarTransparent();
+  // Window.enableFullSizeContentView();
 
-  runApp(const MyApp());
+  SystemTheme.fallbackColor = const Color(0xFF2196F3);
+  await SystemTheme.accentColor.load();
+  runApp(const TitlebarSafeArea(child: MyApp()));
+  print(SystemTheme.accentColor.accent);
 
   doWhenWindowReady(() {
     const initialSize = Size(1000, 625);
@@ -51,6 +57,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  final Color accentColor = SystemTheme.accentColor.accent;
 
 
   void _setWindowTheme(ThemeMode themeModePreference) async{
@@ -73,16 +81,25 @@ class _MyAppState extends State<MyApp> {
         color: themeModePreference==ThemeMode.dark?kDarkModeMenuColor:themeModePreference==ThemeMode.light?Colors.white70:SchedulerBinding.instance.window.platformBrightness==Brightness.dark?kDarkModeMenuColor:Colors.white70,
       );
     } else if(Platform.isMacOS) {
+      // Window.setBlurViewState(MacOSBlurViewState.followsWindowActiveState);
       await Window.setEffect(
-        effect: WindowEffect.windowBackground
-        // color: Colors.white
+        effect: WindowEffect.sidebar,
+        // color: Colors.black
       );
+      if(themeModePreference == ThemeMode.dark) {
+        Window.overrideMacOSBrightness(dark: true);
+      } else {
+        Window.overrideMacOSBrightness(dark: false);
+      }
     }
   }
 
   @override
   void initState() {
     themeModeService.addListener(() {
+      setState(() {});
+    });
+    SystemTheme.onChange.listen((event) {
       setState(() {});
     });
     super.initState();
@@ -101,22 +118,22 @@ class _MyAppState extends State<MyApp> {
           themeMode: snapshot.data!,
           theme: ThemeData(
             useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: kAccentColor),
+            colorScheme: ColorScheme.fromSeed(seedColor: accentColor, secondary: accentColor),
             // primaryColor: kAccentColor,
             appBarTheme: const AppBarTheme(
-              backgroundColor: kAccentColor,
+              backgroundColor: Colors.transparent,
             ),
             // toggleableActiveColor: kAccentColor,
-            progressIndicatorTheme: const ProgressIndicatorThemeData(
-              color: kAccentColor,
+            progressIndicatorTheme: ProgressIndicatorThemeData(
+              color: accentColor,
             ),
             scaffoldBackgroundColor: Colors.transparent,
             textTheme: TextTheme(
               displayLarge: GoogleFonts.quicksand(),
               displayMedium: GoogleFonts.quicksand(),
-              displaySmall: GoogleFonts.quicksand(color: kAccentColor,fontSize: 40,),
+              displaySmall: GoogleFonts.quicksand(color: accentColor,fontSize: 40,),
               headlineMedium: GoogleFonts.quicksand(),
-              headlineSmall: GoogleFonts.quicksand(color: kAccentColor,fontSize: 25,fontWeight: FontWeight.w600),
+              headlineSmall: GoogleFonts.quicksand(color: accentColor,fontSize: 25,fontWeight: FontWeight.w600),
               titleLarge: GoogleFonts.quicksand(fontSize: 20,fontWeight: FontWeight.w500,),
               titleMedium: GoogleFonts.quicksand(fontSize: 15),
               titleSmall: GoogleFonts.quicksand(),
@@ -128,13 +145,13 @@ class _MyAppState extends State<MyApp> {
             dialogTheme: DialogTheme(
               titleTextStyle: GoogleFonts.quicksand(
                 fontSize: 20,
-                color: kAccentColor,
+                color: accentColor,
                 fontWeight: FontWeight.w500,
               ),
             )
           ),
           darkTheme: ThemeData.dark().copyWith(
-            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(seedColor: accentColor, secondary: accentColor, brightness: Brightness.dark),
             scaffoldBackgroundColor: Platform.isLinux?Colors.black26:Colors.transparent,
             primaryColor: Colors.blueGrey,
             // cardColor: Colors.transparent,
@@ -152,9 +169,9 @@ class _MyAppState extends State<MyApp> {
               shadowColor: Colors.transparent,
               backgroundColor: Colors.transparent,
             ),
-            listTileTheme: const ListTileThemeData(
+            listTileTheme: ListTileThemeData(
               textColor: Colors.white,
-              iconColor: kAccentColor,
+              iconColor: accentColor,
             ),
             drawerTheme: const DrawerThemeData(
               backgroundColor: kDarkModeMenuColor,

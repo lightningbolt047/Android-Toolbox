@@ -8,9 +8,9 @@ import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:system_theme/system_theme.dart';
 
 import '../services/file_services.dart';
-import '../utils/const.dart';
 
 class PackageInfo extends StatelessWidget {
 
@@ -52,17 +52,18 @@ class PackageInfo extends StatelessWidget {
         leading: Container(),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text("App info",style: TextStyle(
-            color: kAccentColor,
+        centerTitle: false,
+        title: Text("App info",style: TextStyle(
+            color: SystemTheme.accentColor.accent,
             fontWeight: FontWeight.w600,
             fontSize: 20
         ),),
       ),
       body: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.android,color: Colors.green,size: 60,)
             ],
           ),
@@ -71,9 +72,9 @@ class PackageInfo extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(packageInfo['packageName'],maxLines: 2,overflow: TextOverflow.ellipsis,style: const TextStyle(
+                Text(packageInfo['packageName'],maxLines: 2,overflow: TextOverflow.ellipsis,style: TextStyle(
                   fontSize: 20,
-                  color: kAccentColor,
+                  color: SystemTheme.accentColor.accent,
                 ),),
               ],
             ),
@@ -88,7 +89,7 @@ class PackageInfo extends StatelessWidget {
             children: [
               SimpleRectangleIconMaterialButton(
                 buttonText: "Get Apk(s)",
-                buttonIcon: const Icon(Icons.business_center,color: Colors.blue,),
+                buttonIcon: Icon(Icons.business_center,color: SystemTheme.accentColor.accent,),
                 onPressed: () async {
                   String? chosenDirectory = await pickFileFolderFromDesktop(fileItemType: FileItemType.directory, dialogTitle: "Where to download", allowedExtensions: ["*"]);
                   if (chosenDirectory == null) {
@@ -104,7 +105,7 @@ class PackageInfo extends StatelessWidget {
               ),
               SimpleRectangleIconMaterialButton(
                 buttonText: "Open",
-                buttonIcon: const Icon(Icons.open_in_new,color: kAccentColor,),
+                buttonIcon: Icon(Icons.open_in_new,color: SystemTheme.accentColor.accent,),
                 onPressed: () async{
                   int exitCode=await adbService.launchApp(packageName: packageInfo['packageName']!);
                   if(exitCode!=0){
@@ -128,7 +129,7 @@ class PackageInfo extends StatelessWidget {
               ), // if(packageInfo['appType']==AppType.user)
               SimpleRectangleIconMaterialButton(
                 buttonText: "Uninstall",
-                buttonIcon: const Icon(Icons.delete,color: kAccentColor,),
+                buttonIcon: Icon(Icons.delete,color: SystemTheme.accentColor.accent,),
                 onPressed: (){
                   showDialog(
                     context: context,
@@ -140,8 +141,8 @@ class PackageInfo extends StatelessWidget {
                           await showDialog(
                             context: context,
                             builder: (context)=>AlertDialog(
-                              title: const Text("Error",style: TextStyle(
-                                color: kAccentColor,
+                              title: Text("Error",style: TextStyle(
+                                color: SystemTheme.accentColor.accent,
                                 fontWeight: FontWeight.w600
                               ),),
                               content: const Text("An error occurred"),
@@ -150,8 +151,8 @@ class PackageInfo extends StatelessWidget {
                                   onPressed: (){
                                     Navigator.pop(context);
                                   },
-                                  child: const Text("OK",style: TextStyle(
-                                    color: kAccentColor
+                                  child: Text("OK",style: TextStyle(
+                                    color: SystemTheme.accentColor.accent
                                   ),),
                                 ),
                               ],
@@ -168,7 +169,7 @@ class PackageInfo extends StatelessWidget {
               ),
               SimpleRectangleIconMaterialButton(
                 buttonText: "Force stop",
-                buttonIcon: const Icon(Icons.warning_amber_rounded,color: kAccentColor,),
+                buttonIcon: Icon(Icons.warning_amber_rounded,color: SystemTheme.accentColor.accent,),
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -199,7 +200,7 @@ class PackageInfo extends StatelessWidget {
                       Tooltip(
                         message: "Suspending Apps will disable the ability to launch them on your phone. Don't fret! Your data will remain intact and may unsuspend them by using the unsuspend option",
                         child: SimpleRectangleIconMaterialButton(
-                          buttonIcon: const Icon(Icons.ac_unit, color: kAccentColor,),
+                          buttonIcon: Icon(Icons.ac_unit, color: SystemTheme.accentColor.accent,),
                           buttonText: "Suspend",
                           onPressed: () async {
                             if((await adbService.suspendApp(packageInfo['packageName']!))==0){
@@ -214,7 +215,7 @@ class PackageInfo extends StatelessWidget {
                       Tooltip(
                       message: "Unsuspending apps will restore normal functionality",
                       child: SimpleRectangleIconMaterialButton(
-                        buttonIcon: const Icon(Icons.wb_sunny_rounded, color: kAccentColor,),
+                        buttonIcon: Icon(Icons.wb_sunny_rounded, color: SystemTheme.accentColor.accent,),
                         buttonText: "Unsuspend",
                         onPressed: () async {
                           if((await adbService.unsuspendApp(packageInfo['packageName']!))==0){
@@ -228,7 +229,7 @@ class PackageInfo extends StatelessWidget {
                     if(packageInfo['appType']==AppType.user)
                       SimpleRectangleIconMaterialButton(
                         buttonText: "Offload",
-                        buttonIcon: const Icon(FontAwesomeIcons.archive,color: kAccentColor,),
+                        buttonIcon: Icon(FontAwesomeIcons.boxArchive,color: SystemTheme.accentColor.accent,),
                         onPressed: (){
                           showDialog(
                             context: context,
@@ -240,8 +241,8 @@ class PackageInfo extends StatelessWidget {
                                   await showDialog(
                                     context: context,
                                     builder: (context)=>AlertDialog(
-                                      title: const Text("Error",style: TextStyle(
-                                          color: kAccentColor,
+                                      title: Text("Error",style: TextStyle(
+                                          color: SystemTheme.accentColor.accent,
                                           fontWeight: FontWeight.w600
                                       ),),
                                       content: const Text("An error occurred"),
@@ -250,8 +251,8 @@ class PackageInfo extends StatelessWidget {
                                           onPressed: (){
                                             Navigator.pop(context);
                                           },
-                                          child: const Text("OK",style: TextStyle(
-                                              color: kAccentColor
+                                          child: Text("OK",style: TextStyle(
+                                              color: SystemTheme.accentColor.accent
                                           ),),
                                         ),
                                       ],
@@ -270,7 +271,7 @@ class PackageInfo extends StatelessWidget {
                       Tooltip(
                         message: "You can opt to trade speed for space or vice versa. Applications may take up less or more space depending on your choice",
                         child: SimpleRectangleIconMaterialButton(
-                          buttonIcon: const Icon(Icons.refresh_rounded, color: kAccentColor,),
+                          buttonIcon: Icon(Icons.refresh_rounded, color: SystemTheme.accentColor.accent,),
                           buttonText: "Recompile",
                           onPressed: () {
                             showDialog(

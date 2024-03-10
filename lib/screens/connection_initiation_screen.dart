@@ -8,6 +8,7 @@ import 'package:adb_gui/screens/settings_screen.dart';
 import 'package:adb_gui/services/platform_services.dart';
 import 'package:adb_gui/services/shared_prefs.dart';
 import 'package:adb_gui/services/update_services.dart';
+import 'package:adb_gui/utils/const.dart';
 import 'package:adb_gui/utils/vars.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
@@ -15,8 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../utils/const.dart';
+import 'package:system_theme/system_theme.dart';
 
 
 class ConnectionInitiationScreen extends StatefulWidget {
@@ -169,7 +169,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                     ),
-                    focusColor: kAccentColor,
+                    focusColor: SystemTheme.accentColor.accent,
                   hintText: "000000",
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.w400,
@@ -198,7 +198,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    focusColor: kAccentColor,
+                    focusColor: SystemTheme.accentColor.accent,
                     hintText: "192.168.0.1:12345",
                     hintStyle: TextStyle(
                       color: Colors.grey[500]
@@ -214,8 +214,8 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                   onPressed: (){
                     Navigator.pop(context);
                   },
-                  child: const Text("OK",style: TextStyle(
-                    color: kAccentColor
+                  child: Text("OK",style: TextStyle(
+                    color: SystemTheme.accentColor.accent
                   ),),
               ),
             ),
@@ -280,17 +280,17 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: MoveWindow(
-            child: Row(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(75),
+        child: MoveWindow(
+          child: AppBar(
+            toolbarHeight: 75,
+            title: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                const Text("Android Toolbox",style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
+                Text("Android Toolbox",style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark?Colors.white:kLightModeAppBarTitleColor,
+                  fontSize: 25,
                 ),),
                 const Spacer(),
                 WindowMaterialButton(
@@ -320,9 +320,9 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
               children: [
                 Text("Lets get you connected",style: Theme.of(context).textTheme.headline3,),
                 IconNameMaterialButton(
-                    icon: Icon(Icons.refresh_rounded, size: 35,color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.white,),
+                    icon: Icon(Icons.refresh_rounded, size: 35,color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:Colors.white,),
                     text: Text("Refresh", style: TextStyle(
-                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.white,
+                        color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:Colors.white,
                         fontSize: 20
                     ),),
                     onPressed: (){
@@ -338,7 +338,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
             child: Column(
               children: [
                 FutureBuilder(
-                    future:getAllDevicesInfo(),
+                    future: getAllDevicesInfo(),
                     builder: (BuildContext context,AsyncSnapshot<List<Device>> snapshot) {
                       if(!snapshot.hasData){
                         return Shimmer.fromColors(
@@ -373,11 +373,11 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                     }
                 ),
                 const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text("Tip: You will need to enable USB debugging on your phone and authorize this device for it to show up here",style: TextStyle(
                         color: Colors.grey,
                       ),),
@@ -416,15 +416,15 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                               onPressed: (){
                                 onAddressSubmit(_addressFieldController.text);
                               },
-                              child: const Text("Connect",style: TextStyle(
-                                  color: kAccentColor
+                              child: Text("Connect",style: TextStyle(
+                                  color: SystemTheme.accentColor.accent
                               ),),
                             ),
                             hintText: "192.168.0.1:1246",
                             hintStyle: TextStyle(
                               color: Colors.grey[500]
                             ),
-                            focusColor: kAccentColor,
+                            focusColor: SystemTheme.accentColor.accent,
                           ),
                         ),
                       ),
@@ -433,7 +433,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.blueGrey,
+                        color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:Colors.blueGrey,
                         child: Row(
                           children: [
                             SizedBox(
@@ -455,8 +455,8 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                           }
                           showDialog(context: context, builder: (context){
                             return AlertDialog(
-                              title: const Text("Unable to connect",style: TextStyle(
-                                color: kAccentColor
+                              title: Text("Unable to connect",style: TextStyle(
+                                color: SystemTheme.accentColor.accent
                               ),),
                               content: const Text("Make sure to start Windows Subsystem for Android and enable Developer Mode before attempting to connect"),
                               actions: [
@@ -464,10 +464,10 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                                     onPressed: (){
                                       Navigator.pop(context);
                                     },
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(8.0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Text("OK",style: TextStyle(
-                                        color: kAccentColor,
+                                        color: SystemTheme.accentColor.accent,
                                       ),),
                                     )
                                 ),
@@ -481,7 +481,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                             return MaterialButton(
                               shape: const CircleBorder(),
                               // color: Colors.blue,
-                              color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.blueGrey,
+                              color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:Colors.blueGrey,
                               disabledColor: Colors.grey,
                               child: const Padding(
                                   padding: EdgeInsets.all(8.0),

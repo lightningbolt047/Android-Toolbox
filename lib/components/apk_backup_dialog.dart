@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:adb_gui/components/console_output.dart';
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/reinstall_system_app_dialog.dart';
@@ -8,9 +6,8 @@ import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:system_theme/system_theme.dart';
 import '../services/file_services.dart';
-import '../utils/const.dart';
 
 
 class APKBackupDialog extends StatefulWidget {
@@ -104,8 +101,8 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
           content: Text(errorString),
           actions: [
             TextButton(
-              child: const Text("OK",style: TextStyle(
-                  color: kAccentColor
+              child: Text("OK",style: TextStyle(
+                  color: SystemTheme.accentColor.accent
               ),),
               onPressed: (){
                 Navigator.pop(context);
@@ -235,7 +232,7 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
-                        color: saveDirectoryPath==null?Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.blueGrey:Colors.green,
+                        color: saveDirectoryPath==null?Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:Colors.blueGrey:Colors.green,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
@@ -309,7 +306,7 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)
                         ),
-                        color: kAccentColor,
+                        color: SystemTheme.accentColor.accent,
                         disabledColor: Colors.grey,
                         child: const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20,vertical: 8),
@@ -324,7 +321,7 @@ class _APKBackupDialogState extends State<APKBackupDialog> with SingleTickerProv
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)
                           ),
-                          color: kAccentColor,
+                          color: SystemTheme.accentColor.accent,
                           disabledColor: Colors.grey,
                           child: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20,vertical: 8),

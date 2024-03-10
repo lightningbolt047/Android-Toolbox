@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../utils/const.dart';
-
+import 'package:system_theme/system_theme.dart';
 class PromptDialog extends StatelessWidget {
   final String title;
   final String contentText;
@@ -11,21 +9,21 @@ class PromptDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title,style: const TextStyle(
-        color: kAccentColor,
+      title: Text(title,style: TextStyle(
+        color: SystemTheme.accentColor.accent,
         fontWeight: FontWeight.w600,
       ),),
       content: Text(contentText),
       actions: [
         TextButton(
-          child: const Text("Cancel",style: TextStyle(color: kAccentColor),),
+          child: Text("Cancel",style: TextStyle(color: SystemTheme.accentColor.accent),),
           onPressed: (){
             Navigator.pop(context);
           },
         ),
         TextButton(
-          child: const Text("OK",style: TextStyle(color: kAccentColor),),
           onPressed: onConfirm,
+          child: Text("OK",style: TextStyle(color: SystemTheme.accentColor.accent),),
         ),
       ],
     );

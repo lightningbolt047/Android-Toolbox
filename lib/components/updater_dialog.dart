@@ -3,8 +3,7 @@ import 'package:adb_gui/services/update_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/const.dart';
+import 'package:system_theme/system_theme.dart';
 
 class UpdaterDialog extends StatefulWidget {
   final Map<String,dynamic> updateInfo;
@@ -25,14 +24,14 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
 
   Widget _getDialogTitle(){
     if(_isDownloading){
-      return const Text("Downloading Update",style: TextStyle(
-        color: kAccentColor
+      return Text("Downloading Update",style: TextStyle(
+        color: SystemTheme.accentColor.accent
       ),);
     }else if(_error){
       return const Text("Download failed");
     }
-    return Text("New update available! ${(updateInfo['preRelease']!=null && updateInfo['preRelease'])?"(Prerelease)":""}",style: const TextStyle(
-        color: kAccentColor
+    return Text("New update available! ${(updateInfo['preRelease']!=null && updateInfo['preRelease'])?"(Prerelease)":""}",style: TextStyle(
+        color: SystemTheme.accentColor.accent
     ),);
   }
 
@@ -66,8 +65,8 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextButton(
-              child: const Text("Close",style: TextStyle(
-                  color: kAccentColor
+              child: Text("Close",style: TextStyle(
+                  color: SystemTheme.accentColor.accent
               ),),
               onPressed: (){
                 Navigator.pop(context);
@@ -195,9 +194,6 @@ class UpdateNowButton extends CloseWindowButton{
   @override
   Widget build(BuildContext context){
     return TextButton(
-      child: const Text("Update Now",style: TextStyle(
-          color: kAccentColor
-      ),),
       onPressed: disabled?null:() async{
         beforeExecution();
         try{
@@ -210,6 +206,9 @@ class UpdateNowButton extends CloseWindowButton{
         }
         afterExecution();
       },
+      child: Text("Update Now",style: TextStyle(
+          color: SystemTheme.accentColor.accent
+      ),),
     );
   }
 }

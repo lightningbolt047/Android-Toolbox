@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../utils/const.dart';
+import 'package:system_theme/system_theme.dart';
 
 class SimpleRectangleIconMaterialButton extends StatelessWidget {
   final Icon buttonIcon;
@@ -14,19 +13,19 @@ class SimpleRectangleIconMaterialButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18)
       ),
+      onPressed: onPressed,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
             buttonIcon,
-            Text(buttonText,style: const TextStyle(
-              color: kAccentColor,
+            Text(buttonText,style: TextStyle(
+              color: SystemTheme.accentColor.accent,
               fontWeight: FontWeight.w700,
             ),),
           ],
         ),
       ),
-      onPressed: onPressed,
     );
   }
 }

@@ -12,6 +12,7 @@ import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:system_theme/system_theme.dart';
 
 import '../utils/const.dart';
 
@@ -67,10 +68,10 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                     Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: IconNameMaterialButton(
-                        icon: const Icon(Icons.android_rounded,color: kAccentColor,size: 35,),
+                        icon: Icon(Icons.android_rounded,color: SystemTheme.accentColor.accent,size: 35,),
                         spacing: 4,
-                        text: const Text("Install",style: TextStyle(
-                          color: kAccentColor,
+                        text: Text("Install",style: TextStyle(
+                          color: SystemTheme.accentColor.accent,
                           fontSize: 20
                         ),),
                         onPressed: () async{
@@ -97,7 +98,7 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                             ),
                             hintText: "Search by package name",
                           suffixIcon: IconButton(
-                            icon: const Icon(Icons.search_rounded,color: kAccentColor,),
+                            icon: Icon(Icons.search_rounded,color: SystemTheme.accentColor.accent,),
                             onPressed: (){
                               setState(() {});
                             },
@@ -112,10 +113,10 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                   child: Row(
                     children: [
                       IconNameMaterialButton(
-                        icon: const Icon(Icons.system_update_alt_rounded,color: kAccentColor,size: 30,),
+                        icon: Icon(Icons.system_update_alt_rounded,color: SystemTheme.accentColor.accent,size: 30,),
                         spacing: 4,
-                        text: const Text("Reinstall system app",style: TextStyle(
-                            color: kAccentColor,
+                        text: Text("Reinstall system app",style: TextStyle(
+                            color: SystemTheme.accentColor.accent,
                             fontSize: 15
                         ),),
                         onPressed: () async{
@@ -135,14 +136,14 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                           DropdownMenuItem(
                             value: AppType.user,
                             child: CustomListTile(
-                              icon: const Icon(FontAwesomeIcons.user,color: kAccentColor,),
+                              icon: Icon(FontAwesomeIcons.user,color: SystemTheme.accentColor.accent,),
                               title: isPreIceCreamSandwichAndroid(device.androidAPILevel)?"All apps":"User apps",
                             ),
                           ),
-                          const DropdownMenuItem(
+                          DropdownMenuItem(
                             value: AppType.system,
                             child: CustomListTile(
-                              icon: Icon(Icons.system_update,color: kAccentColor,),
+                              icon: Icon(Icons.system_update,color: SystemTheme.accentColor.accent,),
                               title: "System apps",
                             ),
                           ),
@@ -157,9 +158,9 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                         },
                       ),
                       PopupMenuButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.more_vert_rounded,
-                          color: Colors.blue,
+                          color: SystemTheme.accentColor.accent,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(28),
@@ -169,13 +170,13 @@ class _PackageManagerScreenState extends State<PackageManagerScreen> {
                             child: ListTile(
                               leading: Icon(
                                 FontAwesomeIcons.download,
-                                color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                               ),
                               dense:false,
                               title: Text(
                                 "Backup APKs",
                                 style: TextStyle(
-                                  color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
+                                  color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                 ),
                               ),
                             ),

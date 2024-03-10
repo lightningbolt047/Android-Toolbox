@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   flutter_acrylic
+  system_theme
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

@@ -5,6 +5,7 @@ import 'package:adb_gui/screens/device_info_screen.dart';
 import 'package:adb_gui/screens/package_manager_screen.dart';
 import 'package:adb_gui/services/adb_services.dart';
 import 'package:adb_gui/services/platform_services.dart';
+import 'package:adb_gui/utils/const.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:adb_gui/models/device.dart';
 import 'package:adb_gui/screens/file_manager_screen.dart';
@@ -12,8 +13,7 @@ import 'package:adb_gui/screens/power_controls_screen.dart';
 import 'package:adb_gui/services/android_api_checks.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/const.dart';
+import 'package:system_theme/system_theme.dart';
 
 class HomeScreen extends StatefulWidget {
   final Device device;
@@ -49,18 +49,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: MoveWindow(
-            child: Row(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(75),
+        child: MoveWindow(
+          child: AppBar(
+            toolbarHeight: 75,
+            title: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
                 Tooltip(
                   message: "${device.id} - ${device.model}",
-                  child: Text("${_getScreenName(_currentScreen)} (${device.model})",overflow: TextOverflow.ellipsis,style: const TextStyle(
-                      color: Colors.white,
+                  child: Text("${_getScreenName(_currentScreen)} (${device.model})",overflow: TextOverflow.ellipsis,style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark?Colors.white:kLightModeAppBarTitleColor,
                       fontSize: 20
                   ),),
                 ),
@@ -74,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     showDialog(
                       context: context,
                       builder: (context)=>AlertDialog(
-                        title: const Text("Stability Alert",style: TextStyle(
-                          color: kAccentColor
+                        title: Text("Stability Alert",style: TextStyle(
+                          color: SystemTheme.accentColor.accent
                         ),),
                         content: Text("You may experience degraded performance/glitches since your device runs on Android ${device.androidVersion} .\nThe recommended Android version is 7.0 and above"),
                         actions: [
@@ -83,10 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: (){
                               Navigator.pop(context);
                             },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Text("OK",style: TextStyle(
-                                color: kAccentColor
+                                color: SystemTheme.accentColor.accent
                               ),),
                             ),
                           ),
@@ -123,8 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               DrawerHeader(
                   decoration: BoxDecoration(
-                    gradient: Theme.of(context).brightness==Brightness.light?const LinearGradient(
-                      colors: [Colors.blueGrey, Colors.grey],
+                    gradient: Theme.of(context).brightness==Brightness.light?LinearGradient(
+                      colors: [SystemTheme.accentColor.accent.withOpacity(0.6), Colors.transparent],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ):null,
@@ -145,11 +145,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Image.asset("assets/lightningBoltLogo.png",width: 50,height: 50,),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 12.0, bottom: 4),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0, bottom: 4),
                         child: Text(
                           "Android Toolbox",
-                          style: TextStyle(color: Colors.white, fontSize: 25),
+                          style: TextStyle(color: SystemTheme.accentColor.accent, fontSize: 25),
                         ),
                       ),
                     ],

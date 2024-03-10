@@ -1,8 +1,8 @@
 import 'package:adb_gui/services/adb_services.dart';
 import 'package:adb_gui/utils/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:system_theme/system_theme.dart';
 
-import '../utils/const.dart';
 
 class SelectCompilationModeDialog extends StatefulWidget {
   final String packageName;
@@ -35,7 +35,7 @@ class _SelectCompilationModeDialogState extends State<SelectCompilationModeDialo
             width: 20,
           ),
           IconButton(
-            icon: const Icon(Icons.info_outline_rounded,color: kAccentColor,),
+            icon: Icon(Icons.info_outline_rounded,color: SystemTheme.accentColor.accent,),
             onPressed: (){
               showDialog(
                 context: context,
