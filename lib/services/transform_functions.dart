@@ -4,7 +4,13 @@ class TransformFunctions{
 
   String securityPatchTransform(String value){
     DateTime dateTime=DateTime.parse(value);
-    return dateTime.day.toString()+" "+DateTimeService.getMonthStringFromInt(dateTime.month)+" "+dateTime.year.toString();
+    String patchLevelInfo = "";
+    if (dateTime.day == 1) {
+      patchLevelInfo = "Android Framework patch only";
+    } else if(dateTime.day == 5) {
+      patchLevelInfo = "Android Framework & Vendor/Kernel patches included";
+    }
+    return "${DateTimeService.getMonthStringFromInt(dateTime.month)} ${dateTime.year} ($patchLevelInfo)";
   }
 
   String mobileNetworkOperatorsTransform(String value){

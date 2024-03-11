@@ -15,7 +15,7 @@ import 'package:system_theme/system_theme.dart';
 
 void main() async {
 
-  if(kDebugMode && (Platform.isWindows || Platform.isMacOS)){
+  if(kDebugMode && (Platform.isWindows)){
     adbExecutable="adb";
   }else{
     if(Platform.isWindows){
@@ -23,7 +23,9 @@ void main() async {
     }else if(Platform.isLinux){
       adbExecutable="data/flutter_assets/assets/adb";
     }else if(Platform.isMacOS){
-      adbExecutable="data/flutter_assets/assets/adbMac";
+      List<String> pathToAppExecList = Platform.resolvedExecutable.split("/");
+      pathToAppExecList = pathToAppExecList.sublist(0, pathToAppExecList.length - 2);
+      adbExecutable="${pathToAppExecList.join("/")}/Frameworks/App.framework/Versions/A/Resources/flutter_assets/assets/adbMac";
     }
   }
 
@@ -36,7 +38,6 @@ void main() async {
   SystemTheme.fallbackColor = const Color(0xFF2196F3);
   await SystemTheme.accentColor.load();
   runApp(const TitlebarSafeArea(child: MyApp()));
-  print(SystemTheme.accentColor.accent);
 
   doWhenWindowReady(() {
     const initialSize = Size(1000, 625);
@@ -86,11 +87,11 @@ class _MyAppState extends State<MyApp> {
         effect: WindowEffect.sidebar,
         // color: Colors.black
       );
-      if(themeModePreference == ThemeMode.dark) {
-        Window.overrideMacOSBrightness(dark: true);
-      } else {
-        Window.overrideMacOSBrightness(dark: false);
-      }
+      // if(themeModePreference == ThemeMode.dark) {
+      //   Window.overrideMacOSBrightness(dark: true);
+      // } else {
+      //   Window.overrideMacOSBrightness(dark: false);
+      // }
     }
   }
 

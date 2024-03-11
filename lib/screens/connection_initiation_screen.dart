@@ -42,7 +42,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
 
   Future<List<Device>> getDevices() async{
     if(!_serverStarted){
-      if(Platform.isLinux && !kDebugMode){
+      if((Platform.isLinux || Platform.isMacOS) && !kDebugMode){
         await Process.run("chmod",["+x",adbExecutable]);
       }
       if(!kDebugMode && (await getKillADBDuringStartPreference())!){

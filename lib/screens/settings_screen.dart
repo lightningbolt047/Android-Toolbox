@@ -97,94 +97,96 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const PageSubheading(subheadingName: "Appearance"),
-                  PopupMenuButton(
-                    tooltip: "Select Theme Mode",
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18)
-                    ),
-                    offset: Offset(MediaQuery.of(context).size.width,0),
-                    enabled: !(Platform.isWindows && !isWindows11()),
-                    child: ListTile(
-                      dense: true,
+                  if (!Platform.isMacOS)...[
+                    const PageSubheading(subheadingName: "Appearance"),
+                    PopupMenuButton(
+                      tooltip: "Select Theme Mode",
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18)
+                          borderRadius: BorderRadius.circular(18)
                       ),
-                      title: Text("Theme Mode ${(Platform.isWindows && !isWindows11())?"(Disabled for Windows 10 and below versions)":""}",style: const TextStyle(
-                        fontSize: 20
-                      ),),
-                      subtitle: const Text("Theme changes don't require application restart anymore"),
-                      trailing: FutureBuilder(
-                          future: getSelectedThemeModeAsString(),
-                          builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-                            if(!snapshot.hasData){
-                              return const CircularProgressIndicator();
-                            }
-                            return Text(snapshot.data!,style: TextStyle(
-                              color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
+                      offset: Offset(MediaQuery.of(context).size.width,0),
+                      enabled: !(Platform.isWindows && !isWindows11()),
+                      child: ListTile(
+                          dense: true,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18)
+                          ),
+                          title: Text("Theme Mode ${(Platform.isWindows && !isWindows11())?"(Disabled for Windows 10 and below versions)":""}",style: const TextStyle(
                               fontSize: 20
-                            ),);
-                          },
-                        )
-                    ),
-                    itemBuilder: (BuildContext context)=>[
-                      PopupMenuItem(
-                        child: ListTile(
-                            leading: Icon(
-                              Icons.wb_sunny_rounded,
-                              color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
-                            ),
-                            dense:false,
-                            title: Text(
-                              "Light Mode",
-                              style: TextStyle(
+                          ),),
+                          subtitle: const Text("Theme changes don't require application restart anymore"),
+                          trailing: FutureBuilder(
+                            future: getSelectedThemeModeAsString(),
+                            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+                              if(!snapshot.hasData){
+                                return const CircularProgressIndicator();
+                              }
+                              return Text(snapshot.data!,style: TextStyle(
+                                  color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
+                                  fontSize: 20
+                              ),);
+                            },
+                          )
+                      ),
+                      itemBuilder: (BuildContext context)=>[
+                        PopupMenuItem(
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.wb_sunny_rounded,
                                 color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                               ),
+                              dense:false,
+                              title: Text(
+                                "Light Mode",
+                                style: TextStyle(
+                                  color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
+                                ),
+                              ),
                             ),
+                            onTap: () async {
+                              await themeModeService.setThemeMode(ThemeMode.light);
+                              setState(() {});
+                            }
                         ),
-                        onTap: () async {
-                          await themeModeService.setThemeMode(ThemeMode.light);
-                          setState(() {});
-                        }
-                      ),
-                      PopupMenuItem(
-                          child: ListTile(
-                              leading: Icon(
-                                Icons.mode_night_rounded,
-                                color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
-                              ),
-                              dense:false,
-                              title: Text(
-                                "Dark Mode",
-                                style: TextStyle(
+                        PopupMenuItem(
+                            child: ListTile(
+                                leading: Icon(
+                                  Icons.mode_night_rounded,
                                   color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                 ),
-                              )),
-                          onTap: () async{
-                            await themeModeService.setThemeMode(ThemeMode.dark);
-                            setState(() {});
-                          }
-                      ),
-                      PopupMenuItem(
-                          child: ListTile(
-                              leading: Icon(
-                                Icons.brightness_auto,
-                                color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
-                              ),
-                              dense:false,
-                              title: Text(
-                                "Follow System",
-                                style: TextStyle(
+                                dense:false,
+                                title: Text(
+                                  "Dark Mode",
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
+                                  ),
+                                )),
+                            onTap: () async{
+                              await themeModeService.setThemeMode(ThemeMode.dark);
+                              setState(() {});
+                            }
+                        ),
+                        PopupMenuItem(
+                            child: ListTile(
+                                leading: Icon(
+                                  Icons.brightness_auto,
                                   color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
                                 ),
-                              )),
-                          onTap: () async{
-                            await themeModeService.setThemeMode(ThemeMode.system);
-                            setState(() {});
-                          }
-                      ),
-                    ],
-                  ),
+                                dense:false,
+                                title: Text(
+                                  "Follow System",
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness==Brightness.light?SystemTheme.accentColor.accent:null,
+                                  ),
+                                )),
+                            onTap: () async{
+                              await themeModeService.setThemeMode(ThemeMode.system);
+                              setState(() {});
+                            }
+                        ),
+                      ],
+                    ),
+                  ],
                   const PageSubheading(subheadingName: "Files"),
                   PreferenceToggle(
                     titleText: "Show Hidden Files",

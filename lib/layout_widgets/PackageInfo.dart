@@ -31,11 +31,11 @@ class PackageInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if(packageInfo['packageName']==null){
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.android,color: Colors.grey,size: 100,),
               Text(
                 "Select an App",

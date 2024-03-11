@@ -104,7 +104,13 @@ Future<String> downloadRelease(String url) async{
   //User has to extract the .tar.xz file to their pwd
   Directory saveDirectory=await getTemporaryDirectory();
   String appendSymbol=Platform.isWindows?"\\":"/";
-  File latestRelease=File(saveDirectory.path+appendSymbol+"update.${Platform.isWindows?"exe":"tar.xz"}");
+  String executableFileExtension = "exe";
+  if(Platform.isMacOS) {
+    executableFileExtension = "dmg";
+  } else if(Platform.isLinux) {
+    executableFileExtension = "tar.xz";
+  }
+  File latestRelease=File("${saveDirectory.path}${appendSymbol}update.$executableFileExtension");
   if(await latestRelease.exists()){
     await latestRelease.delete();
   }
@@ -113,7 +119,7 @@ Future<String> downloadRelease(String url) async{
     //Save file and return path to file;
     await latestRelease.create();
     await latestRelease.writeAsBytes(response.bodyBytes);
-    return saveDirectory.path+appendSymbol+"update.${Platform.isWindows?"exe":"tar.xz"}";
+    return "${saveDirectory.path}${appendSymbol}update.$executableFileExtension";
   }
   throw "Error occurred when attempting to download file";
 }

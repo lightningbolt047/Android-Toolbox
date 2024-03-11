@@ -37,9 +37,9 @@ class _UpdaterDialogState extends State<UpdaterDialog> {
 
   Widget _getDialogContent(){
     if(_isDownloading){
-      return Row(
+      return const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children: [
           Text("Update download in progress",style: TextStyle(
             ),
           ),
@@ -182,11 +182,13 @@ class UpdateNowButton extends CloseWindowButton{
 
   void installUpdate(String pathToFile) async{
     // await Process.run(adbExecutable, ["kill-server"],runInShell: true);
-    if(Platform.isWindows){
+    if(Platform.isWindows) {
       Process.run("start",[pathToFile],runInShell: true);
       Process.run("taskkill", ["/IM","adb.exe","/F"],runInShell: true);
-    }else if(Platform.isLinux){
+    } else if(Platform.isLinux) {
       Process.run("nautilus", [pathToFile],runInShell: true);
+    } else if(Platform.isMacOS) {
+      Process.run("open", [pathToFile], runInShell: true);
     }
     super.onPressed!();
   }
