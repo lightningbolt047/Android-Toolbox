@@ -447,6 +447,27 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
                           ],
                         ),
                         onPressed: () async{
+                          await showDialog(context: context, builder: (context){
+                            return AlertDialog(
+                              title: Text("Microsoft dropping support for WSA", style: TextStyle(
+                                color: SystemTheme.accentColor.accent
+                              ),),
+                              content: const Text("Windows Subsystem for Android is retiring and is no longer supported on your Windows 11 computer starting March 5, 2025"),
+                              actions: [
+                                TextButton(
+                                    onPressed: (){
+                                      Navigator.pop(context);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("OK",style: TextStyle(
+                                        color: SystemTheme.accentColor.accent,
+                                      ),),
+                                    )
+                                ),
+                              ],
+                            );
+                          });
                           if(await onAddressSubmit("127.0.0.1:58526")){
                             Device wsaDevice=await getDeviceAllProperties(Device.wsaCons("127.0.0.1:58526"));
                             await Navigator.push(context, CupertinoPageRoute(builder: (context)=>HomeScreen(device:wsaDevice,)));

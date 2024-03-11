@@ -32,7 +32,7 @@
                 <b>Bloatware or other system apps can now be uninstalled</b>
             </li>
             <li>
-                <b>Full Windows Subsystem for Android (WSA) compatibility</b>
+                <b>Full Windows Subsystem for Android (WSA) compatibility (WSA is retiring on March 5, 2025)</b>
             </li>
             <li>
                 <em>More soon......</em>
