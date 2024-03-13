@@ -128,7 +128,7 @@ class _MyAppState extends State<MyApp> {
             progressIndicatorTheme: ProgressIndicatorThemeData(
               color: accentColor,
             ),
-            scaffoldBackgroundColor: Colors.transparent,
+            scaffoldBackgroundColor: Platform.isLinux?Colors.white:Colors.transparent,
             textTheme: TextTheme(
               displayLarge: GoogleFonts.quicksand(),
               displayMedium: GoogleFonts.quicksand(),
