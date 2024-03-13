@@ -153,7 +153,7 @@ class _MyAppState extends State<MyApp> {
           ),
           darkTheme: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.fromSeed(seedColor: accentColor, secondary: accentColor, brightness: Brightness.dark),
-            scaffoldBackgroundColor: Platform.isLinux?Colors.black26:Colors.transparent,
+            scaffoldBackgroundColor: Platform.isLinux?Colors.black:Colors.transparent,
             primaryColor: Colors.blueGrey,
             // cardColor: Colors.transparent,
             cardTheme: const CardTheme(
