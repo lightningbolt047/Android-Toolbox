@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:adb_gui/utils/vars.dart';
 import 'package:system_theme/system_theme.dart';
 
+import '../utils/const.dart';
+
 class CustomMinimizeWindowButton extends MinimizeWindowButton{
   CustomMinimizeWindowButton({Key? key}) : super(key: key);
 
@@ -14,7 +16,7 @@ class CustomMinimizeWindowButton extends MinimizeWindowButton{
     return WindowMaterialButton(
       // buttonColor: Colors.blue,
       hoverColor: SystemTheme.accentColor.accent,
-      buttonIcon: const Icon(Icons.minimize,color: Colors.white,),
+      buttonIcon: Icon(Icons.minimize,color: Theme.of(context).brightness == Brightness.dark?Colors.white:kLightModeAppBarTitleColor,),
       onPressed: super.onPressed!,
     );
   }
@@ -30,7 +32,7 @@ class CustomMaximizeWindowButton extends MaximizeWindowButton{
     return WindowMaterialButton(
       // buttonColor: Colors.blue,
       hoverColor: SystemTheme.accentColor.accent,
-      buttonIcon: const Icon(Icons.check_box_outline_blank,color: Colors.white,),
+      buttonIcon: Icon(Icons.check_box_outline_blank,color: Theme.of(context).brightness == Brightness.dark?Colors.white:kLightModeAppBarTitleColor,),
       onPressed: super.onPressed!,
     );
   }
@@ -45,7 +47,7 @@ class CustomCloseWindowButton extends CloseWindowButton{
       // buttonColor: Colors.blue,
       hoverColor: Colors.redAccent,
       darkModeHoverColor: Colors.redAccent,
-      buttonIcon: const Icon(Icons.close,color: Colors.white,),
+      buttonIcon: Icon(Icons.close,color: Theme.of(context).brightness == Brightness.dark?Colors.white:kLightModeAppBarTitleColor,),
       onPressed: () async{
         if((await getKillADBOnExitPreference())!){
           await Process.run(adbExecutable, ["kill-server"],runInShell: true);
