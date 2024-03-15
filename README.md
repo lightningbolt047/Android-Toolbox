@@ -7,13 +7,17 @@
 ![Downloads](https://img.shields.io/github/downloads/lightningbolt047/Android-Toolbox/total) ![Watchers](https://img.shields.io/github/watchers/lightningbolt047/Android-Toolbox?label=Watch) ![Stars](https://img.shields.io/github/stars/lightningbolt047/Android-Toolbox?style=social) ![License](https://img.shields.io/github/license/lightningbolt047/Android-Toolbox)
 
 <div>
+    <h3>Update</h3>
+    <p>MacOS builds are now available starting version 2.0.0. </p>
+</div>
+
+<div>
     <h2>About</h2>
     <p>This application is built with Flutter. It uses adb behind the scenes to execute each and every user operation. The application comes bundled with adb, so you need not have adb installed and configured in path. I plan to bring it to linux after adding some functionality.</p>
 </div>
 
 <div>
     <h2>What does it do?</h2>
-    <p><strike>As of now, you can only use it to access your internal storage either on your phone or on WSA.</strike><br/>
         Current features:
         <ul>
             <li>
@@ -40,7 +44,7 @@
         </ul>
     </p>
     <h2>Okay I'm interested. How do I install it?</h2>
-    <p>As of now only the Windows installer is available (Although I plan to release it on linux and macOS (if I can get my hands on a Mac)). You may download it from this repo's releases which you can find here: [Releases](https://github.com/lightningbolt047/Android-Toolbox/releases). Or if you are very much interested to compile and run in linux, you may as well clone this repo and build it for yourself. Do note that the app might not work as intended in that case.</p>
+    <p>Windows, macOS and linux installers/binaries are available. You may download it from this repo's releases which you can find here: [Releases](https://github.com/lightningbolt047/Android-Toolbox/releases). Or if you are very much interested to compile and run, you may as well clone this repo and build it for yourself.</p>
     <h2>Do I have to keep checking this repo for future updates to the app?</h2>
     <p>No you don't! The app will notify you when there is an update available, and you may choose to download and install the update from within the app.</p>
     <h2>Feature X is awesome, I can't wait to try it out, but it is a prerelease. How do I try it out?</h2>
