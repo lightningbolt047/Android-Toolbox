@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:adb_gui/components/console_output.dart';
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/components/reinstall_system_app_dialog.dart';

@@ -11,7 +11,7 @@ class PageSubheading extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(subheadingName,style: Theme.of(context).textTheme.headline5,),
+          Text(subheadingName,style: Theme.of(context).textTheme.headlineSmall,),
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: const Divider(

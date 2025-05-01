@@ -139,7 +139,7 @@ class InstallerAppListTile extends StatelessWidget {
           const SizedBox(
             width: 12,
           ),
-          Text(installerName,style: Theme.of(context).textTheme.headline6),
+          Text(installerName,style: Theme.of(context).textTheme.titleLarge),
         ],
       ),
     );

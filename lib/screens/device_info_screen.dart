@@ -1,7 +1,6 @@
 import 'package:adb_gui/components/device_info_list_tile.dart';
 import 'package:adb_gui/components/page_subheading.dart';
 import 'package:adb_gui/services/adb_services.dart';
-import 'package:adb_gui/services/date_time_service.dart';
 import 'package:adb_gui/services/transform_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

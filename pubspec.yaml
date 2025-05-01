@@ -35,18 +35,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 #  cupertino_icons: ^1.0.2
 #  process_run: ^0.12.3+1
-  file_picker: ^5.2.5
+  file_picker: ^10.1.2
   font_awesome_flutter: ^10.4.0
   bitsdojo_window: ^0.1.5
-  package_info_plus: ^3.0.3
+  package_info_plus: ^8.3.0
   shared_preferences: ^2.0.18
   path_provider: ^2.0.13
   version: ^3.0.2
-  shimmer: ^2.0.0
+  shimmer: ^3.0.0
   percent_indicator: ^4.2.3
-  google_fonts: ^4.0.3
+  google_fonts: ^6.2.1
   flutter_acrylic: ^1.1.1
-  flutter_staggered_grid_view: ^0.6.2
+  flutter_staggered_grid_view: ^0.7.0
 
 #msix_config:
 #  display_name: Android-Toolbox
@@ -67,7 +67,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.1
+  flutter_lints: ^5.0.0
 #  msix: ^2.8.13
 
 # For information on the generic Dart part of this file, see the

@@ -314,7 +314,7 @@ class _ConnectionInitiationScreenState extends State<ConnectionInitiationScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Lets get you connected",style: Theme.of(context).textTheme.headline3,),
+                Text("Lets get you connected",style: Theme.of(context).textTheme.displaySmall,),
                 IconNameMaterialButton(
                     icon: Icon(Icons.refresh_rounded, size: 35,color: Theme.of(context).brightness==Brightness.light?kAccentColor:Colors.white,),
                     text: Text("Refresh", style: TextStyle(
@@ -529,22 +529,22 @@ class DevicesDataTable extends StatelessWidget {
         dividerThickness: 0,
         columns: [
           DataColumn(
-              label: Text("Select",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
+              label: Text("Select",maxLines: 3,style: Theme.of(context).textTheme.titleLarge,)
           ),
           DataColumn(
-              label: Text("S No.",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
+              label: Text("S No.",maxLines: 3,style: Theme.of(context).textTheme.titleLarge,)
           ),
           DataColumn(
-              label: Text("Model",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
+              label: Text("Model",maxLines: 3,style: Theme.of(context).textTheme.titleLarge,)
           ),
           DataColumn(
-              label: Text("Manufacturer",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
+              label: Text("Manufacturer",maxLines: 3,style: Theme.of(context).textTheme.titleLarge,)
           ),
           DataColumn(
-              label: Text("Android",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
+              label: Text("Android",maxLines: 3,style: Theme.of(context).textTheme.titleLarge,)
           ),
           DataColumn(
-              label: Text("Status",maxLines: 3,style: Theme.of(context).textTheme.headline6,)
+              label: Text("Status",maxLines: 3,style: Theme.of(context).textTheme.titleLarge,)
           ),
         ], rows: deviceDataRows,
       ),

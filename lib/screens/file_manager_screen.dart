@@ -348,12 +348,12 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                               ),
                               itemBuilder: (context) => [
                                 PopupMenuItem(
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                    children: const [
+                                    children: [
                                       Icon(
-                                        FontAwesomeIcons.fileArrowUp,
+                                        FontAwesomeIcons.fileUpload,
                                         color: kAccentColor,
                                       ),
                                       Text(
@@ -718,7 +718,7 @@ class _FileManagerScreenState extends State<FileManagerScreen> with SingleTicker
                                             PopupMenuItem(
                                               child: ListTile(
                                                   leading: Icon(
-                                                    FontAwesomeIcons.scissors,
+                                                    FontAwesomeIcons.cut,
                                                     color: Theme.of(context).brightness==Brightness.light?kAccentColor:null,
                                                   ),
                                                   dense:false,
@@ -924,8 +924,8 @@ class ClipboardChip extends StatelessWidget {
           },
           deleteButtonTooltipMessage: "Paste here",
           deleteIcon: Icon(
+            fileTransferType == FileTransferType.move ? FontAwesomeIcons.cut : FontAwesomeIcons.copy,
             size: 18,
-            fileTransferType == FileTransferType.move ? FontAwesomeIcons.scissors : FontAwesomeIcons.copy,
             color: clipboardChipColors[colorIndex],
           ),
           materialTapTargetSize: MaterialTapTargetSize.padded,
